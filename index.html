@@ -1,0 +1,1394 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FU FUT COFFEE â€” Authentic Ethiopian Coffee & Restaurant</title>
+  <meta name="description" content="Experience authentic Ethiopian coffee, traditional ceremonies, and gourmet cuisine at FU FUT COFFEE. Premium dining meets heritage.">
+  <meta name="theme-color" content="#0F7B78">
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-64x64.png" sizes="64x64">
+    <link rel="icon" type="image/png" href="/favicon-128x128.png" sizes="128x128">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="shortcut icon" href="/favicon.ico">
+  <!-- Favicon -->
+  
+  
+  
+  
+  
+  
+  
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Great+Vibes&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- GSAP for premium animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/sections.css">
+</head>
+<body>
+
+<!-- =============================================
+     1. NAVBAR â€” Transparent, Sticky, Glass
+     ============================================= -->
+<nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav__inner container-wide">
+    <a href="#" class="nav__logo" aria-label="FU FUT COFFEE home">
+      <span class="nav__logo-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <circle cx="18" cy="18" r="17" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M12 24V14c0-3.3 2.7-6 6-6s6 2.7 6 6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M10 24h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M26 16c1.7 0 3 1.3 3 3v1c0 1.7-1.3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="18" cy="28" r="1" fill="currentColor"/>
+        </svg>
+      </span>
+      <div class="nav__logo-text">
+        <span class="nav__logo-name">FU FUT</span>
+        <span class="nav__logo-sub">COFFEE</span>
+      </div>
+    </a>
+
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#home" class="nav__link active">Home</a></li>
+      <li><a href="#menu" class="nav__link">Menu</a></li>
+      <li><a href="#restaurant" class="nav__link">Restaurant</a></li>
+      <li><a href="#coffee" class="nav__link">Coffee</a></li>
+      <li><a href="#gallery" class="nav__link">Gallery</a></li>
+      <li><a href="#about" class="nav__link">About</a></li>
+      <li><a href="#contact" class="nav__link">Contact</a></li>
+    </ul>
+
+    <div class="nav__actions">
+      <button class="btn btn--accent btn--sm nav__reserve" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">
+        <i data-lucide="calendar" style="width:16px;height:16px"></i> Reserve
+      </button>
+      <button class="btn btn--ghost btn--sm nav__order" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">
+        <i data-lucide="shopping-bag" style="width:16px;height:16px"></i> Order
+      </button>
+      <button class="nav__toggle" id="darkToggle" aria-label="Toggle dark mode">
+        <i data-lucide="moon" class="icon-sun" style="width:20px;height:20px"></i>
+        <i data-lucide="sun" class="icon-moon" style="width:20px;height:20px;display:none"></i>
+      </button>
+      <button class="nav__toggle" id="langToggle" aria-label="Switch language">
+        <span style="font-weight:600;font-size:13px">EN</span>
+      </button>
+      <button class="nav__hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__top">
+      <a href="#" class="nav__logo">
+        <span class="nav__logo-icon">
+          <svg width="32" height="32" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="17" stroke="currentColor" stroke-width="1.5"/><path d="M12 24V14c0-3.3 2.7-6 6-6s6 2.7 6 6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 24h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M26 16c1.7 0 3 1.3 3 3v1c0 1.7-1.3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="28" r="1" fill="currentColor"/></svg>
+        </span>
+        <div class="nav__logo-text">
+          <span class="nav__logo-name">FU FUT</span>
+          <span class="nav__logo-sub">COFFEE</span>
+        </div>
+      </a>
+      <button class="mobile-menu__close" id="mobileClose" aria-label="Close menu">
+        <i data-lucide="x" style="width:24px;height:24px"></i>
+      </button>
+    </div>
+    <ul class="mobile-menu__links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#restaurant">Restaurant</a></li>
+      <li><a href="#coffee">Coffee</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="mobile-menu__actions">
+      <button class="btn btn--primary btn--block" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">Reserve a Table</button>
+      <button class="btn btn--accent btn--block mt-4" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">Order Online</button>
+    </div>
+  </div>
+</nav>
+
+<!-- =============================================
+     2. HERO â€” Cinematic Coffee Photography
+     ============================================= -->
+<section class="hero" id="home">
+  <div class="hero__bg">
+    <div class="hero__parallax" data-parallax="0.3">
+      <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1920&q=85&auto=format" alt="Ethiopian coffee being poured" class="hero__bg-img">
+    </div>
+    <div class="hero__overlay"></div>
+  </div>
+
+  <!-- Floating coffee beans -->
+  <div class="hero__beans" aria-hidden="true">
+    <div class="bean bean--1"></div>
+    <div class="bean bean--2"></div>
+    <div class="bean bean--3"></div>
+    <div class="bean bean--4"></div>
+    <div class="bean bean--5"></div>
+  </div>
+
+  <!-- Steam animation -->
+  <div class="hero__steam" aria-hidden="true">
+    <div class="steam steam--1"></div>
+    <div class="steam steam--2"></div>
+    <div class="steam steam--3"></div>
+  </div>
+
+  <div class="hero__content container" data-reveal>
+    <span class="script hero__script" data-reveal>Since 2018</span>
+    <h1 class="hero__h1">
+      Experience Authentic<br>
+      <span class="text-accent">Ethiopian Coffee</span>
+    </h1>
+    <p class="hero__sub body-lg" data-reveal>Where tradition meets modern taste. Every cup tells a story of heritage, craft, and passion.</p>
+    <div class="hero__btns" data-reveal>
+      <button class="btn btn--accent btn--lg" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">
+        <i data-lucide="calendar-check" style="width:20px;height:20px"></i> Reserve Table
+      </button>
+      <button class="btn btn--light btn--lg" onclick="document.getElementById('menu').scrollIntoView({behavior:'smooth'})">
+        View Menu <i data-lucide="arrow-right" style="width:20px;height:20px"></i>
+      </button>
+    </div>
+    <div class="hero__scroll" data-reveal>
+      <div class="hero__scroll-line"></div>
+      <span class="caps">Scroll</span>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     3. BRAND STORY â€” Split Layout + Timeline
+     ============================================= -->
+<section class="story section" id="about">
+  <div class="container">
+    <div class="center" data-reveal>
+      <span class="eyebrow">Our Story</span>
+      <h2 class="h2 section-title">From the Coffee Forests<br>of Ethiopia to Your Cup</h2>
+      <p class="section-sub">Three generations of coffee wisdom, preserved and perfected.</p>
+    </div>
+
+    <div class="story__grid mt-8">
+      <div class="story__media" data-reveal="left">
+        <div class="story__img-wrap">
+          <img src="https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=800&q=80&auto=format" alt="Ethiopian coffee beans" class="story__img">
+          <div class="story__img-accent"></div>
+        </div>
+        <div class="story__badge card-glass">
+          <span class="script text-accent" style="font-size:2rem">Est. 2018</span>
+        </div>
+      </div>
+
+      <div class="story__text" data-reveal="right">
+        <span class="script text-accent" style="font-size:1.5rem">Our Heritage</span>
+        <h3 class="h3 mt-4">Born in the Land of Coffee</h3>
+        <p class="body mt-4 text-soft">Ethiopia is the birthplace of coffee. For centuries, the Ethiopian coffee ceremony has been a cornerstone of community, hospitality, and connection. At FU FUT COFFEE, we bring this sacred tradition to life â€” every roast, every pour, every moment.</p>
+        <p class="body mt-4 text-soft">Our founder grew up watching her grandmother roast green beans over an open flame, the fragrant smoke filling their Addis Ababa home. That memory became a mission: to share Ethiopia's finest coffee with the world.</p>
+
+        <div class="story__timeline mt-8">
+          <div class="timeline" data-reveal>
+            <div class="timeline__item">
+              <div class="timeline__dot"></div>
+              <div class="timeline__content">
+                <span class="caps text-primary">2018</span>
+                <p class="body-sm mt-4 text-soft">First location opens in Addis Ababa</p>
+              </div>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot"></div>
+              <div class="timeline__content">
+                <span class="caps text-primary">2020</span>
+                <p class="body-sm mt-4 text-soft">Launched signature coffee ceremony experience</p>
+              </div>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot"></div>
+              <div class="timeline__content">
+                <span class="caps text-primary">2023</span>
+                <p class="body-sm mt-4 text-soft">Expanded to full-service restaurant</p>
+              </div>
+            </div>
+            <div class="timeline__item">
+              <div class="timeline__dot"></div>
+              <div class="timeline__content">
+                <span class="caps text-primary">Today</span>
+                <p class="body-sm mt-4 text-soft">Serving thousands of guests with pride</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     4. SIGNATURE COFFEE â€” Premium Cards
+     ============================================= -->
+<section class="coffee section" id="coffee">
+  <div class="coffee__bg">
+    <div class="container">
+      <div class="center" data-reveal>
+        <span class="eyebrow">Signature Blends</span>
+        <h2 class="h2 section-title">Coffee That Tells<br><span class="text-accent">a Story</span></h2>
+        <p class="section-sub">Single-origin beans, artisan roasted in small batches for extraordinary depth of flavor.</p>
+      </div>
+
+      <div class="coffee__grid mt-8">
+        <div class="coffee-card card" data-reveal>
+          <div class="coffee-card__img">
+            <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?w=600&q=80&auto=format" alt="Yirgacheffe blend" loading="lazy">
+            <span class="badge badge--primary coffee-card__badge">Bestseller</span>
+          </div>
+          <div class="coffee-card__body">
+            <h4 class="h4">Yirgacheffe</h4>
+            <p class="body-sm text-soft mt-4">Bright, floral notes with hints of bergamot and stone fruit. A celebration of Ethiopia's most famous growing region.</p>
+            <div class="coffee-card__meta">
+              <span class="coffee-card__origin"><i data-lucide="map-pin" style="width:14px;height:14px"></i> Yirgacheffe, Ethiopia</span>
+              <span class="coffee-card__roast">Light Roast</span>
+            </div>
+            <div class="coffee-card__flavors">
+              <span class="tag">Floral</span>
+              <span class="tag">Citrus</span>
+              <span class="tag">Bergamot</span>
+            </div>
+            <button class="btn btn--primary btn--sm mt-4">
+              <i data-lucide="shopping-bag" style="width:16px;height:16px"></i> Order Now
+            </button>
+          </div>
+        </div>
+
+        <div class="coffee-card card" data-reveal>
+          <div class="coffee-card__img">
+            <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80&auto=format" alt="Sidamo blend" loading="lazy">
+            <span class="badge badge--gold coffee-card__badge">Signature</span>
+          </div>
+          <div class="coffee-card__body">
+            <h4 class="h4">Sidamo Reserve</h4>
+            <p class="body-sm text-soft mt-4">Rich, full-bodied with chocolate undertones and a smooth, wine-like finish. Our signature house blend.</p>
+            <div class="coffee-card__meta">
+              <span class="coffee-card__origin"><i data-lucide="map-pin" style="width:14px;height:14px"></i> Sidamo, Ethiopia</span>
+              <span class="coffee-card__roast">Medium Roast</span>
+            </div>
+            <div class="coffee-card__flavors">
+              <span class="tag">Chocolate</span>
+              <span class="tag">Wine</span>
+              <span class="tag">Berry</span>
+            </div>
+            <button class="btn btn--primary btn--sm mt-4">
+              <i data-lucide="shopping-bag" style="width:16px;height:16px"></i> Order Now
+            </button>
+          </div>
+        </div>
+
+        <div class="coffee-card card" data-reveal>
+          <div class="coffee-card__img">
+            <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?w=600&q=80&auto=format" alt="Harar blend" loading="lazy">
+            <span class="badge badge--success coffee-card__badge">New</span>
+          </div>
+          <div class="coffee-card__body">
+            <h4 class="h4">Harar Longberry</h4>
+            <p class="body-sm text-soft mt-4">Bold and complex with blueberry, dark chocolate, and a spiced, earthy finish. Ethiopia's legendary eastern gem.</p>
+            <div class="coffee-card__meta">
+              <span class="coffee-card__origin"><i data-lucide="map-pin" style="width:14px;height:14px"></i> Harar, Ethiopia</span>
+              <span class="coffee-card__roast">Dark Roast</span>
+            </div>
+            <div class="coffee-card__flavors">
+              <span class="tag">Blueberry</span>
+              <span class="tag">Spice</span>
+              <span class="tag">Dark Cocoa</span>
+            </div>
+            <button class="btn btn--primary btn--sm mt-4">
+              <i data-lucide="shopping-bag" style="width:16px;height:16px"></i> Order Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     5. RESTAURANT MENU PREVIEW
+     ============================================= -->
+<section class="menu section" id="menu">
+  <div class="container">
+    <div class="center" data-reveal>
+      <span class="eyebrow">Our Menu</span>
+      <h2 class="h2 section-title">A Feast for<br>Every <span class="text-accent">Craving</span></h2>
+      <p class="section-sub">From traditional Ethiopian dishes to modern favorites, every plate is crafted with care.</p>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="menu__tabs center mt-6" data-reveal>
+      <button class="tag tag--active" data-menu-tab="breakfast">
+        <i data-lucide="sunrise" style="width:16px;height:16px"></i> Breakfast
+      </button>
+      <button class="tag" data-menu-tab="lunch">
+        <i data-lucide="utensils" style="width:16px;height:16px"></i> Lunch
+      </button>
+      <button class="tag" data-menu-tab="dinner">
+        <i data-lucide="moon" style="width:16px;height:16px"></i> Dinner
+      </button>
+      <button class="tag" data-menu-tab="traditional">
+        <i data-lucide="flame" style="width:16px;height:16px"></i> Traditional
+      </button>
+      <button class="tag" data-menu-tab="burgers">
+        <i data-lucide="sandwich" style="width:16px;height:16px"></i> Burgers
+      </button>
+      <button class="tag" data-menu-tab="pasta">
+        <i data-lucide="cooking-pot" style="width:16px;height:16px"></i> Pasta
+      </button>
+      <button class="tag" data-menu-tab="drinks">
+        <i data-lucide="coffee" style="width:16px;height:16px"></i> Drinks
+      </button>
+      <button class="tag" data-menu-tab="desserts">
+        <i data-lucide="cake" style="width:16px;height:16px"></i> Desserts
+      </button>
+    </div>
+
+    <!-- Menu Grid -->
+    <div class="menu__grid mt-6" id="menuGrid">
+      <!-- Breakfast items (default) -->
+      <div class="menu-card card" data-category="breakfast">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80&auto=format" alt="Ethiopian breakfast" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Injera with Ful</h4>
+            <span class="menu-card__price text-accent">350 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Traditional injera served with spiced fava beans, accompanied by fresh vegetables.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--success">Popular</span>
+            <span class="badge badge--gold">Vegetarian</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card" data-category="breakfast">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80&auto=format" alt="Eggs breakfast" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Fu Fu Breakfast Platter</h4>
+            <span class="menu-card__price text-accent">520 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Scrambled eggs, avocado toast, fresh fruit, and Ethiopian coffee on the side.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Chef's Pick</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card" data-category="breakfast">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80&auto=format" alt="Pastry breakfast" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Pastry Basket</h4>
+            <span class="menu-card__price text-accent">280 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Selection of fresh pastries with honey butter and jam.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Sweet</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lunch items (hidden by default) -->
+      <div class="menu-card card hide" data-category="lunch">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80&auto=format" alt="Burger" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Fu Fut Signature Burger</h4>
+            <span class="menu-card__price text-accent">680 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Wagyu beef patty, aged cheddar, caramelized onions, house-made sauce, brioche bun.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Signature</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="lunch">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80&auto=format" alt="Salad" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Ethiopian Power Salad</h4>
+            <span class="menu-card__price text-accent">420 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Mixed greens, berbere-spiced chickpeas, avocado, pomegranate, tahini dressing.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--success">Vegan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="lunch">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&q=80&auto=format" alt="Sandwich" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Club Sandwich</h4>
+            <span class="menu-card__price text-accent">450 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Triple-decker with grilled chicken, bacon, lettuce, tomato, herb aioli.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Popular</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dinner -->
+      <div class="menu-card card hide" data-category="dinner">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80&auto=format" alt="Steak" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Berbere Grilled Steak</h4>
+            <span class="menu-card__price text-accent">1250 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Prime cut, marinated in traditional berbere spice, served with roasted root vegetables.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Chef's Special</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="dinner">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&q=80&auto=format" alt="Pasta" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Truffle Mac & Cheese</h4>
+            <span class="menu-card__price text-accent">780 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Creamy three-cheese blend with black truffle oil, topped with crispy breadcrumbs.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Indulgent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="dinner">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=400&q=80&auto=format" alt="Fish dish" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Pan-Seared Tilapia</h4>
+            <span class="menu-card__price text-accent">890 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Fresh tilapia with mitmita butter sauce, sautÃ©ed greens, and rice pilaf.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--success">Fresh</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Traditional -->
+      <div class="menu-card card hide" data-category="traditional">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400&q=80&auto=format" alt="Doro Wat" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Doro Wat</h4>
+            <span class="menu-card__price text-accent">750 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Ethiopia's beloved chicken stew, slow-cooked with berbere and served with injera.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Iconic</span>
+            <span class="badge badge--gold">Spicy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="traditional">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&q=80&auto=format" alt="Kitfo" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Tibbs</h4>
+            <span class="menu-card__price text-accent">680 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">SautÃ©ed beef cubes with peppers, onions, and rosemary, served on injera.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--success">Popular</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="traditional">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=80&auto=format" alt="Misir Wat" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Misir Wat</h4>
+            <span class="menu-card__price text-accent">420 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Slow-cooked red lentil stew, richly spiced and served with fluffy injera.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--success">Vegan</span>
+            <span class="badge badge--gold">Comfort Food</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Burgers -->
+      <div class="menu-card card hide" data-category="burgers">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80&auto=format" alt="Classic burger" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Classic Smash Burger</h4>
+            <span class="menu-card__price text-accent">580 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Double smash patty, American cheese, pickles, special sauce.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Fan Favorite</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="burgers">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=400&q=80&auto=format" alt="Chicken burger" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Spiced Chicken Burger</h4>
+            <span class="menu-card__price text-accent">520 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Berbere-spiced chicken fillet, coleslaw, jalapeÃ±o mayo.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Spicy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="burgers">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1585238342024-78d387f41777?w=400&q=80&auto=format" alt="Veggie burger" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Garden Veggie Burger</h4>
+            <span class="menu-card__price text-accent">480 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">House-made lentil patty, avocado, sprouts, tahini dressing.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--success">Vegetarian</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pasta -->
+      <div class="menu-card card hide" data-category="pasta">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80&auto=format" alt="Pasta" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Creamy Alfredo Pasta</h4>
+            <span class="menu-card__price text-accent">550 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Fettuccine in rich parmesan cream sauce with grilled chicken.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Creamy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="pasta">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&q=80&auto=format" alt="Penne Arrabiata" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Spicy Penne Arrabbiata</h4>
+            <span class="menu-card__price text-accent">480 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Penne in a fiery tomato sauce with garlic and fresh herbs.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Spicy</span>
+            <span class="badge badge--success">Vegan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="pasta">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=400&q=80&auto=format" alt="Macaroni" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Baked Macaroni</h4>
+            <span class="menu-card__price text-accent">520 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Classic baked macaroni with three-cheese bÃ©chamel and crispy top.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Comfort</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drinks -->
+      <div class="menu-card card hide" data-category="drinks">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80&auto=format" alt="Ethiopian coffee" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Ethiopian Coffee Ceremony</h4>
+            <span class="menu-card__price text-accent">350 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Traditional ceremony with freshly roasted beans, popcorn, and incense.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Must Try</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="drinks">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1497534446932-c925b458314e?w=400&q=80&auto=format" alt="Fresh juice" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Fresh Mango Juice</h4>
+            <span class="menu-card__price text-accent">180 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Freshly pressed mango juice, served ice-cold.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--success">Fresh</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="drinks">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&q=80&auto=format" alt="Hot chocolate" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Spiced Hot Chocolate</h4>
+            <span class="menu-card__price text-accent">220 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Rich hot chocolate infused with cinnamon, cardamom, and a hint of chili.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Cozy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desserts -->
+      <div class="menu-card card hide" data-category="desserts">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&q=80&auto=format" alt="Chocolate cake" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Chocolate Lava Cake</h4>
+            <span class="menu-card__price text-accent">380 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Warm molten chocolate cake with vanilla ice cream and berry coulis.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--primary">Signature</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="desserts">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80&auto=format" alt="Pastry" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Baklava</h4>
+            <span class="menu-card__price text-accent">280 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Layers of crispy phyllo, pistachios, and honey syrup.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Sweet</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card card hide" data-category="desserts">
+        <div class="menu-card__img">
+          <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=80&auto=format" alt="Tiramisu" loading="lazy">
+        </div>
+        <div class="menu-card__body">
+          <div class="flex ai-center jc-between">
+            <h4 class="h4">Coffee Tiramisu</h4>
+            <span class="menu-card__price text-accent">350 ETB</span>
+          </div>
+          <p class="body-sm text-soft mt-4">Classic tiramisu made with our house espresso and mascarpone.</p>
+          <div class="flex ai-center mt-4 gap-2">
+            <span class="badge badge--gold">Coffee Lover</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     6. FEATURED DISHES â€” Large Cards
+     ============================================= -->
+<section class="featured section">
+  <div class="container">
+    <div class="center" data-reveal>
+      <span class="eyebrow">Featured</span>
+      <h2 class="h2 section-title">Chef's <span class="text-accent">Favorites</span></h2>
+    </div>
+
+    <div class="featured__grid mt-8">
+      <div class="featured-card" data-reveal>
+        <div class="featured-card__img">
+          <img src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=800&q=80&auto=format" alt="Doro Wat featured" loading="lazy">
+          <div class="featured-card__overlay">
+            <span class="caps text-accent">Chef's Special</span>
+          </div>
+        </div>
+        <div class="featured-card__body">
+          <div class="flex ai-center jc-between">
+            <h3 class="h3">Doro Wat Platter</h3>
+            <div class="text-right">
+              <span class="featured-card__price">750 ETB</span>
+              <span class="body-sm text-faint">450 kcal</span>
+            </div>
+          </div>
+          <p class="body text-soft mt-4">Our celebrated chicken stew, simmered for hours with berbere, served with injera and sides of gomen and ayib (fresh cheese).</p>
+          <div class="flex ai-center mt-4 gap-2 wrap">
+            <span class="tag">Chicken</span>
+            <span class="tag">Berbere</span>
+            <span class="tag">Injera</span>
+          </div>
+          <div class="flex ai-center mt-5 gap-4">
+            <button class="btn btn--primary">
+              <i data-lucide="shopping-bag" style="width:18px;height:18px"></i> Add to Cart
+            </button>
+            <button class="btn-icon" aria-label="Add to favorites">
+              <i data-lucide="heart" style="width:20px;height:20px"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="featured-card" data-reveal>
+        <div class="featured-card__img">
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&q=80&auto=format" alt="Signature burger featured" loading="lazy">
+          <div class="featured-card__overlay">
+            <span class="caps text-accent">Popular</span>
+          </div>
+        </div>
+        <div class="featured-card__body">
+          <div class="flex ai-center jc-between">
+            <h3 class="h3">Fu Fut Burger</h3>
+            <div class="text-right">
+              <span class="featured-card__price">680 ETB</span>
+              <span class="body-sm text-faint">620 kcal</span>
+            </div>
+          </div>
+          <p class="body text-soft mt-4">Double-stacked wagyu patties with aged cheddar, caramelized onions, house-made pickles, and our secret sauce on a toasted brioche bun.</p>
+          <div class="flex ai-center mt-4 gap-2 wrap">
+            <span class="tag">Wagyu</span>
+            <span class="tag">Cheddar</span>
+            <span class="tag">Brioche</span>
+          </div>
+          <div class="flex ai-center mt-5 gap-4">
+            <button class="btn btn--primary">
+              <i data-lucide="shopping-bag" style="width:18px;height:18px"></i> Add to Cart
+            </button>
+            <button class="btn-icon" aria-label="Add to favorites">
+              <i data-lucide="heart" style="width:20px;height:20px"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     7. COFFEE CEREMONY EXPERIENCE
+     ============================================= -->
+<section class="ceremony section" id="ceremony">
+  <div class="ceremony__bg">
+    <div class="container">
+      <div class="ceremony__grid">
+        <div class="ceremony__media" data-reveal="left">
+          <div class="ceremony__img-wrap">
+            <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?w=800&q=80&auto=format" alt="Ethiopian coffee ceremony" loading="lazy">
+            <div class="ceremony__play-btn" role="button" aria-label="Watch ceremony video" tabindex="0">
+              <i data-lucide="play" style="width:32px;height:32px"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="ceremony__text" data-reveal="right">
+          <span class="eyebrow">The Experience</span>
+          <h2 class="h2 mt-5">Ethiopian Coffee<br><span class="text-accent">Ceremony</span></h2>
+          <p class="body-lg text-soft mt-5">More than coffee â€” it's a ritual of connection. Watch as our baristas perform the ancient Ethiopian ceremony: roasting green beans over open flame, grinding with mortar and pestle, and brewing in a traditional jebena pot.</p>
+
+          <div class="ceremony__steps mt-6">
+            <div class="ceremony__step">
+              <div class="ceremony__step-num">01</div>
+              <div>
+                <h4 class="h4">Roasting</h4>
+                <p class="body-sm text-soft mt-4">Fresh green beans are roasted over charcoal until dark and fragrant.</p>
+              </div>
+            </div>
+            <div class="ceremony__step">
+              <div class="ceremony__step-num">02</div>
+              <div>
+                <h4 class="h4">Grinding</h4>
+                <p class="body-sm text-soft mt-4">Roasted beans are ground by hand using a traditional mukecha mortar.</p>
+              </div>
+            </div>
+            <div class="ceremony__step">
+              <div class="ceremony__step-num">03</div>
+              <div>
+                <h4 class="h4">Brewing</h4>
+                <p class="body-sm text-soft mt-4">Brewed in a jebena clay pot and served in small handleless cups.</p>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn--accent btn--lg mt-6" onclick="document.getElementById('reservation').scrollIntoView({behavior:'smooth'})">
+            <i data-lucide="calendar-check" style="width:20px;height:20px"></i> Book Ceremony
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     8. GALLERY â€” Masonry Grid
+     ============================================= -->
+<section class="gallery section" id="gallery">
+  <div class="container">
+    <div class="center" data-reveal>
+      <span class="eyebrow">Gallery</span>
+      <h2 class="h2 section-title">Moments of<br><span class="text-accent">Beauty</span></h2>
+    </div>
+
+    <div class="gallery__grid mt-8">
+      <div class="gallery__item gallery__item--tall" data-reveal>
+        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&q=80&auto=format" alt="Coffee art" loading="lazy">
+        <div class="gallery__item-overlay">
+          <i data-lucide="maximize-2" style="width:24px;height:24px"></i>
+        </div>
+      </div>
+      <div class="gallery__item" data-reveal>
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=600&q=80&auto=format" alt="Cafe interior" loading="lazy">
+        <div class="gallery__item-overlay">
+          <i data-lucide="maximize-2" style="width:24px;height:24px"></i>
+        </div>
+      </div>
+      <div class="gallery__item" data-reveal>
+        <img src="https://images.unsplash.com/photo-1498804103079-a6351b050096?w=600&q=80&auto=format" alt="Coffee cup" loading="lazy">
+        <div class="gallery__item-overlay">
+          <i data-lucide="maximize-2" style="width:24px;height:24px"></i>
+        </div>
+      </div>
+      <div class="gallery__item gallery__item--wide" data-reveal>
+        <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=800&q=80&auto=format" alt="Restaurant ambiance" loading="lazy">
+        <div class="gallery__item-overlay">
+          <i data-lucide="maximize-2" style="width:24px;height:24px"></i>
+        </div>
+      </div>
+      <div class="gallery__item" data-reveal>
+        <img src="https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=600&q=80&auto=format" alt="Ethiopian spices" loading="lazy">
+        <div class="gallery__item-overlay">
+          <i data-lucide="maximize-2" style="width:24px;height:24px"></i>
+        </div>
+      </div>
+      <div class="gallery__item gallery__item--tall" data-reveal>
+        <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?w=600&q=80&auto=format" alt="Pouring coffee" loading="lazy">
+        <div class="gallery__item-overlay">
+          <i data-lucide="maximize-2" style="width:24px;height:24px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     9. TESTIMONIALS
+     ============================================= -->
+<section class="testimonials section">
+  <div class="container">
+    <div class="center" data-reveal>
+      <span class="eyebrow">Reviews</span>
+      <h2 class="h2 section-title">What Our Guests<br><span class="text-accent">Say</span></h2>
+    </div>
+
+    <div class="testimonials__grid mt-8">
+      <div class="testimonial-card card" data-reveal>
+        <div class="testimonial-card__stars">
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+        </div>
+        <p class="body text-soft mt-4">"The coffee ceremony was unlike anything I've experienced. The warmth, the aroma, the connection â€” FU FUT COFFEE is truly special. A must-visit in Addis."</p>
+        <div class="testimonial-card__author mt-5">
+          <div class="testimonial-card__avatar">SA</div>
+          <div>
+            <span class="body-sm" style="font-weight:600;color:var(--c-ink)">Sarah A.</span>
+            <span class="badge badge--verify" style="margin-left:8px;font-size:11px">Verified</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card card" data-reveal>
+        <div class="testimonial-card__stars">
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+        </div>
+        <p class="body text-soft mt-4">"The Doro Wat here is the best I've ever had â€” and I've had a lot. Perfect spice balance, tender chicken, and the injera is so fresh. The design is gorgeous too."</p>
+        <div class="testimonial-card__author mt-5">
+          <div class="testimonial-card__avatar">MK</div>
+          <div>
+            <span class="body-sm" style="font-weight:600;color:var(--c-ink)">Michael K.</span>
+            <span class="badge badge--verify" style="margin-left:8px;font-size:11px">Verified</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card card" data-reveal>
+        <div class="testimonial-card__stars">
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+          <i data-lucide="star" style="width:16px;height:16px;fill:var(--c-accent);color:var(--c-accent)"></i>
+        </div>
+        <p class="body text-soft mt-4">"A hidden gem. The Yirgacheffe single origin is out of this world. The space feels like a luxury hotel meets Ethiopian heritage. Absolutely stunning."</p>
+        <div class="testimonial-card__author mt-5">
+          <div class="testimonial-card__avatar">LA</div>
+          <div>
+            <span class="body-sm" style="font-weight:600;color:var(--c-ink)">Lily A.</span>
+            <span class="badge badge--verify" style="margin-left:8px;font-size:11px">Verified</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     10. STATS â€” Animated Counters
+     ============================================= -->
+<section class="stats section" id="restaurant">
+  <div class="stats__bg">
+    <div class="container">
+      <div class="stats__grid">
+        <div class="stat" data-reveal>
+          <span class="stat__number" data-count="15000">0</span>
+          <span class="stat__label">Happy Customers</span>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__number" data-count="7">0</span>
+          <span class="stat__label">Years of Service</span>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__number" data-count="50000">0</span>
+          <span class="stat__label">Cups Served</span>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__number" data-count="12">0</span>
+          <span class="stat__label">Awards Won</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     11. RESERVATION
+     ============================================= -->
+<section class="reservation section" id="reservation">
+  <div class="container">
+    <div class="reservation__grid">
+      <div class="reservation__info" data-reveal="left">
+        <span class="eyebrow">Reserve</span>
+        <h2 class="h2 mt-5">Reserve Your<br><span class="text-accent">Table</span></h2>
+        <p class="body-lg text-soft mt-5">Join us for an unforgettable dining experience. Whether it's a quiet dinner for two or a celebration with friends, we'll make it special.</p>
+
+        <div class="reservation__details mt-6">
+          <div class="reservation__detail">
+            <i data-lucide="clock" style="width:20px;height:20px;color:var(--c-primary)"></i>
+            <div>
+              <span class="body-sm" style="font-weight:600">Opening Hours</span>
+              <p class="body-sm text-soft">Monâ€“Sun: 7:00 AM â€“ 11:00 PM</p>
+            </div>
+          </div>
+          <div class="reservation__detail">
+            <i data-lucide="phone" style="width:20px;height:20px;color:var(--c-primary)"></i>
+            <div>
+              <span class="body-sm" style="font-weight:600">Phone</span>
+              <p class="body-sm text-soft">+251 911 234 567</p>
+            </div>
+          </div>
+          <div class="reservation__detail">
+            <i data-lucide="mail" style="width:20px;height:20px;color:var(--c-primary)"></i>
+            <div>
+              <span class="body-sm" style="font-weight:600">Email</span>
+              <p class="body-sm text-soft">reserve@fufutcoffee.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form class="reservation__form card" data-reveal="right" id="reservationForm">
+        <h3 class="h4">Book a Table</h3>
+        <div class="reservation__form-grid mt-5">
+          <div class="field">
+            <label class="label" for="resName">Full Name</label>
+            <input class="input" type="text" id="resName" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label class="label" for="resEmail">Email</label>
+            <input class="input" type="email" id="resEmail" placeholder="you@email.com" required>
+          </div>
+          <div class="field">
+            <label class="label" for="resDate">Date</label>
+            <input class="input" type="date" id="resDate" required>
+          </div>
+          <div class="field">
+            <label class="label" for="resTime">Time</label>
+            <select class="input select" id="resTime" required>
+              <option value="">Select time</option>
+              <option>7:00 AM</option>
+              <option>8:00 AM</option>
+              <option>9:00 AM</option>
+              <option>10:00 AM</option>
+              <option>11:00 AM</option>
+              <option>12:00 PM</option>
+              <option>1:00 PM</option>
+              <option>2:00 PM</option>
+              <option>3:00 PM</option>
+              <option>4:00 PM</option>
+              <option>5:00 PM</option>
+              <option>6:00 PM</option>
+              <option>7:00 PM</option>
+              <option>8:00 PM</option>
+              <option>9:00 PM</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" for="resGuests">Guests</label>
+            <select class="input select" id="resGuests" required>
+              <option value="">Number of guests</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7+</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="label" for="resOccasion">Occasion</label>
+            <select class="input select" id="resOccasion">
+              <option value="">Select occasion (optional)</option>
+              <option>Birthday</option>
+              <option>Anniversary</option>
+              <option>Date Night</option>
+              <option>Business</option>
+              <option>Coffee Ceremony</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field mt-5">
+          <label class="label" for="resNotes">Special Requests</label>
+          <textarea class="textarea" id="resNotes" placeholder="Dietary requirements, seating preference, etc."></textarea>
+        </div>
+        <button type="submit" class="btn btn--primary btn--block btn--lg mt-5">
+          <i data-lucide="calendar-check" style="width:20px;height:20px"></i> Confirm Reservation
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     12. LOCATION
+     ============================================= -->
+<section class="location section" id="contact">
+  <div class="container">
+    <div class="center" data-reveal>
+      <span class="eyebrow">Find Us</span>
+      <h2 class="h2 section-title">Visit <span class="text-accent">FU FUT</span></h2>
+    </div>
+
+    <div class="location__grid mt-8">
+      <div class="location__map" data-reveal="left">
+        <div class="location__map-placeholder">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.5!2d38.76!3d9.02!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOcKwMDEnMTIuMCJOIDM4wrA0NSczNi4wIkU!5e0!3m2!1sen!2set!4v1"
+            width="100%" height="100%" style="border:0;border-radius:var(--r-lg)" allowfullscreen loading="lazy"
+            title="FU FUT COFFEE location on Google Maps"></iframe>
+        </div>
+      </div>
+
+      <div class="location__info" data-reveal="right">
+        <div class="location__card card">
+          <h3 class="h4">FU FUT COFFEE</h3>
+
+          <div class="location__detail mt-5">
+            <i data-lucide="map-pin" style="width:18px;height:18px;color:var(--c-primary)"></i>
+            <div>
+              <span class="body-sm" style="font-weight:600">Address</span>
+              <p class="body-sm text-soft">Bole Road, near Edna Mall<br>Addis Ababa, Ethiopia</p>
+            </div>
+          </div>
+
+          <div class="location__detail mt-4">
+            <i data-lucide="clock" style="width:18px;height:18px;color:var(--c-primary)"></i>
+            <div>
+              <span class="body-sm" style="font-weight:600">Opening Hours</span>
+              <p class="body-sm text-soft">Monday â€“ Friday: 7:00 AM â€“ 11:00 PM<br>Saturday â€“ Sunday: 8:00 AM â€“ 12:00 AM</p>
+            </div>
+          </div>
+
+          <div class="location__detail mt-4">
+            <i data-lucide="car" style="width:18px;height:18px;color:var(--c-primary)"></i>
+            <div>
+              <span class="body-sm" style="font-weight:600">Parking</span>
+              <p class="body-sm text-soft">Free valet parking available</p>
+            </div>
+          </div>
+
+          <hr class="divider" style="margin-block:var(--s-4)">
+
+          <div class="location__actions flex gap-4">
+            <a href="tel:+251911234567" class="btn btn--primary">
+              <i data-lucide="phone" style="width:18px;height:18px"></i> Call
+            </a>
+            <a href="https://wa.me/251911234567" class="btn btn--accent" target="_blank" rel="noopener">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     13. INSTAGRAM FEED
+     ============================================= -->
+<section class="instagram section">
+  <div class="container">
+    <div class="center" data-reveal>
+      <span class="eyebrow">Follow Us</span>
+      <h2 class="h2 section-title">@fufutcoffee</h2>
+      <p class="section-sub">Tag us with #FuFutCoffee for a chance to be featured.</p>
+    </div>
+
+    <div class="instagram__grid mt-8">
+      <a href="#" class="instagram__item" aria-label="Instagram post 1" data-reveal>
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&q=80&auto=format" alt="Instagram: Coffee cup" loading="lazy">
+        <div class="instagram__item-overlay">
+          <i data-lucide="heart" style="width:20px;height:20px"></i>
+          <span>2.4k</span>
+        </div>
+      </a>
+      <a href="#" class="instagram__item" aria-label="Instagram post 2" data-reveal>
+        <img src="https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=400&q=80&auto=format" alt="Instagram: Coffee beans" loading="lazy">
+        <div class="instagram__item-overlay">
+          <i data-lucide="heart" style="width:20px;height:20px"></i>
+          <span>1.8k</span>
+        </div>
+      </a>
+      <a href="#" class="instagram__item" aria-label="Instagram post 3" data-reveal>
+        <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80&auto=format" alt="Instagram: Breakfast" loading="lazy">
+        <div class="instagram__item-overlay">
+          <i data-lucide="heart" style="width:20px;height:20px"></i>
+          <span>3.1k</span>
+        </div>
+      </a>
+      <a href="#" class="instagram__item" aria-label="Instagram post 4" data-reveal>
+        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&q=80&auto=format" alt="Instagram: Latte art" loading="lazy">
+        <div class="instagram__item-overlay">
+          <i data-lucide="heart" style="width:20px;height:20px"></i>
+          <span>4.2k</span>
+        </div>
+      </a>
+      <a href="#" class="instagram__item" aria-label="Instagram post 5" data-reveal>
+        <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80&auto=format" alt="Instagram: Dish" loading="lazy">
+        <div class="instagram__item-overlay">
+          <i data-lucide="heart" style="width:20px;height:20px"></i>
+          <span>1.5k</span>
+        </div>
+      </a>
+      <a href="#" class="instagram__item" aria-label="Instagram post 6" data-reveal>
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&q=80&auto=format" alt="Instagram: Cafe vibes" loading="lazy">
+        <div class="instagram__item-overlay">
+          <i data-lucide="heart" style="width:20px;height:20px"></i>
+          <span>2.7k</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     14. NEWSLETTER
+     ============================================= -->
+<section class="newsletter section">
+  <div class="container">
+    <div class="newsletter__card" data-reveal>
+      <div class="newsletter__content center">
+        <span class="script text-accent" style="font-size:2rem">Stay Connected</span>
+        <h2 class="h2 mt-4">Join Our<br>Coffee Community</h2>
+        <p class="body text-soft mt-4" style="max-width:48ch;margin-inline:auto">Get exclusive offers, new menu alerts, and stories from behind the bar. No spam, just good vibes.</p>
+        <form class="newsletter__form" id="newsletterForm">
+          <div class="newsletter__input-wrap">
+            <input type="email" class="input newsletter__input" placeholder="Enter your email" required aria-label="Email address">
+            <button type="submit" class="btn btn--accent">Subscribe</button>
+          </div>
+        </form>
+      </div>
+      <!-- Decorative elements -->
+      <div class="newsletter__deco newsletter__deco--1" aria-hidden="true"></div>
+      <div class="newsletter__deco newsletter__deco--2" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================================
+     15. FOOTER â€” Premium Large Footer
+     ============================================= -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a href="#" class="nav__logo" style="margin-bottom:var(--s-4)">
+          <span class="nav__logo-icon">
+            <svg width="40" height="40" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="17" stroke="currentColor" stroke-width="1.5"/><path d="M12 24V14c0-3.3 2.7-6 6-6s6 2.7 6 6v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 24h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M26 16c1.7 0 3 1.3 3 3v1c0 1.7-1.3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="18" cy="28" r="1" fill="currentColor"/></svg>
+          </span>
+          <div class="nav__logo-text">
+            <span class="nav__logo-name" style="color:var(--c-ink)">FU FUT</span>
+            <span class="nav__logo-sub" style="color:var(--c-ink-soft)">COFFEE</span>
+          </div>
+        </a>
+        <p class="body-sm text-soft" style="max-width:32ch">Premium Ethiopian coffee and cuisine. Where heritage meets modern taste.</p>
+        <div class="footer__social mt-5">
+          <a href="#" class="btn-icon" aria-label="Instagram"><i data-lucide="instagram" style="width:20px;height:20px"></i></a>
+          <a href="#" class="btn-icon" aria-label="Facebook"><i data-lucide="facebook" style="width:20px;height:20px"></i></a>
+          <a href="#" class="btn-icon" aria-label="Twitter"><i data-lucide="twitter" style="width:20px;height:20px"></i></a>
+          <a href="#" class="btn-icon" aria-label="TikTok"><i data-lucide="music" style="width:20px;height:20px"></i></a>
+        </div>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Quick Links</h4>
+        <ul class="footer__links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#coffee">Coffee</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Services</h4>
+        <ul class="footer__links">
+          <li><a href="#ceremony">Coffee Ceremony</a></li>
+          <li><a href="#reservation">Reservations</a></li>
+          <li><a href="#menu">Order Online</a></li>
+          <li><a href="#">Catering</a></li>
+          <li><a href="#">Events</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Opening Hours</h4>
+        <ul class="footer__links footer__hours">
+          <li><span>Mon â€“ Fri</span><span>7 AM â€“ 11 PM</span></li>
+          <li><span>Saturday</span><span>8 AM â€“ 12 AM</span></li>
+          <li><span>Sunday</span><span>8 AM â€“ 12 AM</span></li>
+        </ul>
+        <div class="footer__address mt-5">
+          <p class="body-sm text-soft">Bole Road, near Edna Mall<br>Addis Ababa, Ethiopia</p>
+          <p class="body-sm text-accent mt-4">+251 911 234 567</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin-block:0">
+
+    <div class="footer__bottom">
+      <p class="body-sm text-faint">&copy; 2026 FU FUT COFFEE. All rights reserved.</p>
+      <div class="footer__bottom-links">
+        <a href="#" class="body-sm text-faint">Privacy Policy</a>
+        <a href="#" class="body-sm text-faint">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- =============================================
+     TOAST NOTIFICATION (hidden)
+     ============================================= -->
+<div class="toast" id="toast" role="alert" aria-live="polite">
+  <i data-lucide="check-circle" style="width:20px;height:20px;color:var(--c-success)"></i>
+  <span class="toast__msg"></span>
+</div>
+
+<!-- =============================================
+     BACK TO TOP
+     ============================================= -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <i data-lucide="chevron-up" style="width:24px;height:24px"></i>
+</button>
+
+<!-- Scripts -->
+<script src="js/main.js"></script>
+</body>
+</html>
+

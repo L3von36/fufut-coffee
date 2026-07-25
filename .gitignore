@@ -1,0 +1,51 @@
+# Python
+*.pyc
+__pycache__/
+*.py
+
+# Large media files
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Zip archives
+*.zip
+
+# Design system (not needed for deployment)
+Fu Fut Coffee Design System/
+
+# Coffee shop backend (deployed separately)
+coffee-shop/
+
+# Agent skill directories
+.agents/
+.augment/
+.claude/
+.codebuddy/
+.codewhale/
+.codex/
+.continue/
+.crush/
+.cursor/
+.factory/
+.gemini/
+.github/
+.kilocode/
+.kiro/
+.mimocode/
+.opencode/
+.poolside/
+.qoder/
+.roo/
+.trae/
+.warp/
+.windsurf/
+
+# Other
+AGENTS.md
+propmt.txt
+image2.JPG
+logo.jpg
+logo2.jpg
+photo_*.jpg
