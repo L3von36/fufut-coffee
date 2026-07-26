@@ -1,5 +1,5 @@
 name = "fufut-coffee"
 compatibility_date = "2025-01-01"
-pages_build_output_dir = "."
+pages_build_output_dir = "website"
 
 # Cloudflare Pages deployment for the FU FUT COFFEE static website

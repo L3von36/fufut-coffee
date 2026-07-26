@@ -1,20 +1,23 @@
 # Cache static assets
-/assets/*
+/website/assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-/css/*
+/website/css/*
   Cache-Control: public, max-age=31536000, immutable
 
-/js/*
+/website/js/*
   Cache-Control: public, max-age=31536000, immutable
 
-/favicon.ico
+/website/favicon.ico
   Cache-Control: public, max-age=31536000, immutable
 
-/favicon-*.png
+/website/favicon-*.png
   Cache-Control: public, max-age=31536000, immutable
 
-/apple-touch-icon.png
+/website/apple-touch-icon.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/coffee-shop/assets/*
   Cache-Control: public, max-age=31536000, immutable
 
 # HTML files should not be cached
