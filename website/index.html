@@ -235,20 +235,32 @@
         .nav-actions { display: flex; gap: 12px; align-items: center; }
         .btn-outline-nav {
             padding: 10px 20px; border-radius: var(--radius-pill);
-            border: 1px solid currentColor; background: transparent;
+            border: 1.5px solid rgba(255,255,255,.3); background: transparent;
             color: #fff; font-weight: 600; font-size: var(--text-sm);
             transition: all var(--duration-fast);
+            display: inline-flex; align-items: center; gap: 6px;
         }
-        .nav.scrolled .btn-outline-nav { color: var(--color-primary); }
-        .btn-outline-nav:hover { background: rgba(255,255,255,.1); }
-        .nav.scrolled .btn-outline-nav:hover { background: var(--teal-50); }
+        .nav.scrolled .btn-outline-nav { color: var(--color-primary); border-color: var(--color-primary); }
+        .btn-outline-nav:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.6); }
+        .nav.scrolled .btn-outline-nav:hover { background: var(--teal-50); border-color: var(--color-primary); }
         .btn-primary-nav {
             padding: 10px 20px; border-radius: var(--radius-pill);
             border: none; background: var(--color-primary); color: #fff;
             font-weight: 600; font-size: var(--text-sm);
             transition: all var(--duration-fast);
+            display: inline-flex; align-items: center; gap: 6px;
+            position: relative;
         }
-        .btn-primary-nav:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+        .btn-primary-nav:hover { background: var(--color-primary-dark); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(15,123,120,.3); }
+        .btn-primary-nav .cart-badge {
+            position: absolute; top: -8px; right: -8px;
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--color-accent); color: var(--neutral-900);
+            font-size: .7rem; font-weight: 700;
+            display: none; align-items: center; justify-content: center;
+            line-height: 1;
+        }
+        .btn-primary-nav .cart-badge.visible { display: flex; }
         .nav-toggle { display: none; width: 40px; height: 40px; border-radius: 50%; border: none; background: transparent; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; z-index: 101; }
         .nav-toggle span { display: block; width: 20px; height: 2px; background: #fff; border-radius: 2px; transition: all .3s var(--ease-out); transform-origin: center; }
         .nav.scrolled .nav-toggle span { background: var(--color-primary-dark); }
@@ -476,6 +488,7 @@
             font-weight: 700; font-size: var(--text-base); cursor: pointer;
             transition: all var(--duration-base) var(--ease-out);
             box-shadow: 0 4px 20px rgba(214,179,106,.3);
+            display: inline-flex; align-items: center; gap: 8px;
         }
         .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(214,179,106,.5); background: var(--gold-700); color: #fff; }
         .btn-ghost {
@@ -484,6 +497,7 @@
             color: #fff; font-weight: 600; font-size: var(--text-base); cursor: pointer;
             transition: all var(--duration-base) var(--ease-out);
             backdrop-filter: blur(4px);
+            display: inline-flex; align-items: center; gap: 8px;
         }
         .btn-ghost:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.7); }
 
@@ -1067,7 +1081,8 @@
         .cart-drawer.open { transform: translateX(0); }
         .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border-subtle); }
         .cart-header h3 { font-family: var(--font-display); font-size: var(--text-lg); margin: 0; color: var(--text-heading); }
-        .cart-close { background: none; border: none; font-size: 28px; line-height: 1; color: var(--text-muted); cursor: pointer; }
+        .cart-close { background: none; border: none; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 24px; line-height: 1; color: var(--text-muted); cursor: pointer; border-radius: 50%; transition: all var(--duration-fast); }
+        .cart-close:hover { background: var(--teal-50); color: var(--color-primary); }
         .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 14px; }
         .cart-empty { color: var(--text-muted); text-align: center; margin-top: 40px; font-size: var(--text-sm); }
         .cart-item { display: flex; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle); }
@@ -1277,8 +1292,15 @@
             <li><a href="#reservation">Contact</a></li>
         </ul>
         <div class="nav-actions">
-            <button class="btn-outline-nav" data-scroll="#reservation">Reserve Table</button>
-            <button class="btn-primary-nav" data-scroll="#menu">Order Online</button>
+            <button class="btn-outline-nav" data-scroll="#reservation" onclick="event.stopPropagation()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Reserve
+            </button>
+            <button class="btn-primary-nav" id="navOrderBtn" onclick="event.stopPropagation()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                Order
+                <span class="cart-badge" id="navCartBadge">0</span>
+            </button>
         </div>
         <button class="nav-toggle" id="navToggle" aria-label="Menu">
             <span></span><span></span><span></span>
@@ -1317,8 +1339,14 @@
             <h1>Experience Authentic<br>Ethiopian <span class="accent">Coffee</span></h1>
             <p class="hero-sub">Where tradition meets modern taste. Single-origin beans, ceremony-brewed, served with heart.</p>
             <div class="hero-btns">
-                <button class="btn-gold" data-scroll="#reservation">Reserve Table</button>
-                <button class="btn-ghost" data-scroll="#menu">View Menu</button>
+                <button class="btn-gold" data-scroll="#reservation">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    Reserve Table
+                </button>
+                <button class="btn-ghost" data-scroll="#menu">
+                    View Menu
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
             </div>
         </div>
         <div class="hero-scroll">
@@ -2176,6 +2204,16 @@
         }, 3000);
     });
 
+    // ===== NAV BUTTONS - SMART ORDER =====
+    document.getElementById('navOrderBtn').addEventListener('click', function() {
+        if (cart.length > 0) {
+            openCart();
+        } else {
+            var t = document.querySelector('#menu');
+            if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+
     // ===== SMOOTH SCROLL =====
     document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', function(e) {
@@ -2186,7 +2224,12 @@
     });
     document.querySelectorAll('[data-scroll]').forEach(b => {
         b.addEventListener('click', function() {
-            const t = document.querySelector(this.getAttribute('data-scroll'));
+            var target = this.getAttribute('data-scroll');
+            if (target === '#menu' && cart.length > 0) {
+                openCart();
+                return;
+            }
+            const t = document.querySelector(target);
             if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
@@ -2278,6 +2321,10 @@
         var count = cart.reduce(function(s, c) { return s + c.qty; }, 0);
         document.getElementById('cartCount').textContent = count;
         document.getElementById('cartFab').style.display = count > 0 ? 'flex' : 'none';
+        var badge = document.getElementById('navCartBadge');
+        badge.textContent = count;
+        if (count > 0) badge.classList.add('visible');
+        else badge.classList.remove('visible');
     }
     function renderCart() {
         var wrap = document.getElementById('cartItems');
