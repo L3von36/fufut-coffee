@@ -358,12 +358,12 @@
 }
 
 .hero__script {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
   margin-bottom: var(--s-4);
 }
 
 .hero__h1 {
-  font-size: clamp(2.5rem, 6vw, var(--fs-100));
+  font-size: clamp(2rem, 5vw, 4.5rem);
   line-height: var(--lh-tight);
   letter-spacing: var(--ls-tight);
   margin-bottom: var(--s-4);
@@ -374,7 +374,7 @@
 }
 
 .hero__sub {
-  font-size: var(--fs-20);
+  font-size: clamp(var(--fs-14), 1.5vw, var(--fs-20));
   line-height: var(--lh-base);
   color: rgba(255, 255, 255, 0.85);
   margin-bottom: var(--s-6);
@@ -387,6 +387,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--s-3);
+  flex-wrap: wrap;
   margin-top: var(--s-6);
 }
 
@@ -534,6 +535,7 @@
    4. COFFEE CARDS
    ============================================================ */
 .coffee {
+  position: relative;
   background: linear-gradient(135deg, var(--c-light) 0%, var(--c-white) 100%);
 }
 
@@ -1016,7 +1018,7 @@
 .stat__number {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2rem, 4vw, var(--fs-80));
+  font-size: clamp(1.75rem, 3.5vw, 3.5rem);
   color: var(--c-accent);
   line-height: 1;
 }
@@ -1338,7 +1340,7 @@
 
 .footer__links a {
   color: var(--c-ink-soft);
-  transition: color var(--dur-1), color var(--c-primary);
+  transition: color var(--dur-1);
 }
 
 .footer__links a:hover {
@@ -1350,7 +1352,7 @@
   gap: var(--s-3);
 }
 
-.footer__hours span {
+.footer__hours li {
   display: flex;
   justify-content: space-between;
   gap: var(--s-4);
@@ -1525,6 +1527,34 @@
   background: var(--c-light);
 }
 
+[data-theme="dark"] .timeline__content {
+  background: var(--c-white);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .timeline__dot {
+  border-color: var(--c-bg);
+}
+
+[data-theme="dark"] .eyebrow {
+  background: var(--c-white);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .tag {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .back-to-top {
+  background: var(--c-accent);
+  color: #1a130a;
+}
+
+[data-theme="dark"] .toast {
+  background: var(--c-accent);
+  color: #1a130a;
+}
+
 [data-theme="dark"] .stats {
   background: var(--c-primary-dark);
 }
@@ -1549,26 +1579,24 @@
   .story__grid,
   .ceremony__grid,
   .reservation__grid,
-  .location__grid {
+  .location__grid,
+  .coffee__grid,
+  .menu__grid,
+  .testimonials__grid,
+  .featured__grid,
+  .gallery__grid {
     grid-template-columns: 1fr;
-    gap: var(--s-6);
+    gap: var(--s-5);
+  }
+
+  .coffee-card,
+  .menu-card,
+  .featured-card {
+    max-width: 500px;
+    margin-inline: auto;
   }
 
   .ceremony__steps {
-    grid-template-columns: 1fr;
-  }
-
-  .coffee__grid,
-  .menu__grid,
-  .testimonials__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .featured__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gallery__grid {
     grid-template-columns: 1fr;
   }
 
@@ -1594,15 +1622,43 @@
 
   .hero__btns {
     flex-direction: column;
+    align-items: stretch;
     gap: var(--s-3);
   }
 
   .hero__content {
+    max-width: 90%;
     margin-inline: auto;
+  }
+
+  .hero__sub {
+    max-width: 100%;
+  }
+
+  .btn--lg {
+    padding: 16px 28px;
+    font-size: var(--fs-14);
+  }
+
+  .ceremony__play-btn {
+    width: 56px;
+    height: 56px;
+  }
+
+  .location__map-placeholder {
+    height: 350px;
+  }
+
+  .newsletter__card {
+    padding: var(--s-6);
   }
 }
 
 @media (max-width: 768px) {
+  .nav {
+    height: 64px;
+  }
+
   .nav__links {
     display: none;
   }
@@ -1611,8 +1667,66 @@
     display: flex;
   }
 
-  .mobile-menu__links a {
-    font-size: var(--fs-18);
+  .nav__logo-name {
+    font-size: 1.2rem;
+  }
+
+  .nav__logo-icon svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .nav__actions {
+    gap: var(--s-1);
+  }
+
+  .nav__toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav__reserve,
+  .nav__order {
+    display: none;
+  }
+
+  .hero {
+    min-height: 90vh;
+    margin-top: 64px;
+  }
+
+  .hero__content {
+    max-width: 95%;
+    padding-inline: var(--s-3);
+  }
+
+  .hero__h1 {
+    font-size: clamp(1.75rem, 7vw, 3rem);
+  }
+
+  .hero__script {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+  }
+
+  .hero__sub {
+    font-size: var(--fs-14);
+  }
+
+  .story__img-accent {
+    width: 80px;
+    height: 80px;
+    bottom: -10px;
+    right: -10px;
+  }
+
+  .story__badge {
+    top: 12px;
+    left: 12px;
+    padding: var(--s-2) var(--s-3);
+  }
+
+  .section {
+    padding-block: clamp(48px, 8vw, var(--s-8));
   }
 
   .footer__top {
@@ -1624,15 +1738,8 @@
   }
 
   .stats__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .hero__h1 {
-    font-size: clamp(2rem, 7vw, var(--fs-60));
-  }
-
-  .hero__script {
-    font-size: 1.25rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-4);
   }
 
   .newsletter__input-wrap {
@@ -1642,33 +1749,173 @@
   .newsletter__deco {
     display: none;
   }
+
+  .newsletter__card {
+    padding: var(--s-5);
+  }
+
+  .location__map-placeholder {
+    height: 280px;
+  }
+
+  .ceremony__play-btn {
+    width: 48px;
+    height: 48px;
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .ceremony__play-btn i[data-lucide] {
+    width: 24px;
+    height: 24px;
+  }
+
+  .testimonial-card__avatar {
+    width: 40px;
+    height: 40px;
+    font-size: var(--fs-14);
+  }
+
+  .back-to-top {
+    width: 44px;
+    height: 44px;
+    bottom: var(--s-4);
+    right: var(--s-4);
+  }
+
+  .btn {
+    padding: 12px 20px;
+    font-size: var(--fs-13);
+  }
+
+  .btn--lg {
+    padding: 14px 24px;
+    font-size: var(--fs-14);
+  }
+
+  .btn--sm {
+    padding: 8px 14px;
+    font-size: var(--fs-11);
+  }
+
+  .btn-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .card {
+    padding: var(--s-4);
+  }
+
+  .reservation__form {
+    padding: var(--s-4);
+  }
+
+  .reservation__form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .location__card {
+    padding: var(--s-4);
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: var(--s-3);
+    text-align: center;
+    padding-block: var(--s-4);
+  }
 }
 
 @media (max-width: 480px) {
+  .hero {
+    min-height: 80vh;
+  }
+
   .hero__content {
     padding-inline: var(--s-4);
   }
 
   .hero__h1 {
-    font-size: clamp(1.75rem, 8vw, var(--fs-48));
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
   }
 
-  .hero__btns {
-    gap: var(--s-2);
-  }
-
-  .btn--lg {
-    padding: 16px 28px;
-    font-size: var(--fs-14);
+  .hero__btns .btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .menu__tabs {
     justify-content: flex-start;
+    flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: var(--s-2);
+    gap: var(--s-1);
+  }
+
+  .menu__tabs .tag {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    font-size: var(--fs-11);
+  }
+
+  .instagram__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s-2);
+  }
+
+  .stats__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-3);
+  }
+
+  .stat__number {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+  }
+
+  .stat__label {
+    font-size: var(--fs-12);
+  }
+
+  .coffee-card,
+  .menu-card {
+    max-width: 100%;
+  }
+
+  .location__map-placeholder {
+    height: 220px;
+  }
+
+  .location__actions {
+    flex-direction: column;
+  }
+
+  .footer__top {
+    gap: var(--s-4);
+  }
+
+  .footer__bottom-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-3);
+  }
+
+  .btn--lg {
+    padding: 12px 20px;
+    font-size: var(--fs-13);
+  }
+
+  .toast {
+    left: var(--s-4);
+    right: var(--s-4);
+    transform: translateY(100%);
+  }
+
+  .toast.show {
+    transform: translateY(0);
   }
 
   .section {
-    padding-block: clamp(48px, 10vw, var(--s-9));
+    padding-block: clamp(40px, 10vw, var(--s-8));
   }
 }

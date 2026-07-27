@@ -250,3 +250,72 @@ window.showToast = function(message, duration = 3000) {
     }
   });
 })();
+
+// ---------- 13. Menu Tab Switching ----------
+(function initMenuTabs() {
+  const tabs = document.querySelectorAll('[data-menu-tab]');
+  const cards = document.querySelectorAll('[data-category]');
+  if (!tabs.length || !cards.length) return;
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const category = tab.getAttribute('data-menu-tab');
+
+      tabs.forEach(t => t.classList.remove('tag--active'));
+      tab.classList.add('tag--active');
+
+      cards.forEach(card => {
+        card.classList.toggle('hide', card.getAttribute('data-category') !== category);
+      });
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    });
+  });
+})();
+
+// ---------- 14. Stats Counter Animation ----------
+(function initStatsCounter() {
+  if (PREFERS_REDUCED_MOTION) {
+    document.querySelectorAll('.stat__number').forEach(el => {
+      el.textContent = el.getAttribute('data-count');
+    });
+    return;
+  }
+
+  const statNumbers = document.querySelectorAll('.stat__number[data-count]');
+  if (!statNumbers.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  statNumbers.forEach(el => observer.observe(el));
+
+  function animateCounter(el) {
+    const target = parseInt(el.getAttribute('data-count'), 10);
+    const duration = 2000;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(target * eased);
+
+      el.textContent = current.toLocaleString();
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target.toLocaleString();
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+})();
