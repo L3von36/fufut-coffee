@@ -1,28 +1,25 @@
 # Cache static assets
-/website/assets/*
+/assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-/website/css/*
+/css/*
   Cache-Control: public, max-age=31536000, immutable
 
-/website/js/*
+/js/*
   Cache-Control: public, max-age=31536000, immutable
 
-/website/favicon.ico
+/favicon.ico
   Cache-Control: public, max-age=31536000, immutable
 
-/website/favicon-*.png
+/favicon-*.png
   Cache-Control: public, max-age=31536000, immutable
 
-/website/apple-touch-icon.png
+/apple-touch-icon.png
   Cache-Control: public, max-age=31536000, immutable
 
-/coffee-shop/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-# HTML files should not be cached
+# HTML files should not be cached — apply security headers
 /*
   X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
+  X-Frame-Options: SAMEORIGIN
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
