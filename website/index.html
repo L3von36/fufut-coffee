@@ -2760,21 +2760,36 @@
         const notes   = document.getElementById('notes').value || '';
 
         // POST to backend — shows up in admin dashboard
+        var form = this;
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+
         fetch(menuApiBase + '/api/reservations', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name === '—' ? '' : name, email, phone, date, time, guests, notes })
-        }).catch(function() {});
-
-        btn.textContent = 'Reservation Sent!';
-        btn.style.background = 'var(--success)';
-        btn.disabled = true;
-        setTimeout(function() {
-            btn.textContent = originalText;
-            btn.style.background = '';
-            btn.disabled = false;
-            document.getElementById('reservationForm').reset();
-        }, 3000);
+            body: JSON.stringify({ name: name === '—' ? '' : name, email, phone, date, time, guests: Number(guests) || guests, notes })
+        }).then(function(r) {
+            if (!r.ok) throw new Error('Request failed');
+            return r.json();
+        }).then(function(data) {
+            if (!data || data.ok === false) throw new Error('Rejected');
+            btn.textContent = 'Reservation Sent!';
+            btn.style.background = 'var(--success)';
+            setTimeout(function() {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+                form.reset();
+            }, 3000);
+        }).catch(function() {
+            btn.textContent = 'Could not send — try again';
+            btn.style.background = 'var(--danger, #c0392b)';
+            setTimeout(function() {
+                btn.textContent = originalText;
+                btn.style.background = '';
+                btn.disabled = false;
+            }, 3000);
+        });
     });
 
     // ===== SMOOTH SCROLL =====
@@ -3044,17 +3059,27 @@
         var total = items.reduce(function(s, it) { return s + it.price * it.qty; }, 0);
 
         // POST to backend — shows up in admin dashboard
+        btn.textContent = 'Sending...';
+        btn.disabled = true;
+
         fetch(menuApiBase + '/api/orders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ items: items, total: total })
-        }).catch(function() {});
-
-        showToast('Order sent!');
-        cart = []; renderCart(); updateCartFab(); closeCart();
-        btn.textContent = 'Order Sent!';
-        btn.disabled = true;
-        setTimeout(function() { btn.textContent = 'Send Order'; btn.disabled = false; }, 2500);
+        }).then(function(r) {
+            if (!r.ok) throw new Error('Request failed');
+            return r.json();
+        }).then(function(data) {
+            if (!data || data.ok === false) throw new Error('Rejected');
+            showToast('Order sent!' + (data.id ? ' Ref: ' + data.id : ''));
+            cart = []; renderCart(); updateCartFab(); closeCart();
+            btn.textContent = 'Order Sent!';
+            setTimeout(function() { btn.textContent = 'Send Order'; btn.disabled = false; }, 2500);
+        }).catch(function() {
+            showToast('Could not send your order. Please try again.');
+            btn.textContent = 'Send Order';
+            btn.disabled = false;
+        });
     });
     updateCartFab();
 
