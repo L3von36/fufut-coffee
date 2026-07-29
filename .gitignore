@@ -30,7 +30,7 @@ coffee-shop/
 .cursor/
 .factory/
 .gemini/
-.github/
+.agents/
 .kilocode/
 .kiro/
 .mimocode/
