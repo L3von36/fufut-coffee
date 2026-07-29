@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
@@ -2450,31 +2450,75 @@
         }
     }
 
-    // Fetch real menu from menus.json
+    // Fetch real menu from menus.json or API
     showSkeleton();
+
+    // Convert flat API array [{name,category,price,...}] into menus.json format {categories:[{name,items}]}
+    function convertApiToMenuFormat(flatItems) {
+        var catMap = {};
+        (flatItems || []).forEach(function(item) {
+            // Skip unavailable items on the customer-facing menu
+            if (item.available === false || item.available === 0) return;
+            var cat = item.category || 'Other';
+            if (!catMap[cat]) catMap[cat] = [];
+            catMap[cat].push({
+                name: item.name,
+                price: String(item.price || 0),
+                description: item.description || '',
+                image: item.image || '',
+                available: item.available,
+                modifiers: item.modifiers || [],
+                id: item.id || ''
+            });
+        });
+        var categories = Object.keys(catMap).map(function(name) {
+            return { name: name, items: catMap[name] };
+        });
+        return { categories: categories };
+    }
+
+    function loadMenuFromData(raw) {
+        menuData = transformMenus(raw);
+        buildTabs(raw.categories || []);
+        var firstTab = document.querySelector('.menu-tab.active');
+        if (firstTab) renderMenu(firstTab.dataset.tab);
+    }
+
+    // Determine the API base: use the same origin when served locally
+    function getMenuApiBase() {
+        try {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                // When developing locally, point to the API server
+                return 'http://localhost:3000';
+            }
+        } catch(e) {}
+        return API;
+    }
+
+    var menuApiBase = getMenuApiBase();
+
+    // 1st: try static menus.json file
     fetch('/menus.json')
-        .then(function(r) { return r.json(); })
-        .then(function(raw) {
-            menuData = transformMenus(raw);
-            buildTabs(raw.categories || []);
-            var firstTab = document.querySelector('.menu-tab.active');
-            if (firstTab) renderMenu(firstTab.dataset.tab);
+        .then(function(r) {
+            if (!r.ok) throw new Error('no menus.json');
+            return r.json();
         })
+        .then(loadMenuFromData)
         .catch(function() {
-            // Fallback: try the API endpoint
-            fetch(API + '/api/menus')
-                .then(function(r) { return r.json(); })
-                .then(function(raw) {
-                    menuData = transformMenus(raw);
-                    buildTabs(raw.categories || []);
-                    var firstTab = document.querySelector('.menu-tab.active');
-                    if (firstTab) renderMenu(firstTab.dataset.tab);
+            // 2nd: try the API endpoint (flat array) and convert
+            var apiUrl = menuApiBase + '/api/menu';
+            fetch(apiUrl, { credentials: 'include' })
+                .then(function(r) {
+                    if (!r.ok) throw new Error('API error');
+                    return r.json();
                 })
-                .catch(function() {
-                    console.warn('Could not load menus.json, showing empty menu');
+                .then(function(flatItems) {
+                    loadMenuFromData(convertApiToMenuFormat(flatItems));
+                })
+                .catch(function(err) {
+                    console.warn('Could not load menu:', err);
                 });
         });
-    // Menu is loaded from /menus.json directly (see menu section above)
 
     // ===== NAVBAR & MOBILE DRAWER =====
     // Handled by js/main.js (initMobileMenu, initNavGlass, initBackToTop)
@@ -2716,7 +2760,7 @@
         const notes   = document.getElementById('notes').value || '';
 
         // POST to backend — shows up in admin dashboard
-        fetch(API + '/api/reservations', {
+        fetch(menuApiBase + '/api/reservations', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: name === '—' ? '' : name, email, phone, date, time, guests, notes })
@@ -3000,7 +3044,7 @@
         var total = items.reduce(function(s, it) { return s + it.price * it.qty; }, 0);
 
         // POST to backend — shows up in admin dashboard
-        fetch(API + '/api/orders', {
+        fetch(menuApiBase + '/api/orders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ items: items, total: total })
@@ -3306,7 +3350,7 @@
             }
         } catch(e) {}
         // 2nd: try content from backend API
-        fetch(API + '/api/content').then(function(r) { return r.ok ? r.json() : null; }).then(applyContent).catch(function() {});
+        fetch(menuApiBase + '/api/content').then(function(r) { return r.ok ? r.json() : null; }).then(applyContent).catch(function() {});
     })();
     </script>
     <script src="js/main.js"></script>

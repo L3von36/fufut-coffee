@@ -1,0 +1,695 @@
+{
+  "categories": [
+    {
+      "name": "Coffee",
+      "items": [
+        {
+          "name": "Espresso",
+          "price": "80",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "single",
+            "double"
+          ],
+          "id": "M001",
+          "available": true
+        },
+        {
+          "name": "Americano",
+          "price": "100",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "hot",
+            "iced"
+          ],
+          "id": "M002",
+          "available": true
+        },
+        {
+          "name": "Cappuccino",
+          "price": "130",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "hot",
+            "iced",
+            "oat-milk"
+          ],
+          "id": "M003",
+          "available": true
+        },
+        {
+          "name": "Latte",
+          "price": "140",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "hot",
+            "iced",
+            "oat-milk",
+            "vanilla",
+            "caramel",
+            "hazelnut"
+          ],
+          "id": "M004",
+          "available": true
+        },
+        {
+          "name": "Mocha",
+          "price": "160",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "hot",
+            "iced",
+            "whipped-cream"
+          ],
+          "id": "M005",
+          "available": true
+        },
+        {
+          "name": "Macchiato",
+          "price": "120",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "single",
+            "double"
+          ],
+          "id": "M006",
+          "available": true
+        },
+        {
+          "name": "Flat White",
+          "price": "150",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M007",
+          "available": true
+        },
+        {
+          "name": "Drip Coffee",
+          "price": "60",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "id": "M008",
+          "available": true
+        },
+        {
+          "name": "Pour Over",
+          "price": "120",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "single-origin"
+          ],
+          "id": "M009",
+          "available": true
+        },
+        {
+          "name": "French Press",
+          "price": "150",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M010",
+          "available": true
+        },
+        {
+          "name": "Test Item",
+          "price": "100",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "hot"
+          ],
+          "id": "Ma2c01efc",
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Drinks",
+      "items": [
+        {
+          "name": "Cold Brew",
+          "price": "130",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "black",
+            "vanilla",
+            "sweet-cream"
+          ],
+          "id": "M011",
+          "available": true
+        },
+        {
+          "name": "Iced Tea",
+          "price": "90",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "lemon",
+            "peach",
+            "mint"
+          ],
+          "id": "M012",
+          "available": true
+        },
+        {
+          "name": "Frappuccino",
+          "price": "180",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "mocha",
+            "caramel",
+            "vanilla",
+            "strawberry"
+          ],
+          "id": "M013",
+          "available": true
+        },
+        {
+          "name": "Smoothie",
+          "price": "200",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "mango",
+            "banana-berry",
+            "green"
+          ],
+          "id": "M014",
+          "available": true
+        },
+        {
+          "name": "Fresh Juice",
+          "price": "150",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "orange",
+            "mango",
+            "papaya",
+            "watermelon"
+          ],
+          "id": "M015",
+          "available": true
+        },
+        {
+          "name": "Ethiopian Tea",
+          "price": "60",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "black",
+            "chai",
+            "honey"
+          ],
+          "id": "M016",
+          "available": true
+        },
+        {
+          "name": "Mineral Water",
+          "price": "30",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "sparkling",
+            "still"
+          ],
+          "id": "M017",
+          "available": true
+        },
+        {
+          "name": "Tea",
+          "price": "40",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "black",
+            "green",
+            "chai",
+            "herbal",
+            "honey"
+          ],
+          "id": "M048",
+          "available": true
+        },
+        {
+          "name": "Soft Drinks",
+          "price": "50",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "coke",
+            "sprite",
+            "fanta",
+            "pepsi"
+          ],
+          "id": "M049",
+          "available": true
+        },
+        {
+          "name": "Water",
+          "price": "20",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M050",
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Pastries",
+      "items": [
+        {
+          "name": "Croissant",
+          "price": "120",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "plain",
+            "chocolate",
+            "cheese"
+          ],
+          "id": "M018",
+          "available": true
+        },
+        {
+          "name": "Muffin",
+          "price": "100",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "blueberry",
+            "chocolate",
+            "banana"
+          ],
+          "id": "M019",
+          "available": true
+        },
+        {
+          "name": "Bagel",
+          "price": "90",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "plain",
+            "sesame",
+            "cream-cheese"
+          ],
+          "id": "M020",
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Breakfast",
+      "items": [
+        {
+          "name": "Croissant Sandwich",
+          "price": "220",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "chicken",
+            "veggie",
+            "cheese"
+          ],
+          "id": "M021",
+          "available": true
+        },
+        {
+          "name": "Full Breakfast",
+          "price": "350",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "eggs any style",
+            "eggs scrambled",
+            "eggs fried"
+          ],
+          "id": "M022",
+          "available": true
+        },
+        {
+          "name": "Omelette",
+          "price": "250",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "cheese",
+            "mushroom",
+            "mixed",
+            "veggie"
+          ],
+          "id": "M023",
+          "available": true
+        },
+        {
+          "name": "Pancakes",
+          "price": "200",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "maple",
+            "honey",
+            "chocolate",
+            "mixed-berry"
+          ],
+          "id": "M024",
+          "available": true
+        },
+        {
+          "name": "French Toast",
+          "price": "220",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "classic",
+            "caramel",
+            "berry"
+          ],
+          "id": "M025",
+          "available": true
+        },
+        {
+          "name": "Fruit Bowl",
+          "price": "180",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M026",
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Appetizers",
+      "items": [
+        {
+          "name": "Sambusa",
+          "price": "150",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "lentil",
+            "meat",
+            "vegetable"
+          ],
+          "id": "M027",
+          "available": true
+        },
+        {
+          "name": "Spring Rolls",
+          "price": "180",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "vegetable",
+            "chicken",
+            "shrimp"
+          ],
+          "id": "M028",
+          "available": true
+        },
+        {
+          "name": "French Fries",
+          "price": "120",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "regular",
+            "spicy",
+            "cheese"
+          ],
+          "id": "M029",
+          "available": true
+        },
+        {
+          "name": "Onion Rings",
+          "price": "140",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M030",
+          "available": true
+        },
+        {
+          "name": "Chicken Wings",
+          "price": "280",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "BBQ",
+            "hot",
+            "honey-garlic",
+            "lemon-pepper"
+          ],
+          "id": "M031",
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Salads",
+      "items": [
+        {
+          "name": "Mixed Salad",
+          "price": "200",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "caesar",
+            "garden",
+            "greek",
+            "feta"
+          ],
+          "id": "M032",
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Mains",
+      "items": [
+        {
+          "name": "Pasta",
+          "price": "320",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "bolognese",
+            "carbonara",
+            "alfredo",
+            "arrabbiata",
+            "pesto"
+          ],
+          "id": "M033",
+          "available": true
+        },
+        {
+          "name": "Pizza",
+          "price": "380",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "margherita",
+            "pepperoni",
+            "vegetarian",
+            "hawaiian",
+            "spicy"
+          ],
+          "id": "M034",
+          "available": true
+        },
+        {
+          "name": "Grilled Chicken",
+          "price": "350",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "rice",
+            "fries",
+            "salad",
+            "injera"
+          ],
+          "id": "M035",
+          "available": true
+        },
+        {
+          "name": "Beef Steak",
+          "price": "550",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "rare",
+            "medium",
+            "well-done",
+            "pepper-sauce",
+            "mushroom-sauce"
+          ],
+          "id": "M036",
+          "available": true
+        },
+        {
+          "name": "Burger",
+          "price": "320",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "beef",
+            "chicken",
+            "veggie",
+            "cheese",
+            "bacon"
+          ],
+          "id": "M037",
+          "available": true
+        },
+        {
+          "name": "Club Sandwich",
+          "price": "250",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "chicken",
+            "turkey",
+            "veggie"
+          ],
+          "id": "M038",
+          "available": true
+        },
+        {
+          "name": "Shiro Wat",
+          "price": "220",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "with injera",
+            "with rice",
+            "with bread"
+          ],
+          "id": "M039",
+          "available": true
+        },
+        {
+          "name": "Tibs",
+          "price": "380",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "beef",
+            "lamb",
+            "chicken",
+            "with injera",
+            "with rice"
+          ],
+          "id": "M040",
+          "available": true
+        },
+        {
+          "name": "Doro Wat",
+          "price": "350",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "with injera",
+            "with rice",
+            "spicy",
+            "mild"
+          ],
+          "id": "M041",
+          "available": true
+        },
+        {
+          "name": "Fish & Chips",
+          "price": "380",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M042",
+          "available": true
+        }
+      ]
+    },
+    {
+      "name": "Desserts",
+      "items": [
+        {
+          "name": "Cake Slice",
+          "price": "180",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "chocolate",
+            "carrot",
+            "cheesecake",
+            "red-velvet"
+          ],
+          "id": "M043",
+          "available": true
+        },
+        {
+          "name": "Ice Cream",
+          "price": "120",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "vanilla",
+            "chocolate",
+            "strawberry",
+            "mango",
+            "mixed"
+          ],
+          "id": "M044",
+          "available": true
+        },
+        {
+          "name": "Cheesecake",
+          "price": "250",
+          "description": "",
+          "image": "",
+          "modifiers": [
+            "new-york",
+            "caramel",
+            "berry",
+            "chocolate"
+          ],
+          "id": "M045",
+          "available": true
+        },
+        {
+          "name": "Tiramisu",
+          "price": "220",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M046",
+          "available": true
+        },
+        {
+          "name": "Fruit Platter",
+          "price": "250",
+          "description": "",
+          "image": "",
+          "modifiers": [],
+          "id": "M047",
+          "available": true
+        }
+      ]
+    }
+  ]
+}
