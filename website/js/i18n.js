@@ -383,7 +383,7 @@
 
   /* ---------- Inject CSS ---------- */
   var css = document.createElement('style');
-  css.textContent = '
+  css.textContent = `
     .lang-switcher {
       display: flex;
       align-items: center;
@@ -495,7 +495,7 @@
       font-family: "Noto Sans Ethiopic", var(--font-body);
       line-height: 2;
     }
-  ';
+  `;
   document.head.appendChild(css);
 
   /* ---------- Initialize ---------- */
