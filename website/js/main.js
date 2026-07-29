@@ -1,234 +1,128 @@
 /* ============================================================
    FU FUT COFFEE — Main JavaScript
-   Reveal animations, dark mode, mobile menu, forms, toast
+   Stable, null-safe interactions essential for page functionality
    ============================================================ */
 
 // ---------- 1. Reduced Motion Check ----------
 const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// ---------- 2. Lucide Icons ----------
-if (typeof lucide !== 'undefined') {
-  lucide.createIcons();
-}
-
-// ---------- 3. Reveal-on-Scroll ----------
-(function initReveal() {
-  const revealElements = document.querySelectorAll('[data-reveal]');
-
-  // If user prefers reduced motion, show all elements immediately
-  if (PREFERS_REDUCED_MOTION) {
-    revealElements.forEach(el => {
-      el.classList.add('in-view');
-    });
-    return;
-  }
-
-  // Use IntersectionObserver for reveal animations
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  });
-
-  revealElements.forEach(el => observer.observe(el));
-})();
-
-// ---------- 4. Dark Mode Toggle ----------
-(function initDarkMode() {
-  const toggle = document.getElementById('darkToggle');
-  if (!toggle) return;
-
-  // Check for saved preference or system preference
-  const savedTheme = localStorage.getItem('theme');
-  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const currentTheme = savedTheme || (systemDark ? 'dark' : 'light');
-  document.documentElement.setAttribute('data-theme', currentTheme);
-
-  // Update icon visibility
-  const iconSun = toggle.querySelector('.icon-sun');
-  const iconMoon = toggle.querySelector('.icon-moon');
-
-  function updateIcons(theme) {
-    if (iconSun && iconMoon) {
-      if (theme === 'dark') {
-        iconSun.style.display = 'none';
-        iconMoon.style.display = 'inline-block';
-      } else {
-        iconSun.style.display = 'inline-block';
-        iconMoon.style.display = 'none';
-      }
-    }
-  }
-
-  updateIcons(currentTheme);
-
-  toggle.addEventListener('click', () => {
-    const theme = document.documentElement.getAttribute('data-theme');
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    updateIcons(newTheme);
-  });
-})();
-
-// ---------- 5. Language Toggle ----------
-(function initLangToggle() {
-  const toggle = document.getElementById('langToggle');
-  if (!toggle) return;
-
-  toggle.addEventListener('click', () => {
-    // Simple EN/አማ toggle — in a real app this would swap content
-    const current = toggle.querySelector('span').textContent;
-    toggle.querySelector('span').textContent = current === 'EN' ? 'አማ' : 'EN';
-  });
-})();
-
-// ---------- 6. Mobile Menu Toggle ----------
+// ---------- 2. Mobile Menu Toggle ----------
 (function initMobileMenu() {
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const mobileClose = document.getElementById('mobileClose');
+  const nav = document.getElementById('nav');
+  const toggle = document.getElementById('navToggle');
+  const backdrop = document.getElementById('navBackdrop');
+  const drawer = document.getElementById('navDrawer');
 
-  if (!hamburger || !mobileMenu) return;
+  if (!nav || !toggle) return;
 
   function openMenu() {
-    mobileMenu.classList.add('open');
-    hamburger.setAttribute('aria-expanded', 'true');
+    nav.classList.add('mobile-open');
+    toggle.classList.add('active');
+    toggle.setAttribute('aria-expanded', 'true');
     document.body.style.overflow = 'hidden';
   }
 
   function closeMenu() {
-    mobileMenu.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
+    nav.classList.remove('mobile-open');
+    toggle.classList.remove('active');
+    toggle.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
   }
 
-  hamburger.addEventListener('click', openMenu);
+  toggle.addEventListener('click', function() {
+    if (nav.classList.contains('mobile-open')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
 
-  if (mobileClose) {
-    mobileClose.addEventListener('click', closeMenu);
+  // Close button in drawer header
+  var drawerClose = document.querySelector('.nav-drawer-close');
+  if (drawerClose) {
+    drawerClose.addEventListener('click', closeMenu);
   }
 
-  // Close menu when clicking outside
-  mobileMenu.addEventListener('click', (e) => {
-    if (e.target === mobileMenu) closeMenu();
-  });
+  // Close on backdrop click
+  if (backdrop) {
+    backdrop.addEventListener('click', closeMenu);
+  }
 
   // Close menu when clicking a link
-  const mobileLinks = mobileMenu.querySelectorAll('a');
-  mobileLinks.forEach(link => {
-    link.addEventListener('click', closeMenu);
-  });
+  if (drawer) {
+    drawer.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', closeMenu);
+    });
+  }
 
-  // Close menu on escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+  // Close menu on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && nav.classList.contains('mobile-open')) {
       closeMenu();
     }
   });
 })();
 
-// ---------- 7. Back to Top Button ----------
+// ---------- 3. Navbar Glass Effect on Scroll ----------
+(function initNavGlass() {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 20) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  }, { passive: true });
+})();
+
+// ---------- 4. Back to Top Button ----------
 (function initBackToTop() {
-  const btn = document.getElementById('backToTop');
+  var btn = document.getElementById('backToTop');
   if (!btn) return;
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 600) {
-      btn.classList.add('visible');
-    } else {
-      btn.classList.remove('visible');
-    }
-  });
+  window.addEventListener('scroll', function() {
+    btn.classList.toggle('visible', window.scrollY > 600);
+  }, { passive: true });
 
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 })();
 
-// ---------- 8. Toast Notification ----------
-window.showToast = function(message, duration = 3000) {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
+// ---------- 5. Reveal-on-Scroll (IntersectionObserver) ----------
+// Complements GSAP ScrollTrigger — catches any [data-reveal] elements
+(function initReveal() {
+  const revealElements = document.querySelectorAll('[data-reveal]');
+  if (!revealElements.length) return;
 
-  const msgEl = toast.querySelector('.toast__msg');
-  if (msgEl) msgEl.textContent = message;
+  if (PREFERS_REDUCED_MOTION) {
+    revealElements.forEach(function(el) { el.classList.add('in-view'); });
+    return;
+  }
 
-  toast.classList.add('show');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, duration);
-};
-
-// ---------- 9. Reservation Form ----------
-(function initReservationForm() {
-  const form = document.getElementById('reservationForm');
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const name = form.querySelector('#resName').value.trim();
-    const email = form.querySelector('#resEmail').value.trim();
-    const date = form.querySelector('#resDate').value;
-    const time = form.querySelector('#resTime').value;
-    const guests = form.querySelector('#resGuests').value;
-
-    if (!name || !email || !date || !time || !guests) {
-      window.showToast('Please fill in all required fields.');
-      return;
-    }
-
-    // In a real app, this would POST to /api/reservations
-    // For now, show a success message
-    window.showToast(`Reservation confirmed for ${name} on ${date} at ${time}!`);
-    form.reset();
-  });
+  revealElements.forEach(function(el) { observer.observe(el); });
 })();
 
-// ---------- 10. Newsletter Form ----------
-(function initNewsletterForm() {
-  const form = document.getElementById('newsletterForm');
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const emailInput = form.querySelector('input[type="email"]');
-    const email = emailInput ? emailInput.value.trim() : '';
-
-    if (!email) {
-      window.showToast('Please enter your email address.');
-      return;
-    }
-
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      window.showToast('Please enter a valid email address.');
-      return;
-    }
-
-    window.showToast(`Thanks for subscribing, ${email}!`);
-    form.reset();
-  });
-})();
-
-// ---------- 11. Smooth Scroll for Anchor Links ----------
+// ---------- 6. Smooth Scroll for Anchor Links ----------
 (function initSmoothScroll() {
-  // Skip if user prefers reduced motion
   if (PREFERS_REDUCED_MOTION) return;
 
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
     anchor.addEventListener('click', function(e) {
-      const target = document.querySelector(this.getAttribute('href'));
+      var href = this.getAttribute('href');
+      if (href === '#') return;
+      var target = document.querySelector(href);
       if (target) {
         e.preventDefault();
         target.scrollIntoView({ behavior: 'smooth' });
@@ -237,16 +131,51 @@ window.showToast = function(message, duration = 3000) {
   });
 })();
 
-// ---------- 12. Navbar Glass Effect on Scroll ----------
-(function initNavGlass() {
-  const nav = document.getElementById('nav');
-  if (!nav) return;
+// ---------- 7. Toast Notification (shared utility) ----------
+// Only define if inline script hasn't already defined it
+if (typeof window.showToast !== 'function') {
+  window.showToast = function(message, duration) {
+    duration = duration || 3000;
+    var toast = document.getElementById('toast');
+    if (!toast) return;
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
-  });
+    var msgEl = toast.querySelector('.toast__msg');
+    if (msgEl) msgEl.textContent = message;
+
+    toast.classList.add('show');
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(function() {
+      toast.classList.remove('show');
+    }, duration);
+  };
+}
+
+// ---------- 8. Active Nav Link Highlighting ----------
+(function initActiveNav() {
+  var sections = document.querySelectorAll('section[id], div[id]');
+  var navLinks = document.querySelectorAll('.nav-links a');
+  if (!sections.length || !navLinks.length) return;
+
+  function updateActiveLink() {
+    var scrollPos = window.scrollY + 120;
+    var currentId = '';
+
+    sections.forEach(function(section) {
+      var top = section.offsetTop;
+      var height = section.offsetHeight;
+      if (scrollPos >= top && scrollPos < top + height) {
+        currentId = section.id;
+      }
+    });
+
+    navLinks.forEach(function(link) {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + currentId) {
+        link.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveLink, { passive: true });
+  updateActiveLink();
 })();
