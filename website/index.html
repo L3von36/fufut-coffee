@@ -2497,24 +2497,24 @@
 
     var menuApiBase = getMenuApiBase();
 
-    // 1st: try static menus.json file
-    fetch('/menus.json')
+    // 1st: try live menu from database API
+    fetch(menuApiBase + '/api/menus')
         .then(function(r) {
-            if (!r.ok) throw new Error('no menus.json');
+            if (!r.ok) throw new Error('API error');
             return r.json();
         })
-        .then(loadMenuFromData)
+        .then(function(data) {
+            if (!data || !data.categories) throw new Error('Bad response');
+            loadMenuFromData(data);
+        })
         .catch(function() {
-            // 2nd: try the API endpoint (flat array) and convert
-            var apiUrl = menuApiBase + '/api/menu';
-            fetch(apiUrl, { credentials: 'include' })
+            // 2nd: fall back to static menus.json
+            fetch('/menus.json')
                 .then(function(r) {
-                    if (!r.ok) throw new Error('API error');
+                    if (!r.ok) throw new Error('no menus.json');
                     return r.json();
                 })
-                .then(function(flatItems) {
-                    loadMenuFromData(convertApiToMenuFormat(flatItems));
-                })
+                .then(loadMenuFromData)
                 .catch(function(err) {
                     console.warn('Could not load menu:', err);
                 });
