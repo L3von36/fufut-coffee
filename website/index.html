@@ -2657,11 +2657,17 @@
                 gsap.to('.hero-content', {
                     yPercent: -25, scale: 0.92,
                     filter: 'blur(4px)', opacity: 0.25,
-                    ease: 'power2.inOut',
+                    ease: 'none',
                     scrollTrigger: {
-                        trigger: '#hero', start: 'top top', end: 'bottom 35%', scrub: 1.2,
+                        trigger: '#hero', start: 'top top', end: 'bottom 35%', scrub: 0.6,
                         invalidateOnRefresh: true,
                         onLeaveBack: function() {
+                            gsap.set('.hero-content', {
+                                yPercent: 0, scale: 1,
+                                filter: 'blur(0px)', opacity: 1
+                            });
+                        },
+                        onEnterBack: function() {
                             gsap.set('.hero-content', {
                                 yPercent: 0, scale: 1,
                                 filter: 'blur(0px)', opacity: 1
