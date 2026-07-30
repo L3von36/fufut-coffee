@@ -2316,6 +2316,7 @@
                     <input type="text" id="cartName" placeholder="Your name (optional)">
                     <input type="tel" id="cartPhone" placeholder="Phone (optional)">
                 </div>
+                <input type="email" id="cartEmail" placeholder="Email for confirmation (optional)">
                 <select id="cartOrderType">
                     <option value="">Dine-in / Takeaway?</option>
                     <option value="dine-in">Dine-in</option>
@@ -3151,6 +3152,7 @@
 
         var orderName  = (document.getElementById('cartName')  || {}).value || '';
         var orderPhone = (document.getElementById('cartPhone') || {}).value || '';
+        var orderEmail = (document.getElementById('cartEmail') || {}).value || '';
         var orderType  = (document.getElementById('cartOrderType') || {}).value || '';
         var orderTable = (document.getElementById('cartTable') || {}).value || '';
         var orderNotes = (document.getElementById('cartNotes') || {}).value || '';
@@ -3163,6 +3165,7 @@
                 total: total,
                 name: orderName,
                 phone: orderPhone,
+                email: orderEmail,
                 order_type: orderType,
                 table_number: orderTable,
                 notes: orderNotes,
