@@ -3162,6 +3162,17 @@
         document.addEventListener('DOMContentLoaded', initGallery);
     } else { initGallery(); }
 
+    // Expose gallery rebuild so applyContent can swap in DB images after async fetch
+    window.rebuildGallery = function(items) {
+        var mapped = items.filter(function(g) { return g.url || g.src; }).map(function(g, i) {
+            return { src: g.url || g.src, alt: g.title || '', title: g.title || '', desc: g.desc || '' };
+        });
+        if (!mapped.length) return;
+        galleryData.splice(0, galleryData.length);
+        mapped.forEach(function(g) { galleryData.push(g); });
+        initGallery();
+    };
+
     // ===== LIGHTBOX =====
     function openLightbox(index) {
         var data = galleryData[index];
@@ -3393,6 +3404,7 @@
             var cerTitle   = cr.title   || c.cerTitle   || '';
             var cerDesc    = cr.desc    || c.cerDesc    || '';
             var cerCta     = cr.cta     || c.cerCta     || '';
+            var cerImage   = cr.image   || c.cerImage   || '';
             if (cEye   && cerEyebrow) cEye.textContent   = cerEyebrow;
             if (cTitle && cerTitle)   cTitle.textContent = cerTitle;
             if (cDesc  && cerDesc)    cDesc.textContent  = cerDesc;
@@ -3415,6 +3427,15 @@
                 if (s3x) cSteps[2].querySelector('p').textContent  = s3x;
             }
             if (cCta && cerCta) cCta.textContent = cerCta;
+            // Ceremony photo — replace the hardcoded image if admin provided a URL
+            var cImg = document.querySelector('.ceremony-img img');
+            if (cImg && cerImage) { cImg.src = cerImage; cImg.alt = 'Coffee Ceremony'; }
+
+            // Gallery — swap in admin-managed images if provided
+            var gal = Array.isArray(c.gallery) ? c.gallery.filter(function(g) { return g.url || g.src; }) : [];
+            if (gal.length && typeof window.rebuildGallery === 'function') {
+                window.rebuildGallery(gal);
+            }
 
             // Footer
             var fDesc  = document.querySelector('.footer-brand p');
