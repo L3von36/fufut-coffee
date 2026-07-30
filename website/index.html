@@ -3314,76 +3314,147 @@
     <!-- DYNAMIC CONTENT LOADER -->
     <script>
     (function() {
+        // Normalize: support both nested API format { hero:{title,...}, story:{...}, ... }
+        // and legacy flat format { heroTitle, storyEyebrow, ... }.
+        // Admin always saves nested; this function handles both gracefully.
         function applyContent(c) {
             if (!c) return;
+            var h  = (c.hero     && typeof c.hero     === 'object') ? c.hero     : {};
+            var s  = (c.story    && typeof c.story    === 'object') ? c.story    : {};
+            var st = Array.isArray(c.stats) ? c.stats : [];
+            var cr = (c.ceremony && typeof c.ceremony === 'object') ? c.ceremony : {};
+            var ft = (c.footer   && typeof c.footer   === 'object') ? c.footer   : {};
+
             // Hero
             var hTitle = document.querySelector('.hero-content h1');
-            var hSub = document.querySelector('.hero-sub');
-            var hAmh = document.querySelector('.hero-amharic');
-            var hBtns = document.querySelectorAll('.hero-btns button');
-            if (hTitle && c.heroTitle) hTitle.innerHTML = c.heroTitle;
-            if (hSub && c.heroSub) hSub.textContent = c.heroSub;
-            if (hAmh && c.heroAmharic) hAmh.textContent = c.heroAmharic;
-            if (hBtns[0] && c.heroBtn1) hBtns[0].textContent = c.heroBtn1;
-            if (hBtns[1] && c.heroBtn2) hBtns[1].textContent = c.heroBtn2;
+            var hSub   = document.querySelector('.hero-sub');
+            var hAmh   = document.querySelector('.hero-amharic');
+            var hBtns  = document.querySelectorAll('.hero-btns button');
+            var heroTitle   = h.title    || c.heroTitle   || '';
+            var heroSub     = h.subtitle || c.heroSub     || '';
+            var heroAmharic = h.amharic  || c.heroAmharic || '';
+            var heroBtn1    = h.btn1     || c.heroBtn1    || '';
+            var heroBtn2    = h.btn2     || c.heroBtn2    || '';
+            if (hTitle   && heroTitle)   hTitle.innerHTML   = heroTitle;
+            if (hSub     && heroSub)     hSub.textContent   = heroSub;
+            if (hAmh     && heroAmharic) hAmh.textContent   = heroAmharic;
+            if (hBtns[0] && heroBtn1)    hBtns[0].textContent = heroBtn1;
+            if (hBtns[1] && heroBtn2)    hBtns[1].textContent = heroBtn2;
+
             // Story
-            var sEye = document.querySelector('#story .sec-eyebrow');
+            var sEye   = document.querySelector('#story .sec-eyebrow');
             var sTitle = document.querySelector('#story .story-text h3');
-            var sP = document.querySelectorAll('#story .story-text p');
+            var sP     = document.querySelectorAll('#story .story-text p');
             var sBadge = document.querySelectorAll('.story-badge-float');
-            var sFeat = document.querySelectorAll('.story-feat span');
-            if (sEye && c.storyEyebrow) sEye.textContent = c.storyEyebrow;
-            if (sTitle && c.storyTitle) sTitle.innerHTML = c.storyTitle;
-            if (sP[0] && c.storyP1) sP[0].textContent = c.storyP1;
-            if (sP[1] && c.storyP2) sP[1].textContent = c.storyP2;
-            if (sBadge[0]) { if (c.badge1Num) sBadge[0].querySelector('.story-badge-num').textContent = c.badge1Num; if (c.badge1Label) sBadge[0].querySelector('.story-badge-label').textContent = c.badge1Label; }
-            if (sBadge[1]) { if (c.badge2Num) sBadge[1].querySelector('.story-badge-num').textContent = c.badge2Num; if (c.badge2Label) sBadge[1].querySelector('.story-badge-label').textContent = c.badge2Label; }
+            var sFeat  = document.querySelectorAll('.story-feat span');
+            var storyEyebrow  = s.eyebrow     || c.storyEyebrow  || '';
+            var storyTitle    = s.title       || c.storyTitle     || '';
+            var storyP1       = s.p1          || c.storyP1        || '';
+            var storyP2       = s.p2          || c.storyP2        || '';
+            var badge1Num     = s.badge1Num   || c.badge1Num      || '';
+            var badge1Label   = s.badge1Label || c.badge1Label    || '';
+            var badge2Num     = s.badge2Num   || c.badge2Num      || '';
+            var badge2Label   = s.badge2Label || c.badge2Label    || '';
+            if (sEye   && storyEyebrow) sEye.textContent    = storyEyebrow;
+            if (sTitle && storyTitle)   sTitle.innerHTML    = storyTitle;
+            if (sP[0]  && storyP1)      sP[0].textContent   = storyP1;
+            if (sP[1]  && storyP2)      sP[1].textContent   = storyP2;
+            if (sBadge[0]) {
+                if (badge1Num)   sBadge[0].querySelector('.story-badge-num').textContent   = badge1Num;
+                if (badge1Label) sBadge[0].querySelector('.story-badge-label').textContent = badge1Label;
+            }
+            if (sBadge[1]) {
+                if (badge2Num)   sBadge[1].querySelector('.story-badge-num').textContent   = badge2Num;
+                if (badge2Label) sBadge[1].querySelector('.story-badge-label').textContent = badge2Label;
+            }
             if (sFeat[0] && c.feat1) sFeat[0].textContent = c.feat1;
             if (sFeat[1] && c.feat2) sFeat[1].textContent = c.feat2;
             if (sFeat[2] && c.feat3) sFeat[2].textContent = c.feat3;
             if (sFeat[3] && c.feat4) sFeat[3].textContent = c.feat4;
-            // Stats
-            var stats = document.querySelectorAll('.stat-value');
-            var sLabels = document.querySelectorAll('.stat-label');
-            if (stats[0] && c.stat1Val !== undefined) stats[0].dataset.target = c.stat1Val;
-            if (stats[1] && c.stat2Val !== undefined) stats[1].dataset.target = c.stat2Val;
-            if (stats[2] && c.stat3Val !== undefined) stats[2].dataset.target = c.stat3Val;
-            if (stats[3] && c.stat4Val !== undefined) stats[3].dataset.target = c.stat4Val;
-            if (sLabels[0] && c.stat1Label) sLabels[0].textContent = c.stat1Label;
-            if (sLabels[1] && c.stat2Label) sLabels[1].textContent = c.stat2Label;
-            if (sLabels[2] && c.stat3Label) sLabels[2].textContent = c.stat3Label;
-            if (sLabels[3] && c.stat4Label) sLabels[3].textContent = c.stat4Label;
+
+            // Stats — nested array [ {value, label}, ... ] or legacy flat stat1Val / stat1Label
+            var statEls  = document.querySelectorAll('.stat-value');
+            var statLbls = document.querySelectorAll('.stat-label');
+            for (var i = 0; i < 4; i++) {
+                var sv = (st[i] !== undefined) ? st[i].value : c['stat' + (i+1) + 'Val'];
+                var sl = (st[i] !== undefined) ? st[i].label : c['stat' + (i+1) + 'Label'];
+                if (statEls[i]  && sv !== undefined && sv !== '') statEls[i].dataset.target = sv;
+                if (statLbls[i] && sl)                            statLbls[i].textContent   = sl;
+            }
+
             // Ceremony
-            var cEye = document.querySelector('#ceremony .sec-eyebrow');
+            var cEye   = document.querySelector('#ceremony .sec-eyebrow');
             var cTitle = document.querySelector('#ceremony .sec-title');
-            var cDesc = document.querySelector('#ceremony .sec-desc');
+            var cDesc  = document.querySelector('#ceremony .sec-desc');
             var cSteps = document.querySelectorAll('.ceremony-step-text');
-            var cCta = document.querySelector('#ceremony .btn-gold');
-            if (cEye && c.cerEyebrow) cEye.textContent = c.cerEyebrow;
-            if (cTitle && c.cerTitle) cTitle.textContent = c.cerTitle;
-            if (cDesc && c.cerDesc) cDesc.textContent = c.cerDesc;
-            if (cSteps[0]) { if (c.cerS1Title) cSteps[0].querySelector('h4').textContent = c.cerS1Title; if (c.cerS1Text) cSteps[0].querySelector('p').textContent = c.cerS1Text; }
-            if (cSteps[1]) { if (c.cerS2Title) cSteps[1].querySelector('h4').textContent = c.cerS2Title; if (c.cerS2Text) cSteps[1].querySelector('p').textContent = c.cerS2Text; }
-            if (cSteps[2]) { if (c.cerS3Title) cSteps[2].querySelector('h4').textContent = c.cerS3Title; if (c.cerS3Text) cSteps[2].querySelector('p').textContent = c.cerS3Text; }
-            if (cCta && c.cerCta) cCta.textContent = c.cerCta;
+            var cCta   = document.querySelector('#ceremony .btn-gold');
+            var crSteps = Array.isArray(cr.steps) ? cr.steps : [];
+            var cerEyebrow = cr.eyebrow || c.cerEyebrow || '';
+            var cerTitle   = cr.title   || c.cerTitle   || '';
+            var cerDesc    = cr.desc    || c.cerDesc    || '';
+            var cerCta     = cr.cta     || c.cerCta     || '';
+            if (cEye   && cerEyebrow) cEye.textContent   = cerEyebrow;
+            if (cTitle && cerTitle)   cTitle.textContent = cerTitle;
+            if (cDesc  && cerDesc)    cDesc.textContent  = cerDesc;
+            if (cSteps[0]) {
+                var s1t = (crSteps[0] && crSteps[0].title) || c.cerS1Title || '';
+                var s1x = (crSteps[0] && crSteps[0].text)  || c.cerS1Text  || '';
+                if (s1t) cSteps[0].querySelector('h4').textContent = s1t;
+                if (s1x) cSteps[0].querySelector('p').textContent  = s1x;
+            }
+            if (cSteps[1]) {
+                var s2t = (crSteps[1] && crSteps[1].title) || c.cerS2Title || '';
+                var s2x = (crSteps[1] && crSteps[1].text)  || c.cerS2Text  || '';
+                if (s2t) cSteps[1].querySelector('h4').textContent = s2t;
+                if (s2x) cSteps[1].querySelector('p').textContent  = s2x;
+            }
+            if (cSteps[2]) {
+                var s3t = (crSteps[2] && crSteps[2].title) || c.cerS3Title || '';
+                var s3x = (crSteps[2] && crSteps[2].text)  || c.cerS3Text  || '';
+                if (s3t) cSteps[2].querySelector('h4').textContent = s3t;
+                if (s3x) cSteps[2].querySelector('p').textContent  = s3x;
+            }
+            if (cCta && cerCta) cCta.textContent = cerCta;
+
             // Footer
-            var fDesc = document.querySelector('.footer-brand p');
-            var fYear = document.querySelector('.footer-bottom span:first-child');
+            var fDesc  = document.querySelector('.footer-brand p');
+            var fYear  = document.querySelector('.footer-bottom span:first-child');
             var fCraft = document.querySelector('.footer-bottom span:last-child');
-            if (fDesc && c.footDesc) fDesc.textContent = c.footDesc;
-            if (fYear && c.footYear) fYear.innerHTML = '&copy; ' + c.footYear + ' Fu Fut Coffee. All rights reserved.';
-            if (fCraft && c.footCraft) fCraft.textContent = c.footCraft;
+            var footDesc  = ft.desc  || c.footDesc  || '';
+            var footYear  = ft.year  || c.footYear  || '';
+            var footCraft = ft.craft || c.footCraft || '';
+            if (fDesc  && footDesc)  fDesc.textContent = footDesc;
+            if (fYear  && footYear)  fYear.innerHTML   = '&copy; ' + footYear + ' Fu Fut Coffee. All rights reserved.';
+            if (fCraft && footCraft) fCraft.textContent = footCraft;
         }
-        // 1st: try localStorage (admin edits — instant)
+
+        // Apply i18n first (so its hardcoded strings are in place), then overwrite
+        // with DB/admin content so the saved text always wins.
+        function applyWithI18n(c) {
+            if (window.FufutI18n) window.FufutI18n.setLang(window.FufutI18n.getLang());
+            applyContent(c);
+        }
+
+        // 1st: try localStorage (admin preview — instant, then re-win after i18n init)
         try {
             var raw = localStorage.getItem('fufut_admin');
             if (raw) {
                 var admin = JSON.parse(raw);
-                if (admin.content) { applyContent(admin.content); if (window.FufutI18n) window.FufutI18n.setLang(window.FufutI18n.getLang()); return; }
+                if (admin.content) {
+                    var _ac = admin.content;
+                    applyContent(_ac); // immediate (i18n not loaded yet, but fast display)
+                    // Re-apply after all scripts load so we win over i18n's DOMContentLoaded pass
+                    window.addEventListener('load', function() { applyWithI18n(_ac); }, { once: true });
+                    return;
+                }
             }
         } catch(e) {}
-        // 2nd: try content from backend API
-        fetch(menuApiBase + '/api/content').then(function(r) { return r.ok ? r.json() : null; }).then(function(c) { applyContent(c); if (window.FufutI18n) window.FufutI18n.setLang(window.FufutI18n.getLang()); }).catch(function() {});
+
+        // 2nd: fetch from backend API — cache-busted so Cloudflare never serves stale content
+        fetch(menuApiBase + '/api/content?t=' + Date.now(), { cache: 'no-store' })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(c) { applyWithI18n(c); })
+            .catch(function() {});
     })();
     </script>
     <script src="js/i18n.js"></script>
