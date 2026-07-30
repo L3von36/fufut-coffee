@@ -1456,6 +1456,40 @@
         .cart-submit:hover { background: var(--color-primary-dark); }
         .cart-submit:disabled { background: var(--neutral-300); cursor: not-allowed; }
         .cart-note { font-size: var(--text-xs); color: var(--text-muted); text-align: center; margin: 10px 0 0; }
+        .cart-customer-fields { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
+        .cart-customer-fields input, .cart-customer-fields textarea, .cart-customer-fields select {
+            width: 100%; padding: 10px 12px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+            background: var(--color-surface); color: var(--text-body); font-size: var(--text-sm); font-family: inherit;
+            transition: border-color var(--duration-fast);
+        }
+        .cart-customer-fields input:focus, .cart-customer-fields textarea:focus, .cart-customer-fields select:focus {
+            outline: none; border-color: var(--color-primary);
+        }
+        .cart-customer-fields textarea { resize: none; height: 64px; }
+        .cart-customer-row { display: flex; gap: 8px; }
+        .cart-customer-row input { flex: 1; }
+        .cart-divider { border: none; border-top: 1px solid var(--border-subtle); margin: 4px 0 14px; }
+        /* Review form */
+        #reviewSection { background: var(--neutral-0); }
+        .review-form-wrap { max-width: 560px; margin: 0 auto; padding: 40px 24px; }
+        .review-form-wrap h3 { font-size: var(--text-xl); font-weight: 700; color: var(--text-heading); margin-bottom: 8px; }
+        .review-form-wrap p { color: var(--text-muted); font-size: var(--text-sm); margin-bottom: 24px; }
+        .star-picker { display: flex; gap: 6px; margin-bottom: 20px; }
+        .star-picker button { background: none; border: none; cursor: pointer; padding: 2px; color: var(--neutral-300); transition: color var(--duration-fast); }
+        .star-picker button svg { width: 28px; height: 28px; fill: currentColor; }
+        .star-picker button.active, .star-picker button:hover ~ button { /* handled in JS */ }
+        .star-picker button.active { color: var(--color-accent); }
+        .review-form { display: flex; flex-direction: column; gap: 12px; }
+        .review-form input, .review-form textarea {
+            padding: 12px 14px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+            background: var(--color-surface); color: var(--text-body); font-size: var(--text-sm); font-family: inherit;
+        }
+        .review-form input:focus, .review-form textarea:focus { outline: none; border-color: var(--color-primary); }
+        .review-form textarea { resize: vertical; min-height: 100px; }
+        .review-submit { padding: 13px 32px; border: none; border-radius: var(--radius-pill); background: var(--color-primary); color: #fff; font-weight: 600; cursor: pointer; transition: background var(--duration-fast); width: 100%; }
+        .review-submit:hover { background: var(--color-primary-dark); }
+        .review-submit:disabled { background: var(--neutral-300); cursor: not-allowed; }
+        .review-success { display: none; text-align: center; padding: 24px; color: var(--color-primary); font-weight: 600; }
         @media(max-width:480px){ .cart-fab { bottom: 16px; right: 16px; width: 54px; height: 54px; } }
 
         /* Tablet: centered modal, single column */
@@ -2122,6 +2156,35 @@
         </div>
     </section>
 
+    <!-- REVIEW SUBMISSION FORM -->
+    <section class="section" id="reviewSection">
+        <div class="content">
+            <div class="sec-head">
+                <div class="sec-eyebrow">Share Your Experience</div>
+                <h2 class="sec-title">Leave a Review</h2>
+            </div>
+            <div class="review-form-wrap">
+                <p>Enjoyed your visit? We'd love to hear about it. Approved reviews appear on this page.</p>
+                <div id="reviewSuccess" class="review-success">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="40" height="40" style="margin-bottom:8px;display:block;margin-left:auto;margin-right:auto"><polyline points="20 6 9 17 4 12"/></svg>
+                    Thank you! Your review has been submitted and will appear after approval.
+                </div>
+                <form id="reviewForm" class="review-form">
+                    <div class="star-picker" id="starPicker" aria-label="Rating">
+                        <button type="button" data-star="1" aria-label="1 star"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                        <button type="button" data-star="2" aria-label="2 stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                        <button type="button" data-star="3" aria-label="3 stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                        <button type="button" data-star="4" aria-label="4 stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                        <button type="button" data-star="5" aria-label="5 stars"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+                    </div>
+                    <input type="text" id="reviewAuthor" placeholder="Your name" required>
+                    <textarea id="reviewText" placeholder="Tell us about your experience..." required></textarea>
+                    <button type="submit" class="review-submit">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <!-- STATS -->
     <section class="stats">
         <div class="content">
@@ -2246,6 +2309,21 @@
             <div class="cart-total-row">
                 <span data-i18n="cart.total">Total</span>
                 <span id="cartTotal">ETB 0.00</span>
+            </div>
+            <hr class="cart-divider">
+            <div class="cart-customer-fields">
+                <div class="cart-customer-row">
+                    <input type="text" id="cartName" placeholder="Your name (optional)">
+                    <input type="tel" id="cartPhone" placeholder="Phone (optional)">
+                </div>
+                <select id="cartOrderType">
+                    <option value="">Dine-in / Takeaway?</option>
+                    <option value="dine-in">Dine-in</option>
+                    <option value="takeaway">Takeaway</option>
+                    <option value="delivery">Delivery</option>
+                </select>
+                <input type="text" id="cartTable" placeholder="Table number (if dine-in)">
+                <textarea id="cartNotes" placeholder="Special requests or notes..."></textarea>
             </div>
             <button id="cartSubmit" class="cart-submit" data-i18n="cart.sendOrder">Send Order</button>
             <p class="cart-note" data-i18n="cart.note">We'll confirm your order by email.</p>
@@ -3071,10 +3149,25 @@
         btn.textContent = 'Sending...';
         btn.disabled = true;
 
+        var orderName  = (document.getElementById('cartName')  || {}).value || '';
+        var orderPhone = (document.getElementById('cartPhone') || {}).value || '';
+        var orderType  = (document.getElementById('cartOrderType') || {}).value || '';
+        var orderTable = (document.getElementById('cartTable') || {}).value || '';
+        var orderNotes = (document.getElementById('cartNotes') || {}).value || '';
+
         fetch(menuApiBase + '/api/orders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: items, total: total })
+            body: JSON.stringify({
+                items: items,
+                total: total,
+                name: orderName,
+                phone: orderPhone,
+                order_type: orderType,
+                table_number: orderTable,
+                notes: orderNotes,
+                status: 'new'
+            })
         }).then(function(r) {
             if (!r.ok) throw new Error("Request failed");
             return r.json();
@@ -3092,6 +3185,88 @@
         });
     });
     updateCartFab();
+
+    // ===== REVIEWS: load from API + submission form =====
+    (function() {
+        var STAR_SVG = '<svg viewBox="0 0 24 24" style="width:17px;height:17px;fill:var(--color-accent)"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+
+        function makeTestimonialCard(r) {
+            var stars = '';
+            var n = Math.min(5, Math.max(1, parseInt(r.rating || 5)));
+            for (var i = 0; i < n; i++) stars += STAR_SVG;
+            var name = r.author || r.name || 'Guest';
+            var text = r.text || r.review || '';
+            var role = r.role || 'Verified Guest';
+            return '<div class="testimonial-card">'
+                + '<div class="testimonial-stars">' + stars + '</div>'
+                + '<p class="testimonial-quote">\u201c' + text + '\u201d</p>'
+                + '<div class="testimonial-author">'
+                + '<div class="testimonial-avatar" style="background:var(--teal-100);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--color-primary);font-size:var(--text-sm)">'
+                + name.charAt(0).toUpperCase()
+                + '</div>'
+                + '<div><div class="testimonial-name">' + name + '</div>'
+                + '<div class="testimonial-role">' + role + '</div></div>'
+                + '</div></div>';
+        }
+
+        fetch(menuApiBase + '/api/reviews', { cache: 'no-store' })
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(reviews) {
+                if (!reviews || !reviews.length) return;
+                var track = document.getElementById('testTrack');
+                if (!track) return;
+                track.innerHTML = reviews.map(makeTestimonialCard).join('');
+            })
+            .catch(function() {});
+
+        // Star picker
+        var selectedRating = 0;
+        var picker = document.getElementById('starPicker');
+        if (picker) {
+            var btns = picker.querySelectorAll('button');
+            function updateStars(n) {
+                btns.forEach(function(b, i) {
+                    b.classList.toggle('active', i < n);
+                });
+            }
+            btns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    selectedRating = parseInt(btn.dataset.star);
+                    updateStars(selectedRating);
+                });
+                btn.addEventListener('mouseenter', function() { updateStars(parseInt(btn.dataset.star)); });
+            });
+            picker.addEventListener('mouseleave', function() { updateStars(selectedRating); });
+        }
+
+        // Review form submission
+        var reviewForm = document.getElementById('reviewForm');
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var author = document.getElementById('reviewAuthor').value.trim();
+                var text   = document.getElementById('reviewText').value.trim();
+                if (!author || !text) { showToast('Please fill in all fields.'); return; }
+                if (!selectedRating) { showToast('Please select a star rating.'); return; }
+                var btn = reviewForm.querySelector('.review-submit');
+                btn.textContent = 'Submitting...'; btn.disabled = true;
+                fetch(menuApiBase + '/api/reviews', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ author: author, text: text, rating: selectedRating, status: 'pending' })
+                }).then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (!data || data.ok === false) throw new Error(data && data.error ? data.error : 'Failed');
+                    reviewForm.style.display = 'none';
+                    var suc = document.getElementById('reviewSuccess');
+                    if (suc) { suc.style.display = 'block'; }
+                }).catch(function(err) {
+                    showToast('Could not submit review. Please try again.');
+                    btn.textContent = 'Submit Review'; btn.disabled = false;
+                });
+            });
+        }
+    })();
 
     // ===== CARD CLICK DELEGATION =====
     document.addEventListener('click', function(e) {
