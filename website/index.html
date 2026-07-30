@@ -2321,51 +2321,53 @@
     }
 
     function transformMenus(raw) {
-        // Convert menus.json categories format to tab-keyed object
         var result = {};
         (raw.categories || []).forEach(function(cat) {
             var key = slugify(cat.name);
             var catName = (cat.name || '').toLowerCase();
-            result[key] = cat.items.map(function(item) {
-                // Parse price: extract number from "600 ETB" or "420 BIRR" etc.
+            result[key] = (cat.items || []).filter(function(item) {
+                // Hide unavailable items
+                return item.available !== false && item.available !== 0;
+            }).map(function(item) {
                 var priceNum = parseFloat(item.price) || 0;
                 var desc = item.description || '';
                 var descLc = desc.toLowerCase();
 
-                // Infer dietary labels from description and category
-                var dietary = '';
-                if (descLc.indexOf('vegan') !== -1 || descLc.indexOf('ጾም') !== -1 || descLc.indexOf('fasting') !== -1) {
-                    dietary = 'Vegan';
-                } else if (descLc.indexOf('vegetarian') !== -1) {
-                    dietary = 'Vegetarian';
-                } else if (catName.indexOf('soft drink') !== -1 || catName.indexOf('juice') !== -1) {
-                    // These categories are reliably vegan (sodas, water, fruit juices)
-                    dietary = 'Vegan';
-                }
-
-                // Infer tags from description
+                // Use explicit tags from API; fall back to inference from description
                 var tags = [];
-                if (dietary === 'Vegan') {
-                    tags.push('Vegan');
-                } else if (dietary === 'Vegetarian') {
-                    tags.push('Vegetarian');
-                }
-                if (descLc.indexOf('traditional') !== -1 || descLc.indexOf('ethiopian') !== -1 || descLc.indexOf('habesha') !== -1) {
-                    tags.push('Traditional');
-                }
-                if (descLc.indexOf('spicy') !== -1 || descLc.indexOf('berbere') !== -1 || descLc.indexOf('chili') !== -1) {
-                    tags.push('Spicy');
+                if (Array.isArray(item.tags) && item.tags.length > 0) {
+                    tags = item.tags;
+                } else {
+                    // Infer dietary labels from description
+                    if (descLc.indexOf('vegan') !== -1 || descLc.indexOf('ጾም') !== -1 || descLc.indexOf('fasting') !== -1) {
+                        tags.push('Vegan');
+                    } else if (descLc.indexOf('vegetarian') !== -1) {
+                        tags.push('Vegetarian');
+                    } else if (catName.indexOf('soft drink') !== -1 || catName.indexOf('juice') !== -1) {
+                        tags.push('Vegan');
+                    }
+                    if (descLc.indexOf('traditional') !== -1 || descLc.indexOf('ethiopian') !== -1 || descLc.indexOf('habesha') !== -1) {
+                        tags.push('Traditional');
+                    }
+                    if (descLc.indexOf('spicy') !== -1 || descLc.indexOf('berbere') !== -1 || descLc.indexOf('chili') !== -1) {
+                        tags.push('Spicy');
+                    }
                 }
 
-                // Generate a best-effort image path from item name
-                var imgName = 'menu-' + (item.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '.jpg';
+                var dietary = tags.find(function(t) { return t === 'Vegan' || t === 'Vegetarian'; }) || '';
+
+                // Use real image from API; fall back to guessed filename
+                var image = item.image && item.image.trim()
+                    ? item.image
+                    : 'assets/menu-' + (item.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '.jpg';
 
                 return {
                     name: item.name,
                     price: String(priceNum),
                     desc: desc,
-                    image: 'assets/' + imgName,
+                    image: image,
                     tags: tags,
+                    modifiers: item.modifiers || [],
                     flavorNotes: '',
                     spiceLevel: '',
                     prepTime: '',
