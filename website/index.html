@@ -1456,6 +1456,29 @@
         .cart-submit:hover { background: var(--color-primary-dark); }
         .cart-submit:disabled { background: var(--neutral-300); cursor: not-allowed; }
         .cart-note { font-size: var(--text-xs); color: var(--text-muted); text-align: center; margin: 10px 0 0; }
+        /* Order confirmation panel */
+        .cart-confirm {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 40px 24px; text-align: center; gap: 12px; flex: 1;
+        }
+        .cart-confirm-icon { margin-bottom: 8px; }
+        .cart-confirm-icon svg { width: 56px; height: 56px; }
+        .cart-confirm-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 600; color: var(--text-heading); }
+        .cart-confirm-msg { font-size: var(--text-sm); color: var(--text-body); }
+        .cart-confirm-ref {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            background: var(--teal-50); border: 1px solid var(--teal-200);
+            border-radius: var(--radius-md); padding: 16px 32px; margin: 8px 0;
+        }
+        .cart-confirm-ref-label { font-size: var(--text-xs); letter-spacing: var(--tracking-wider); text-transform: uppercase; color: var(--text-muted); }
+        .cart-confirm-ref-code { font-family: ui-monospace, 'Courier New', monospace; font-size: var(--text-xl); font-weight: 700; color: var(--color-primary); letter-spacing: 0.05em; }
+        .cart-confirm-note { font-size: var(--text-xs); color: var(--text-muted); }
+        .cart-confirm-close {
+            margin-top: 8px; padding: 12px 40px; border-radius: var(--radius-pill);
+            background: var(--color-primary); color: #fff; border: none; font-size: var(--text-sm); font-weight: 600;
+            cursor: pointer; transition: background var(--duration-fast);
+        }
+        .cart-confirm-close:hover { background: var(--color-primary-dark); }
         .cart-customer-fields { padding: 0 0 14px; display: flex; flex-direction: column; gap: 8px; }
         .cart-customer-fields input, .cart-customer-fields textarea, .cart-customer-fields select {
             width: 100%; padding: 10px 12px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
@@ -2329,6 +2352,19 @@
             <button id="cartSubmit" class="cart-submit" data-i18n="cart.sendOrder">Send Order</button>
             <p class="cart-note" data-i18n="cart.note">We'll confirm your order by email.</p>
         </div>
+        <div id="cartConfirm" class="cart-confirm" style="display:none">
+            <div class="cart-confirm-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="22" stroke="var(--teal-600)" stroke-width="2.5" fill="var(--teal-50)"/><polyline points="14 25 21 32 34 18" stroke="var(--teal-600)" stroke-width="3"/></svg>
+            </div>
+            <h4 class="cart-confirm-title">Order Received!</h4>
+            <p class="cart-confirm-msg">Your order has been sent to the kitchen.</p>
+            <div class="cart-confirm-ref">
+                <span class="cart-confirm-ref-label">Reference</span>
+                <span id="cartConfirmRef" class="cart-confirm-ref-code">—</span>
+            </div>
+            <p class="cart-confirm-note">Show this reference to your server, or we'll find you.</p>
+            <button class="cart-confirm-close" onclick="closeCart()">Done</button>
+        </div>
     </div>
     <div id="cartOverlay" class="cart-overlay" onclick="closeCart()"></div>
 
@@ -3000,6 +3036,7 @@
         const price = parseFloat(document.getElementById('modalTotalPrice').textContent.replace(/[^0-9.]/g, '')) / qty;
         const image = document.getElementById('modalImageSide').style.backgroundImage.match(/url\(["']?([^"')]+)/);
         addToCart({ name: name, price: price, image: image ? image[1] : '', qty: qty });
+        openCart();
         closeDetailModal();
     }
 
@@ -3118,7 +3155,19 @@
     }
 
     function openCart() { document.getElementById('cartDrawer').classList.add('open'); document.getElementById('cartOverlay').classList.add('open'); }
-    function closeCart() { document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('cartOverlay').classList.remove('open'); }
+    function closeCart() {
+        document.getElementById('cartDrawer').classList.remove('open');
+        document.getElementById('cartOverlay').classList.remove('open');
+        // Reset confirmation panel when cart is closed
+        var confirmPanel = document.getElementById('cartConfirm');
+        var footer = document.querySelector('.cart-footer');
+        var cartItemsEl = document.getElementById('cartItems');
+        if (confirmPanel && confirmPanel.style.display !== 'none') {
+            confirmPanel.style.display = 'none';
+            if (footer) footer.style.display = '';
+            if (cartItemsEl) cartItemsEl.style.display = '';
+        }
+    }
 
 
     document.getElementById('cartSubmit').addEventListener('click', function() {
@@ -3176,11 +3225,20 @@
             return r.json();
         }).then(function(data) {
             if (!data || data.ok === false) throw new Error("Rejected");
-            showToast("Order sent!" + (data.id ? " Ref: " + data.id : ""));
-            cart = []; renderCart(); updateCartFab(); closeCart();
-            btn.textContent = window.FufutI18n ? window.FufutI18n.t("cart.orderSent") : "Order Sent!";
-            btn.disabled = true;
-            setTimeout(function() { btn.textContent = window.FufutI18n ? window.FufutI18n.t("cart.sendOrder") : "Send Order"; btn.disabled = false; }, 2500);
+            // Show in-cart confirmation panel with order reference number
+            var refEl = document.getElementById('cartConfirmRef');
+            if (refEl) refEl.textContent = data.id || '—';
+            var confirmPanel = document.getElementById('cartConfirm');
+            var footer = document.querySelector('.cart-footer');
+            var cartItemsEl = document.getElementById('cartItems');
+            if (confirmPanel) {
+                if (footer) footer.style.display = 'none';
+                if (cartItemsEl) cartItemsEl.style.display = 'none';
+                confirmPanel.style.display = 'flex';
+            }
+            cart = []; updateCartFab();
+            btn.textContent = window.FufutI18n ? window.FufutI18n.t("cart.sendOrder") : "Send Order";
+            btn.disabled = false;
         }).catch(function() {
             showToast("Could not send your order. Please try again.");
             btn.textContent = window.FufutI18n ? window.FufutI18n.t("cart.sendOrder") : "Send Order";
@@ -3277,7 +3335,7 @@
         if (orderBtn) {
             e.stopPropagation();
             const card = orderBtn.closest('[data-name]');
-            if (card) addToCart({ id: card.dataset.id || '', name: card.dataset.name, price: card.dataset.price, image: card.dataset.image });
+            if (card) { addToCart({ id: card.dataset.id || '', name: card.dataset.name, price: card.dataset.price, image: card.dataset.image }); openCart(); }
             return;
         }
         const card = e.target.closest('.coffee-card[data-name], .menu-card[data-name], .dish-card[data-name]');
