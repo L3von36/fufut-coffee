@@ -3656,7 +3656,40 @@
                 window.rebuildGallery(gal);
             }
 
-            // Footer
+            // Signature Coffee
+            var sc = (c.signatureCoffee && typeof c.signatureCoffee === 'object') ? c.signatureCoffee : {};
+            var scCards = Array.isArray(sc.cards) ? sc.cards : [];
+            var scEye   = document.querySelector('#coffee .sec-eyebrow');
+            var scTitle = document.querySelector('#coffee .sec-title');
+            if (scEye   && sc.eyebrow) scEye.textContent   = sc.eyebrow;
+            if (scTitle && sc.title)   scTitle.textContent = sc.title;
+            var coffeeCardEls = document.querySelectorAll('.coffee-card');
+            scCards.forEach(function(card, i) {
+                if (!coffeeCardEls[i]) return;
+                var el = coffeeCardEls[i];
+                if (card.name)   { el.dataset.name  = card.name;  var h3 = el.querySelector('.coffee-card-body h3'); if (h3) h3.textContent = card.name; }
+                if (card.meta)   { el.dataset.meta  = card.meta;  var mt = el.querySelector('.coffee-card-meta');    if (mt) mt.textContent = card.meta; }
+                if (card.desc)   { el.dataset.desc  = card.desc; }
+                if (card.badge)  { var bd = el.querySelector('.coffee-card-badge'); if (bd) bd.textContent = card.badge; }
+                if (card.flavor) { el.dataset.flavor = card.flavor; var fn2 = el.querySelector('.coffee-card-notes'); if (fn2) fn2.textContent = card.flavor; }
+                if (card.price)  { el.dataset.price = card.price;  var pr = el.querySelector('.coffee-card-price');  if (pr) pr.textContent = 'ETB ' + card.price; }
+                if (card.image)  { el.dataset.image = card.image;  var ci = el.querySelector('.coffee-card-img');    if (ci) ci.style.backgroundImage = "url('" + card.image + "')"; }
+            });
+
+            // Reservation section info
+            var rv = (c.reservation && typeof c.reservation === 'object') ? c.reservation : {};
+            var resEye     = document.querySelector('#reservation .sec-eyebrow');
+            var resTitle   = document.querySelector('#reservation .res-info h3');
+            var resDesc    = document.querySelector('#reservation .res-info > p');
+            var resDetails = document.querySelectorAll('.res-detail-text span');
+            if (resEye   && rv.eyebrow)      resEye.textContent      = rv.eyebrow;
+            if (resTitle && rv.title)        resTitle.innerHTML       = rv.title;
+            if (resDesc  && rv.desc)         resDesc.textContent      = rv.desc;
+            if (resDetails[0] && rv.hoursVal)    resDetails[0].textContent = rv.hoursVal;
+            if (resDetails[1] && rv.locationVal) resDetails[1].textContent = rv.locationVal;
+            if (resDetails[2] && rv.contactVal)  resDetails[2].textContent = rv.contactVal;
+
+            // Footer — brand
             var fDesc  = document.querySelector('.footer-brand p');
             var fYear  = document.querySelector('.footer-bottom span:first-child');
             var fCraft = document.querySelector('.footer-bottom span:last-child');
@@ -3666,6 +3699,33 @@
             if (fDesc  && footDesc)  fDesc.textContent = footDesc;
             if (fYear  && footYear)  fYear.innerHTML   = '&copy; ' + footYear + ' Fu Fut Coffee. All rights reserved.';
             if (fCraft && footCraft) fCraft.textContent = footCraft;
+
+            // Footer — hours column (3rd footer-col)
+            var ftHoursCol = document.querySelectorAll('.footer-col');
+            var ftHoursEl  = ftHoursCol[1] ? ftHoursCol[1].querySelectorAll('li a') : [];
+            if (ft.monFri   && ftHoursEl[0]) ftHoursEl[0].textContent = ft.monFri;
+            if (ft.sat      && ftHoursEl[1]) ftHoursEl[1].textContent = ft.sat;
+            if (ft.sun      && ftHoursEl[2]) ftHoursEl[2].textContent = ft.sun;
+            if (ft.holidays && ftHoursEl[3]) ftHoursEl[3].textContent = ft.holidays;
+
+            // Footer — contact column (4th footer-col)
+            var ftContactEl = ftHoursCol[2] ? ftHoursCol[2].querySelectorAll('li a') : [];
+            if (ft.phone    && ftContactEl[0]) { ftContactEl[0].href = 'tel:' + ft.phone.replace(/s/g,''); ftContactEl[0].textContent = ft.phone; }
+            if (ft.email    && ftContactEl[1]) { ftContactEl[1].href = 'mailto:' + ft.email; ftContactEl[1].textContent = ft.email; }
+            if (ft.address1 && ftContactEl[2]) ftContactEl[2].textContent = ft.address1;
+            if (ft.address2 && ftContactEl[3]) ftContactEl[3].textContent = ft.address2;
+
+            // Footer — social links
+            var socials = document.querySelectorAll('.footer-social a');
+            if (ft.instagram && socials[0]) socials[0].href = ft.instagram;
+            if (ft.facebook  && socials[1]) socials[1].href = ft.facebook;
+            if (ft.twitter   && socials[2]) socials[2].href = ft.twitter;
+
+            // Story features — pick from nested s.feat or legacy flat c.feat
+            if (sFeat[0] && (s.feat1 || c.feat1)) sFeat[0].textContent = s.feat1 || c.feat1;
+            if (sFeat[1] && (s.feat2 || c.feat2)) sFeat[1].textContent = s.feat2 || c.feat2;
+            if (sFeat[2] && (s.feat3 || c.feat3)) sFeat[2].textContent = s.feat3 || c.feat3;
+            if (sFeat[3] && (s.feat4 || c.feat4)) sFeat[3].textContent = s.feat4 || c.feat4;
         }
 
         // Apply i18n first (so its hardcoded strings are in place), then overwrite
