@@ -2477,6 +2477,7 @@
                     : 'assets/menu-' + (item.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '.jpg';
 
                 return {
+                    id: item.id || '',
                     name: item.name,
                     price: String(priceNum),
                     desc: desc,
@@ -2486,7 +2487,9 @@
                     flavorNotes: '',
                     spiceLevel: '',
                     prepTime: '',
-                    dietary: dietary
+                    dietary: dietary,
+                    serves: '',
+                    allergens: ''
                 };
             });
         });
@@ -2621,7 +2624,7 @@
             return r.json();
         })
         .then(function(data) {
-            if (!data || !data.categories) throw new Error('Bad response');
+            if (!data || !data.categories || !data.categories.length) throw new Error('Bad response');
             loadMenuFromData(data);
         })
         .catch(function() {
@@ -3041,7 +3044,7 @@
     }
 
     function showToast(message) {
-        const toast = document.getElementById('toastNotification');
+        const toast = document.getElementById('toast');
         document.getElementById('toastMsg').textContent = message;
         toast.classList.add('show');
         clearTimeout(toast._hideTimer);
