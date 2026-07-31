@@ -72,7 +72,7 @@
             --shadow-md:0 8px 24px rgba(7,55,53,.10),0 2px 6px rgba(7,55,53,.06);
             --shadow-lg:0 24px 60px rgba(7,55,53,.16),0 8px 16px rgba(7,55,53,.08);
             --shadow-primary-sm:0 4px 14px rgba(15,123,120,.2); --shadow-primary-md:0 6px 20px rgba(15,123,120,.35);
-            --modal-max-w:820px; --modal-min-h:480px; --modal-close-size:36px;
+            --modal-max-w:820px; --modal-min-h:360px; --modal-close-size:36px;
             --modal-overlay:rgba(7,55,53,.7);
             --glass-bg:rgba(255,255,255,.62); --glass-border:rgba(255,255,255,.4);
             --glass-blur:blur(16px);
@@ -1300,9 +1300,10 @@
         .modal-backdrop.open { opacity: 1; visibility: visible; }
         .modal-content {
             position: relative; width: 100%; max-width: var(--modal-max-w);
+            max-height: 85dvh; overflow-y: auto; overflow-x: hidden;
             background: var(--color-surface); border-radius: var(--radius-lg);
             border: 1px solid var(--border-subtle);
-            box-shadow: var(--shadow-lg); overflow: hidden;
+            box-shadow: var(--shadow-lg);
             transform: scale(0.95) translateY(10px);
             transition: transform var(--duration-base) var(--ease-out);
         }
