@@ -226,6 +226,15 @@ ul, ol { list-style: none; }
 .btn-icon:hover { transform: translateY(-2px); background: var(--c-light); }
 .btn-icon svg { width: 20px; height: 20px; }
 
+/* ---------- Button States ---------- */
+.btn-loading { opacity: .85; pointer-events: none; cursor: wait; }
+.btn-success-state { --bg: var(--c-success) !important; --fg: #fff !important; --bd: var(--c-success) !important; cursor: default; }
+.btn-error-state { --bg: var(--c-error) !important; --fg: #fff !important; --bd: var(--c-error) !important; }
+.btn-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: btnSpin .6s linear infinite; flex-shrink: 0; }
+@keyframes btnSpin { to { transform: rotate(360deg); } }
+.btn-check { font-weight: 700; font-size: 1.1em; flex-shrink: 0; }
+.btn-error-icon { font-weight: 700; font-size: 1.1em; flex-shrink: 0; }
+
 /* ---------- 12. Inputs ---------- */
 .field { display: flex; flex-direction: column; gap: 6px; }
 .label { font-size: var(--fs-12); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--c-ink-soft); }

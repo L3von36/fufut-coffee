@@ -3505,10 +3505,7 @@
         }
         var total = items.reduce(function(s, it) { return s + it.price * it.qty; }, 0);
 
-        // POST to backend — shows up in admin dashboard
-        btn.textContent = 'Sending...';
-        btn.disabled = true;
-
+        // Use buttonState utility
         var orderName  = (document.getElementById('cartName')  || {}).value || '';
         var orderPhone = (document.getElementById('cartPhone') || {}).value || '';
         var orderEmail = (document.getElementById('cartEmail') || {}).value || '';
@@ -3516,43 +3513,50 @@
         var orderTable = (document.getElementById('cartTable') || {}).value || '';
         var orderNotes = (document.getElementById('cartNotes') || {}).value || '';
 
-        fetch(menuApiBase + '/api/orders', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                items: items,
-                total: total,
-                name: orderName,
-                phone: orderPhone,
-                email: orderEmail,
-                order_type: orderType,
-                table_number: orderTable,
-                notes: orderNotes,
-                status: 'new'
-            })
-        }).then(function(r) {
-            if (!r.ok) throw new Error("Request failed");
-            return r.json();
-        }).then(function(data) {
-            if (!data || data.ok === false) throw new Error("Rejected");
-            // Show in-cart confirmation panel with order reference number
-            var refEl = document.getElementById('cartConfirmRef');
-            if (refEl) refEl.textContent = data.id || '—';
-            var confirmPanel = document.getElementById('cartConfirm');
-            var footer = document.querySelector('.cart-footer');
-            var cartItemsEl = document.getElementById('cartItems');
-            if (confirmPanel) {
-                if (footer) footer.style.display = 'none';
-                if (cartItemsEl) cartItemsEl.style.display = 'none';
-                confirmPanel.style.display = 'flex';
-            }
-            cart = []; updateCartFab();
-            btn.textContent = window.FufutI18n ? window.FufutI18n.t("cart.sendOrder") : "Send Order";
-            btn.disabled = false;
+        window.buttonState.wrap(btn, function() {
+            return fetch(menuApiBase + '/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    items: items,
+                    total: total,
+                    name: orderName,
+                    phone: orderPhone,
+                    email: orderEmail,
+                    order_type: orderType,
+                    table_number: orderTable,
+                    notes: orderNotes,
+                    status: 'new'
+                })
+            }).then(function(r) {
+                if (!r.ok) throw new Error("Request failed");
+                return r.json();
+            }).then(function(data) {
+                if (!data || data.ok === false) throw new Error("Rejected");
+                // Show in-cart confirmation panel with order reference number
+                var refEl = document.getElementById('cartConfirmRef');
+                if (refEl) refEl.textContent = data.id || '—';
+                var confirmPanel = document.getElementById('cartConfirm');
+                var footer = document.querySelector('.cart-footer');
+                var cartItemsEl = document.getElementById('cartItems');
+                if (confirmPanel) {
+                    if (footer) footer.style.display = 'none';
+                    if (cartItemsEl) cartItemsEl.style.display = 'none';
+                    confirmPanel.style.display = 'flex';
+                }
+                cart = []; updateCartFab();
+                // Reset button after success
+                setTimeout(function() {
+                    window.buttonState.reset(btn);
+                    btn.textContent = window.FufutI18n ? window.FufutI18n.t("cart.sendOrder") : "Send Order";
+                }, 2000);
+            });
+        }, 'send', {
+            loading: window.FufutI18n ? window.FufutI18n.t('cart.sending') : 'Sending...',
+            success: 'Sent ✓',
+            error: window.FufutI18n ? window.FufutI18n.t('cart.retry') : 'Try Again'
         }).catch(function() {
             showToast("Could not send your order. Please try again.");
-            btn.textContent = window.FufutI18n ? window.FufutI18n.t("cart.sendOrder") : "Send Order";
-            btn.disabled = false;
         });
     });
     updateCartFab();
@@ -3620,20 +3624,24 @@
                 if (!author || !text) { showToast('Please fill in all fields.'); return; }
                 if (!selectedRating) { showToast('Please select a star rating.'); return; }
                 var btn = reviewForm.querySelector('.review-submit');
-                btn.textContent = 'Submitting...'; btn.disabled = true;
-                fetch(menuApiBase + '/api/reviews', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ author: author, text: text, rating: selectedRating, status: 'pending' })
-                }).then(function(r) { return r.json(); })
-                .then(function(data) {
-                    if (!data || data.ok === false) throw new Error(data && data.error ? data.error : 'Failed');
-                    reviewForm.style.display = 'none';
-                    var suc = document.getElementById('reviewSuccess');
-                    if (suc) { suc.style.display = 'block'; }
+                window.buttonState.wrap(btn, function() {
+                    return fetch(menuApiBase + '/api/reviews', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ author: author, text: text, rating: selectedRating, status: 'pending' })
+                    }).then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        if (!data || data.ok === false) throw new Error(data && data.error ? data.error : 'Failed');
+                        reviewForm.style.display = 'none';
+                        var suc = document.getElementById('reviewSuccess');
+                        if (suc) { suc.style.display = 'block'; }
+                    });
+                }, 'submit', {
+                    loading: 'Submitting...',
+                    success: 'Submitted ✓',
+                    error: 'Try Again'
                 }).catch(function(err) {
                     showToast('Could not submit review. Please try again.');
-                    btn.textContent = 'Submit Review'; btn.disabled = false;
                 });
             });
         }
@@ -4124,6 +4132,7 @@
         renderCart();
     });
     </script>
+    <script src="js/buttonState.js"></script>
     <script src="js/main.js"></script>
     </body>
 </html>
