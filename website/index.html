@@ -2341,6 +2341,7 @@
     // ===== CMS CONTENT LOADER =====
     // Fetches landing page content from /api/content and populates static sections.
     // Falls back to hardcoded HTML if API is unavailable.
+    // Supports: ?preview=true (loads draft), dynamic zones (_sectionLayout)
     (function loadCmsContent() {
         var base = API;
         try {
@@ -2348,6 +2349,10 @@
                 base = 'http://localhost:3000';
             }
         } catch(e) {}
+
+        // Detect ?preview=true or ?preview=1
+        var params = new URLSearchParams(window.location.search);
+        var isPreview = params.has('preview');
 
         function setText(id, html) {
             var el = document.getElementById(id);
@@ -2365,7 +2370,66 @@
                        .replace(/&lt;span class=&quot;([^&]*)&quot;&gt;(.*?)&lt;\/span&gt;/gi, '<span class="$1">$2</span>');
         }
 
-        fetch(base + '/api/content')
+        // Show preview banner if in preview mode
+        if (isPreview) {
+            var banner = document.createElement('div');
+            banner.id = 'preview-banner';
+            banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#e67e22;color:#fff;text-align:center;padding:8px 16px;font-size:13px;font-weight:600;font-family:Inter,sans-serif;box-shadow:0 2px 12px rgba(0,0,0,.15)';
+            banner.innerHTML = 'Preview Mode — This is draft content. <a href="' + window.location.pathname + '" style="color:#fff;text-decoration:underline;margin-left:8px">Exit Preview</a>';
+            document.body.prepend(banner);
+        }
+
+        // Dynamic zones: apply section visibility and order from _sectionLayout
+        function applySectionLayout(layout) {
+            if (!Array.isArray(layout)) return;
+
+            // Map section IDs to their DOM elements
+            var sectionMap = {
+                'hero':        document.getElementById('hero'),
+                'story':       document.getElementById('story'),
+                'coffee':      document.getElementById('coffee'),
+                'menu':        document.getElementById('menu'),
+                'stats':       document.querySelector('.stats'),
+                'ceremony':    document.getElementById('ceremony'),
+                'gallery':     document.getElementById('gallery'),
+                'testimonials': document.getElementById('testimonials'),
+                'reviewSection':document.getElementById('reviewSection'),
+                'reservation': document.getElementById('reservation'),
+                'footer':      document.querySelector('.footer')
+            };
+
+            // 1. Visibility: hide sections marked as invisible
+            layout.forEach(function(sec) {
+                var el = sectionMap[sec.id];
+                if (el && sec.visible === false) {
+                    el.style.display = 'none';
+                }
+            });
+
+            // 2. Reorder: use CSS order property on parent containers
+            // Find the parent of all sections
+            var page = document.querySelector('.page') || document.body;
+            var orderedIds = layout.filter(function(s) { return s.visible !== false; }).map(function(s) { return s.id; });
+
+            orderedIds.forEach(function(id, index) {
+                var el = sectionMap[id];
+                if (el) {
+                    el.style.order = index;
+                }
+            });
+
+            // Enable CSS order on the parent
+            if (page) {
+                page.style.display = 'flex';
+                page.style.flexDirection = 'column';
+            }
+        }
+
+        // Build API URL: add ?preview=true or ?draft=true
+        var contentUrl = base + '/api/content';
+        if (isPreview) contentUrl += '?preview=true';
+
+        fetch(contentUrl)
             .then(function(r) { if (!r.ok) throw new Error('API error'); return r.json(); })
             .then(function(c) {
                 if (!c) return;
@@ -2578,7 +2642,10 @@
                     window.FufutI18n.apply();
                 }
 
-                console.log('[CMS] Landing page content loaded from API');
+                // Apply dynamic zones: section visibility and order
+                applySectionLayout(c._sectionLayout);
+
+                console.log('[CMS] Landing page content loaded from API' + (isPreview ? ' (PREVIEW MODE)' : ''));
             })
             .catch(function(err) {
                 console.warn('[CMS] Could not load content from API, using hardcoded defaults:', err);
