@@ -1359,11 +1359,29 @@
         .btn-modal-action {
             width: 100%; padding: var(--space-2); border-radius: var(--radius-pill); border: none;
             background: var(--color-primary); color: var(--neutral-0); font-weight: 600; font-size: var(--text-base);
-            transition: all var(--duration-base) var(--ease-out); cursor: pointer;
+            transition: background .25s ease, transform .18s ease, box-shadow .18s ease; cursor: pointer;
             box-shadow: var(--shadow-primary-sm);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-modal-action:hover { background: var(--color-primary-dark); transform: translateY(-2px); box-shadow: var(--shadow-primary-md); }
         .btn-modal-action:active { transform: translateY(0); }
+        .btn-modal-action.added {
+            background: #2d7a4f; pointer-events: none;
+            animation: btn-pop .25s ease;
+        }
+        @keyframes btn-pop {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.04); }
+            100% { transform: scale(1); }
+        }
+        /* Cart FAB bounce when item is added */
+        @keyframes fab-bounce {
+            0%,100% { transform: scale(1); }
+            30%     { transform: scale(1.22); }
+            60%     { transform: scale(.93); }
+            80%     { transform: scale(1.07); }
+        }
+        .cart-fab.bounce { animation: fab-bounce .5s ease; }
 
         /* ===== MODAL DETAILS BAR ===== */
         .modal-details-bar {
@@ -3056,12 +3074,38 @@
 
     function addToOrderAction() {
         const name = document.getElementById('modalTitle').textContent;
-        const qty = parseInt(document.getElementById('modalQty').textContent);
+        const qty  = parseInt(document.getElementById('modalQty').textContent);
         const price = parseFloat(document.getElementById('modalTotalPrice').textContent.replace(/[^0-9.]/g, '')) / qty;
         const image = document.getElementById('modalImageSide').style.backgroundImage.match(/url\(["']?([^"')]+)/);
+
         addToCart({ name: name, price: price, image: image ? image[1] : '', qty: qty });
-        openCart();
-        closeDetailModal();
+
+        // --- Success feedback on the button ---
+        var btn = document.getElementById('modalActionBtn');
+        var label = window.FufutI18n ? window.FufutI18n.t('modal.addToOrder') : 'Add to Order';
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:18px;height:18px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Added!';
+        btn.classList.add('added');
+
+        // Bounce the cart FAB so the user knows where their item went
+        var fab = document.getElementById('cartFab');
+        if (fab) {
+            fab.classList.remove('bounce');
+            // Force reflow so animation re-triggers even if already bouncing
+            void fab.offsetWidth;
+            fab.classList.add('bounce');
+            fab.addEventListener('animationend', function h() {
+                fab.classList.remove('bounce');
+                fab.removeEventListener('animationend', h);
+            });
+        }
+
+        // After a short pause — long enough to read "Added!" — open cart and close modal
+        setTimeout(function() {
+            btn.innerHTML = label;
+            btn.classList.remove('added');
+            closeDetailModal();
+            openCart();
+        }, 950);
     }
 
     function showToast(message) {
