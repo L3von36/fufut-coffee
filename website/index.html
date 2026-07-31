@@ -2338,6 +2338,255 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script>var API = '';</script>
     <script>
+    // ===== CMS CONTENT LOADER =====
+    // Fetches landing page content from /api/content and populates static sections.
+    // Falls back to hardcoded HTML if API is unavailable.
+    (function loadCmsContent() {
+        var base = API;
+        try {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                base = 'http://localhost:3000';
+            }
+        } catch(e) {}
+
+        function setText(id, html) {
+            var el = document.getElementById(id);
+            if (el) el.innerHTML = html;
+        }
+        function setI18n(key, text) {
+            var els = document.querySelectorAll('[data-i18n="' + key + '"]');
+            els.forEach(function(el) { el.textContent = text; });
+        }
+        function safeHtml(str) {
+            if (!str) return '';
+            // Allow <br>, <span> with class only (from CMS)
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                       .replace(/&lt;br\s*\/?&gt;/gi, '<br>')
+                       .replace(/&lt;span class=&quot;([^&]*)&quot;&gt;(.*?)&lt;\/span&gt;/gi, '<span class="$1">$2</span>');
+        }
+
+        fetch(base + '/api/content')
+            .then(function(r) { if (!r.ok) throw new Error('API error'); return r.json(); })
+            .then(function(c) {
+                if (!c) return;
+
+                // === HERO ===
+                if (c.hero) {
+                    if (c.hero.amharic) {
+                        var heroAm = document.querySelector('.hero-amharic');
+                        if (heroAm) heroAm.textContent = c.hero.amharic;
+                    }
+                    if (c.hero.title) {
+                        var heroH1 = document.querySelector('.hero-content h1');
+                        if (heroH1) heroH1.innerHTML = safeHtml(c.hero.title);
+                    }
+                    if (c.hero.subtitle) {
+                        var heroSub = document.querySelector('.hero-sub');
+                        if (heroSub) heroSub.textContent = c.hero.subtitle;
+                    }
+                    if (c.hero.btn1) {
+                        var btn1 = document.querySelector('.hero-btns .btn-gold');
+                        if (btn1) btn1.textContent = c.hero.btn1;
+                    }
+                    if (c.hero.btn2) {
+                        var btn2 = document.querySelector('.hero-btns .btn-ghost');
+                        if (btn2) btn2.textContent = c.hero.btn2;
+                    }
+                }
+
+                // === BRAND STORY ===
+                if (c.story) {
+                    if (c.story.eyebrow) setI18n('story.eyebrow', c.story.eyebrow);
+                    if (c.story.title) {
+                        var storyH3 = document.querySelector('.story-text h3');
+                        if (storyH3) storyH3.innerHTML = safeHtml(c.story.title);
+                    }
+                    if (c.story.p1) setI18n('story.p1', c.story.p1);
+                    if (c.story.p2) setI18n('story.p2', c.story.p2);
+                    if (c.story.badge1Num) setI18n('story.badge1Num', c.story.badge1Num);
+                    if (c.story.badge1Label) setI18n('story.badge1Label', c.story.badge1Label);
+                    if (c.story.badge2Num) setI18n('story.badge2Num', c.story.badge2Num);
+                    if (c.story.badge2Label) setI18n('story.badge2Label', c.story.badge2Label);
+                    if (c.story.feat1) setI18n('story.feat1', c.story.feat1);
+                    if (c.story.feat2) setI18n('story.feat2', c.story.feat2);
+                    if (c.story.feat3) setI18n('story.feat3', c.story.feat3);
+                    if (c.story.feat4) setI18n('story.feat4', c.story.feat4);
+                }
+
+                // === SIGNATURE COFFEE ===
+                if (c.signatureCoffee) {
+                    if (c.signatureCoffee.eyebrow) setI18n('coffee.eyebrow', c.signatureCoffee.eyebrow);
+                    if (c.signatureCoffee.title) setI18n('coffee.title', c.signatureCoffee.title);
+                    if (Array.isArray(c.signatureCoffee.cards)) {
+                        var coffeeGrid = document.querySelector('.coffee-grid');
+                        if (coffeeGrid) {
+                            coffeeGrid.innerHTML = c.signatureCoffee.cards.map(function(card) {
+                                var flavor = (card.flavor || '').split(',').map(function(f){return f.trim();}).slice(0,3).join(', ');
+                                return '<div class="coffee-card"'
+                                    + ' data-name="' + (card.name||'').replace(/"/g,'&quot;') + '"'
+                                    + ' data-price="' + (card.price||'') + '"'
+                                    + ' data-meta="' + (card.meta||'').replace(/"/g,'&quot;') + '"'
+                                    + ' data-desc="' + (card.desc||'').replace(/"/g,'&quot;') + '"'
+                                    + ' data-image="' + (card.image||'') + '"'
+                                    + ' data-tags="' + (card.badge||'') + '"'
+                                    + ' data-flavor="' + (card.flavor||'').replace(/"/g,'&quot;') + '"'
+                                    + ' data-dietary="Vegan" data-serves="1" data-allergens="None">'
+                                    + '<div class="coffee-card-img" style="background-image: url(\'' + (card.image||'') + '\')">'
+                                    + (card.badge ? '<span class="coffee-card-badge">' + card.badge + '</span>' : '')
+                                    + '</div>'
+                                    + '<div class="coffee-card-body">'
+                                    + '<h3>' + (card.name||'') + '</h3>'
+                                    + '<div class="coffee-card-meta">' + (card.meta||'') + '</div>'
+                                    + '<div class="coffee-card-notes">' + flavor + '</div>'
+                                    + '<div class="coffee-card-footer">'
+                                    + '<div class="coffee-card-price">ETB ' + (card.price||'0') + '</div>'
+                                    + '<button class="btn-order" data-i18n="menu.order">' + (window.FufutI18n ? window.FufutI18n.t('menu.order') : 'Order') + '</button>'
+                                    + '</div></div></div>';
+                            }).join('');
+                        }
+                    }
+                }
+
+                // === MENU SECTION HEADING ===
+                if (c.menu) {
+                    if (c.menu.script) setI18n('menu.script', c.menu.script);
+                    if (c.menu.eyebrow) setI18n('menu.eyebrow', c.menu.eyebrow);
+                    if (c.menu.title) setI18n('menu.title', c.menu.title);
+                }
+
+                // === STATS ===
+                if (Array.isArray(c.stats)) {
+                    var statEls = document.querySelectorAll('.stats .stat');
+                    c.stats.forEach(function(stat, i) {
+                        if (!statEls[i]) return;
+                        var valEl = statEls[i].querySelector('.stat-value');
+                        var lblEl = statEls[i].querySelector('.stat-label');
+                        if (valEl) valEl.setAttribute('data-target', String(stat.value || 0));
+                        if (lblEl) lblEl.textContent = stat.label || '';
+                    });
+                }
+
+                // === CEREMONY ===
+                if (c.ceremony) {
+                    if (c.ceremony.eyebrow) setI18n('ceremony.eyebrow', c.ceremony.eyebrow);
+                    if (c.ceremony.title) setI18n('ceremony.title', c.ceremony.title);
+                    if (c.ceremony.desc) setI18n('ceremony.desc', c.ceremony.desc);
+                    if (Array.isArray(c.ceremony.steps)) {
+                        c.ceremony.steps.forEach(function(step, i) {
+                            if (step.title) setI18n('ceremony.s' + (i+1) + 'Title', step.title);
+                            if (step.text) setI18n('ceremony.s' + (i+1) + 'Text', step.text);
+                        });
+                    }
+                    if (c.ceremony.cta) setI18n('ceremony.cta', c.ceremony.cta);
+                    if (c.ceremony.image) {
+                        var cerImg = document.querySelector('.ceremony-img img');
+                        if (cerImg) cerImg.src = c.ceremony.image;
+                    }
+                }
+
+                // === GALLERY SECTION HEADING ===
+                if (c.gallerySection) {
+                    if (c.gallerySection.eyebrow) setI18n('gallery.eyebrow', c.gallerySection.eyebrow);
+                    if (c.gallerySection.title) setI18n('gallery.title', c.gallerySection.title);
+                    if (c.gallerySection.desc) setI18n('gallery.desc', c.gallerySection.desc);
+                }
+
+                // === TESTIMONIALS ===
+                if (c.testimonials) {
+                    if (c.testimonials.eyebrow) setI18n('testimonials.eyebrow', c.testimonials.eyebrow);
+                    if (c.testimonials.title) setI18n('testimonials.title', c.testimonials.title);
+                }
+                // Testimonial cards from CMS
+                if (Array.isArray(c.testimonialCards) && c.testimonialCards.length > 0) {
+                    var track = document.getElementById('testTrack');
+                    if (track) {
+                        var starsSvg = '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+                        var starsHtml = starsSvg + starsSvg + starsSvg + starsSvg + starsSvg;
+                        track.innerHTML = c.testimonialCards.map(function(card) {
+                            return '<div class="testimonial-card">'
+                                + '<div class="testimonial-stars">' + starsHtml + '</div>'
+                                + '<p class="testimonial-quote">"' + (card.quote || '') + '"</p>'
+                                + '<div class="testimonial-author">'
+                                + '<div class="testimonial-avatar">' + (card.avatar ? '<img src="' + card.avatar + '" alt="' + (card.name||'') + '">' : '') + '</div>'
+                                + '<div><div class="testimonial-name">' + (card.name || '') + '</div><div class="testimonial-role">' + (card.role || '') + '</div></div>'
+                                + '</div></div>';
+                        }).join('');
+                        // Re-initialize GSAP testimonials scroll if needed
+                        if (typeof initTestimonialsScroll === 'function') initTestimonialsScroll();
+                    }
+                }
+
+                // === RESERVATION INFO ===
+                if (c.reservation) {
+                    if (c.reservation.eyebrow) setI18n('res.eyebrow', c.reservation.eyebrow);
+                    if (c.reservation.title) {
+                        var resTitle = document.querySelector('.res-info h3');
+                        if (resTitle) resTitle.innerHTML = safeHtml(c.reservation.title);
+                    }
+                    if (c.reservation.desc) setI18n('res.desc', c.reservation.desc);
+                    if (c.reservation.hoursVal) setI18n('res.hoursVal', c.reservation.hoursVal);
+                    if (c.reservation.locationVal) setI18n('res.locationVal', c.reservation.locationVal);
+                    if (c.reservation.contactVal) setI18n('res.contactVal', c.reservation.contactVal);
+                }
+
+                // === FOOTER ===
+                if (c.footer) {
+                    if (c.footer.desc) setI18n('footer.desc', c.footer.desc);
+                    if (c.footer.monFri) setI18n('footer.monFri', c.footer.monFri);
+                    if (c.footer.sat) setI18n('footer.sat', c.footer.sat);
+                    if (c.footer.sun) setI18n('footer.sun', c.footer.sun);
+                    if (c.footer.holidays) setI18n('footer.holidays', c.footer.holidays);
+                    if (c.footer.craft) setI18n('footer.crafted', c.footer.craft);
+                    if (c.footer.year) {
+                        var copyrightEl = document.querySelector('.footer-bottom span');
+                        if (copyrightEl && copyrightEl.textContent.indexOf('©') !== -1) {
+                            copyrightEl.innerHTML = '&copy; ' + c.footer.year + ' Fu Fut Coffee. All rights reserved.';
+                        }
+                    }
+                    // Social links
+                    if (c.footer.instagram && c.footer.instagram !== '#') {
+                        var igLink = document.querySelector('.footer-social a[aria-label="Instagram"]');
+                        if (igLink) igLink.href = c.footer.instagram;
+                    }
+                    if (c.footer.facebook && c.footer.facebook !== '#') {
+                        var fbLink = document.querySelector('.footer-social a[aria-label="Facebook"]');
+                        if (fbLink) fbLink.href = c.footer.facebook;
+                    }
+                    if (c.footer.twitter && c.footer.twitter !== '#') {
+                        var twLink = document.querySelector('.footer-social a[aria-label="Twitter"]');
+                        if (twLink) twLink.href = c.footer.twitter;
+                    }
+                    // Contact column
+                    if (c.footer.phone) {
+                        var phoneEl = document.querySelector('.footer-col:last-child a[href^="tel:"]');
+                        if (phoneEl) phoneEl.textContent = c.footer.phone;
+                    }
+                    if (c.footer.email) {
+                        var emailEl = document.querySelector('.footer-col:last-child a[href^="mailto:"]');
+                        if (emailEl) emailEl.textContent = c.footer.email;
+                    }
+                    if (c.footer.address1) {
+                        var addrEls = document.querySelectorAll('.footer-col:last-child a[href="#"]');
+                        // First # link in contact col is address line 1
+                        if (addrEls.length >= 2) addrEls[0].textContent = c.footer.address1;
+                        if (c.footer.address2 && addrEls.length >= 3) addrEls[1].textContent = c.footer.address2;
+                    }
+                }
+
+                // Re-run i18n if already loaded
+                if (window.FufutI18n && typeof window.FufutI18n.apply === 'function') {
+                    window.FufutI18n.apply();
+                }
+
+                console.log('[CMS] Landing page content loaded from API');
+            })
+            .catch(function(err) {
+                console.warn('[CMS] Could not load content from API, using hardcoded defaults:', err);
+            });
+    })();
+    </script>
+
+    <script>
     // ===== MENU DATA =====
     // ===== LOADED FROM menus.json (real restaurant menu) =====
     let menuData = null;
