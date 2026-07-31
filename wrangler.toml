@@ -2,4 +2,11 @@ name = "fufut-coffee"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "website"
 
+# KV namespace for CMS content storage (drafts, versions, published content)
+[[kv_namespaces]]
+binding = "CONTENT_KV"
+id = "YOUR_KV_NAMESPACE_ID"
+# Replace YOUR_KV_NAMESPACE_ID with the actual KV namespace ID after running:
+#   wrangler kv namespace create "CONTENT_KV"
+
 # Cloudflare Pages deployment for the FU FUT COFFEE static website

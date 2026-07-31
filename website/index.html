@@ -92,7 +92,6 @@
         a:hover { color: var(--color-primary-dark); }
         button { font-family: inherit; cursor: pointer; }
 
-        .page { max-width: var(--width-page); margin: 0 auto; }
         .content { max-width: var(--width-content); margin: 0 auto; padding: 0 var(--gutter); }
         .section { padding: var(--space-8) var(--gutter); }
         @media(max-width:900px){ .section { padding: var(--space-7) var(--gutter); } }
@@ -2406,22 +2405,38 @@
                 }
             });
 
-            // 2. Reorder: use CSS order property on parent containers
-            // Find the parent of all sections
-            var page = document.querySelector('.page') || document.body;
+            // 2. Reorder: physically move DOM elements (safer than CSS flex on body)
+            // Find the last visible section to use as insertion anchor
             var orderedIds = layout.filter(function(s) { return s.visible !== false; }).map(function(s) { return s.id; });
-
-            orderedIds.forEach(function(id, index) {
-                var el = sectionMap[id];
-                if (el) {
-                    el.style.order = index;
+            // Track which elements we've already placed
+            var placed = {};
+            // Reference element: insert before the first section we haven't placed yet
+            // Use a sentinel — the footer is always last
+            var footerEl = sectionMap['footer'];
+            var anchor = footerEl ? footerEl.nextSibling : null;
+            if (!anchor) {
+                // Fallback: find any section's parent and append
+                for (var k in sectionMap) {
+                    if (sectionMap[k] && sectionMap[k].parentNode) {
+                        anchor = null; // will append to end
+                        break;
+                    }
                 }
-            });
-
-            // Enable CSS order on the parent
-            if (page) {
-                page.style.display = 'flex';
-                page.style.flexDirection = 'column';
+            }
+            // Walk the ordered list backwards and prepend before the anchor
+            for (var i = orderedIds.length - 1; i >= 1; i--) {
+                var el = sectionMap[orderedIds[i]];
+                if (el && el.parentNode && placed[orderedIds[i]] !== true) {
+                    var prevEl = sectionMap[orderedIds[i - 1]];
+                    if (prevEl && prevEl.parentNode) {
+                        // Ensure el comes after prevEl
+                        if (el.compareDocumentPosition(prevEl) & Node.DOCUMENT_POSITION_FOLLOWING) {
+                            // el is before prevEl in DOM — move it after prevEl
+                            prevEl.parentNode.insertBefore(el, prevEl.nextSibling);
+                        }
+                    }
+                    placed[orderedIds[i]] = true;
+                }
             }
         }
 
