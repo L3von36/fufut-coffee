@@ -2387,7 +2387,7 @@
     <script>
     // ===== MENU DATA =====
     // ===== LOADED FROM menus.json (real restaurant menu) =====
-    let menuData = {};
+    let menuData = null;
     var activeFilter = '';
 
     function showSkeleton() {
@@ -3092,7 +3092,7 @@
     function isItemAvailable(item) {
         if (!menuData) return true;
         var m = findMenuItem(item.id, item.name);
-        if (!m) return false;
+        if (!m) return true; // static item not in live menu — allow order
         if (m.available === false) return false;
         return true;
     }
