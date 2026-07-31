@@ -3726,6 +3726,31 @@
             if (sFeat[1] && (s.feat2 || c.feat2)) sFeat[1].textContent = s.feat2 || c.feat2;
             if (sFeat[2] && (s.feat3 || c.feat3)) sFeat[2].textContent = s.feat3 || c.feat3;
             if (sFeat[3] && (s.feat4 || c.feat4)) sFeat[3].textContent = s.feat4 || c.feat4;
+
+            // Menu section headings
+            var mn = (c.menu && typeof c.menu === 'object') ? c.menu : {};
+            var mnScript = document.querySelector('#menu .sec-script');
+            var mnEye    = document.querySelector('#menu .sec-eyebrow');
+            var mnTitle  = document.querySelector('#menu .sec-title');
+            if (mnScript && mn.script) mnScript.textContent = mn.script;
+            if (mnEye    && mn.eyebrow) mnEye.textContent   = mn.eyebrow;
+            if (mnTitle  && mn.title)   mnTitle.textContent = mn.title;
+
+            // Gallery section headings
+            var gl = (c.gallerySection && typeof c.gallerySection === 'object') ? c.gallerySection : {};
+            var glEye  = document.querySelector('#gallery .sec-eyebrow');
+            var glTitle = document.querySelector('#gallery .sec-title');
+            var glDesc  = document.querySelector('#gallery .sec-desc');
+            if (glEye   && gl.eyebrow) glEye.textContent   = gl.eyebrow;
+            if (glTitle && gl.title)   glTitle.textContent = gl.title;
+            if (glDesc  && gl.desc)    glDesc.textContent  = gl.desc;
+
+            // Testimonials section headings
+            var tm = (c.testimonials && typeof c.testimonials === 'object') ? c.testimonials : {};
+            var tmEye   = document.querySelector('#testimonials .sec-eyebrow');
+            var tmTitle = document.querySelector('#testimonials .sec-title');
+            if (tmEye   && tm.eyebrow) tmEye.textContent   = tm.eyebrow;
+            if (tmTitle && tm.title)   tmTitle.textContent = tm.title;
         }
 
         // Apply i18n first (so its hardcoded strings are in place), then overwrite
