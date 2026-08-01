@@ -1433,21 +1433,6 @@
         .modal-allergens-text:not(:empty) {
             color: var(--neutral-700);
         }
-
-        /* ===== TOAST NOTIFICATION ===== */
-        .toast {
-            position: fixed; bottom: var(--space-4); left: var(--space-4);
-            background: var(--neutral-900); color: var(--neutral-0);
-            padding: 12px var(--space-3); border-radius: var(--radius-pill);
-            display: flex; align-items: center; gap: 10px;
-            box-shadow: var(--shadow-lg); z-index: 2000;
-            transform: translateY(100px); opacity: 0;
-            transition: all var(--duration-base) var(--ease-out);
-        }
-        .toast.show { transform: translateY(0); opacity: 1; }
-        .toast svg { width: var(--space-2); height: var(--space-2); color: var(--color-accent); }
-        .toast span { font-size: var(--text-sm); font-weight: 600; }
-
         /* ===== ORDER CART ===== */
         .cart-fab {
             position: fixed; bottom: 24px; right: 24px; z-index: 1500;
@@ -1639,9 +1624,7 @@
             .hero-btns .btn-ghost { flex: 1 1 160px; text-align: center; }
             /* Story visual: prevent ring bleeds past viewport edge */
             .story-visual { overflow: hidden; }
-            /* Toast: full-width snackbar — prevents right-edge clip on long item names */
-            .toast { left: 16px; right: 16px; bottom: 16px; border-radius: var(--radius-md); justify-content: center; }
-            /* Back-to-top: lift above the full-width toast */
+            /* Back-to-top position */
             .back-to-top { bottom: 76px; right: 16px; }
             /* Coffee / menu grid: remove max-width cap so cards fill viewport naturally */
             .coffee-grid, .menu-grid { max-width: 100%; }
@@ -1674,7 +1657,7 @@
             .coffee-card-img, .menu-card-img, .dish-card-img { height: 170px; }
             /* Stats counter: smaller on phone */
             .stat-value { font-size: 1.6rem; }
-            /* Back-to-top: match toast position */
+            /* Back-to-top position */
             .back-to-top { right: 16px; }
         }
 
@@ -2325,12 +2308,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         <span id="cartCount" class="cart-count">0</span>
     </button>
-
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="toast">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        <span id="toastMsg">Added to order!</span>
-    </div>
 
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -3335,14 +3312,6 @@
         }, 950);
     }
 
-    function showToast(message) {
-        const toast = document.getElementById('toastNotification');
-        document.getElementById('toastMsg').textContent = message;
-        toast.classList.add('show');
-        clearTimeout(toast._hideTimer);
-        toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
     // ===== ORDER CART (API-synced) =====
     var cart = [];
 
@@ -4118,6 +4087,7 @@
     });
     </script>
     <script src="js/buttonState.js"></script>
+    <script src="js/toast.js"></script>
     <script src="js/main.js"></script>
     </body>
 </html>
