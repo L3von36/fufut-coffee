@@ -1306,7 +1306,7 @@
         .modal-image-action .btn-qty { color: #fff; }
         .modal-image-action #modalQty { color: #fff; }
         .modal-image-action .price-label { color: rgba(255,255,255,.7); }
-        .modal-image-action .price-value { color: #fff; font-size: var(--text-xl); }
+        .modal-image-action .price-value { color: #fff; font-size: var(--text-sm); font-weight: 600; }
         .modal-info-side { padding: var(--space-4); display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
         .modal-tags-container { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-bottom: var(--space-2); }
         .modal-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; color: var(--text-heading); margin-bottom: 6px; }
@@ -1319,7 +1319,7 @@
         #modalQty { font-size: var(--text-base); font-weight: 700; color: var(--text-heading); min-width: 20px; text-align: center; }
         .modal-price-calc { text-align: right; }
         .price-label { display: block; font-size: var(--text-xs); color: var(--text-muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: var(--tracking-wide); }
-        .price-value { font-size: var(--text-lg); font-weight: 700; color: var(--color-primary-dark); }
+        .price-value { font-size: var(--text-sm); font-weight: 700; color: var(--color-primary-dark); }
         .btn-modal-action {
             width: 100%; padding: var(--space-2); border-radius: var(--radius-pill); border: none;
             background: var(--color-primary); color: var(--neutral-0); font-weight: 600; font-size: var(--text-base);
