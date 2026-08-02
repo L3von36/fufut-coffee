@@ -2696,6 +2696,12 @@
                     ? item.image
                     : 'assets/menu-' + (item.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') + '.jpg';
 
+                // Rewrite broken images.futfutcoffee.com URLs to working Worker proxy
+                if (image.indexOf('images.futfutcoffee.com') !== -1) {
+                    var imgKey = image.split('images.futfutcoffee.com/')[1];
+                    image = 'https://fufut-api.fufutcoffee.workers.dev/api/images/' + imgKey;
+                }
+
                 return {
                     name: item.name,
                     name_am: item.name_am || '',
