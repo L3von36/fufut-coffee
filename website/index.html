@@ -668,7 +668,7 @@
         }
         function setI18n(key, text) {
             var els = document.querySelectorAll('[data-i18n="' + key + '"]');
-            els.forEach(function(el) { el.textContent = text; });
+            els.forEach(function(el) { el.innerHTML = text; });
         }
         function safeHtml(str) {
             if (!str) return '';
