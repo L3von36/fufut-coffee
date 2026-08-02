@@ -42,8 +42,8 @@
       'story.feat4': 'Friendly Community',
 
       // Signature Coffee
-      'coffee.eyebrow': 'Single Origin',
-      'coffee.title': 'Signature Coffee',
+      'coffee.eyebrow': 'Signature Coffee',
+      'coffee.title': 'Yirgacheffe Grade 1 Coffee',
 
       // Menu section
       'menu.script': 'Menu',
@@ -180,8 +180,8 @@
       'story.feat4': 'ወዳጃዊ ማህበረሰብ',
 
       // Signature Coffee
-      'coffee.eyebrow': 'ነጠላ-ምንጭ',
-      'coffee.title': 'ልዩ ቡናዎቻችን',
+      'coffee.eyebrow': 'ልዩ ቡና',
+      'coffee.title': 'ይርጋቸፈ ግራድ 1 ቡና',
 
       // Menu section
       'menu.script': 'ዝርዝር',
