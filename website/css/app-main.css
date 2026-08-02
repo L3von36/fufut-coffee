@@ -1290,9 +1290,10 @@
             background: linear-gradient(to top, rgba(4,35,33,.82) 0%, rgba(4,35,33,.3) 52%, transparent 100%);
             pointer-events: none; z-index: 1;
         }
-        /* Action overlay pinned to bottom of image */
+        /* Action bar: overlays image on desktop, sticky footer on mobile */
         .modal-image-action {
-            position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+            position: absolute; bottom: 0; left: 0; z-index: 2;
+            width: calc(100% / 2.1); /* matches 1fr in 1fr 1.1fr grid */
             padding: 16px 18px 18px;
         }
         .modal-image-action .modal-interactive {
@@ -1510,31 +1511,40 @@
         @media(max-width:768px) {
             .modal-content { max-width: 480px; max-height: 90dvh; overflow-y: auto; }
             .modal-grid { grid-template-columns: 1fr; min-height: unset; }
-            .modal-image-side { height: 200px; }
+            .modal-image-side { height: 180px; }
             .modal-info-side { padding: var(--space-4); }
             .modal-desc-text { margin-bottom: var(--space-3); }
+            .modal-pkg-options { flex-direction: column; gap: 10px; padding: 12px; }
+            .modal-details-bar { grid-template-columns: 1fr 1fr; gap: 8px; }
         }
 
         /* Mobile: polished centered pop-up card */
         @media(max-width:640px) {
-            .modal-backdrop { padding: var(--space-3); align-items: center; }
+            .modal-backdrop { padding: var(--space-2); align-items: flex-end; }
 
             .modal-content {
-                max-width: 92%; max-height: 88dvh;
-                overflow-y: auto; overflow-x: hidden;
-                border-radius: var(--radius-lg);
+                max-width: 100%; max-height: 92dvh;
+                overflow: hidden; overflow-x: hidden;
+                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
                 border-color: transparent;
+                display: flex; flex-direction: column;
             }
 
-            /* Image: taller with gradient dissolve into card body */
-            .modal-image-side { height: 210px; }
+            /* Scrollable middle area */
+            .modal-grid {
+                overflow-y: auto; -webkit-overflow-scrolling: touch;
+                flex: 1; min-height: 0;
+            }
+
+            /* Image: shorter */
+            .modal-image-side { height: 160px; min-height: 140px; }
             .modal-image-side::after {
                 content: ''; position: absolute; inset: 0;
                 background: linear-gradient(to bottom, transparent 30%, var(--color-surface) 100%);
                 pointer-events: none;
             }
 
-            /* Info side: slides up over the gradient tail */
+            /* Info side */
             .modal-info-side {
                 padding: var(--space-1) var(--space-3) var(--space-3);
                 margin-top: calc(-1 * var(--space-5));
@@ -1542,7 +1552,7 @@
                 background: var(--color-surface);
             }
 
-            /* Close button: glass pill floating over the image */
+            /* Close button: glass pill */
             .modal-close {
                 background: var(--glass-bg);
                 backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
@@ -1552,8 +1562,26 @@
             .modal-close:hover { background: var(--color-primary); color: var(--neutral-0); border-color: transparent; }
 
             .modal-tags-container { margin-bottom: var(--space-1); }
-            .modal-title { font-size: var(--text-xl); }
-            .modal-desc-text { margin-bottom: var(--space-3); }
+            .modal-title { font-size: var(--text-lg); margin-bottom: 4px; }
+            .modal-meta-text { font-size: .65rem; margin-bottom: var(--space-1); }
+            .modal-desc-text { font-size: var(--text-xs); margin-bottom: var(--space-2); line-height: 1.5; }
+
+            /* Package options stack on mobile */
+            .modal-pkg-options { flex-direction: column; gap: 8px; padding: 10px; margin: 8px 0; }
+            .pkg-opt-group { min-width: unset; }
+            .pkg-opt-select { padding: 8px 10px; font-size: var(--text-sm); }
+            .pkg-opt-label { font-size: 10px; margin-bottom: 4px; }
+
+            /* Details bar: 2-col compact */
+            .modal-details-bar { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px 0; }
+            .modal-detail-item { gap: 6px; }
+            .modal-detail-icon { font-size: .95rem; }
+            .modal-detail-label { font-size: .6rem; }
+            .modal-detail-value { font-size: var(--text-xs); }
+
+            /* Flavor section compact */
+            .modal-flavor-label { font-size: .65rem; }
+            .modal-flavor-text { font-size: var(--text-xs); }
 
             /* Qty buttons: filled teal circles */
             .btn-qty {
@@ -1565,10 +1593,20 @@
             /* Price: teal accent */
             .price-value { color: var(--color-primary); }
 
-            /* CTA: gradient for depth */
+            /* CTA: sticky at bottom */
+            .modal-image-action {
+                position: relative; z-index: 2;
+                padding: 12px var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom));
+                background: var(--color-surface);
+                border-top: 1px solid var(--border-subtle);
+                margin-top: auto;
+            }
+            .modal-image-action .modal-interactive { margin-bottom: 8px; }
             .btn-modal-action {
                 background: linear-gradient(135deg, var(--teal-500), var(--teal-700));
                 letter-spacing: var(--tracking-wide);
+                font-size: var(--text-sm);
+                padding: 10px var(--space-2);
             }
             .btn-modal-action:hover { background: linear-gradient(135deg, var(--teal-400), var(--teal-600)); }
         }
