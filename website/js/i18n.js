@@ -41,6 +41,21 @@
       'story.feat3': 'Open Daily 7AM–10PM',
       'story.feat4': 'Friendly Community',
 
+      // About Persona section
+      'about.breadcrumb': 'HOME &nbsp;/&nbsp; ABOUT US',
+      'about.outline': 'About Us',
+      'about.title': 'About Us',
+      'about.subtitle': 'Elevating the traditional Ethiopian coffee ritual into a modern sensory journey. Born from heritage, perfected for today.',
+      'about.accent': 'OUR KEY FEATURES',
+      'about.heading': 'Crafting Every Cup with Intention and Heritage',
+      'about.f1Title': 'Our Mission',
+      'about.f1Text': 'To honor and preserve the age-old tradition of Ethiopian coffee ceremonies while sourcing and serving the finest single-origin specialty coffees.',
+      'about.f2Title': 'Our Goals',
+      'about.f2Text': 'We aim to connect high-altitude smallholder farmers with coffee lovers worldwide, ensuring ethical trading and peerless flavor quality.',
+      'about.f3Title': 'Why Us?',
+      'about.f3Text': 'Every single cup is meticulously roasted and hand-poured, keeping the spirit of gathering and hospitality alive at the heart of our space.',
+      'about.cta': 'LEARN MORE',
+
       // Signature Coffee
       'coffee.eyebrow': 'Signature Coffee',
       'coffee.title': 'Yirgacheffe Grade 1 Coffee',
@@ -178,6 +193,21 @@
       'story.feat2': 'በሞላጋጅ መንገድ የተገኘ',
       'story.feat3': 'በየቀኑ 7AM–10PM',
       'story.feat4': 'ወዳጃዊ ማህበረሰብ',
+
+      // About Persona section
+      'about.breadcrumb': 'መነሻ &nbsp;/&nbsp; ስለ እኛ',
+      'about.outline': 'ስለ እኛ',
+      'about.title': 'ስለ እኛ',
+      'about.subtitle': 'ባህላዊውን የኢትዮጵያ የቡና ስነ-ስርዓት ወደ ዘመናዊ የስሜት ጉዞ ከፍ እናደርጋለን። ከውርስ የተወለደ፣ ለዛሬ የተዘጋጀ።',
+      'about.accent': 'ዋና ዋና ባህሪያቶቻችን',
+      'about.heading': 'እያንዳንዱን ኩባያ በዓላማ እና በቅርስ መሥራት',
+      'about.f1Title': 'ራዕያችን',
+      'about.f1Text': 'ምርጥ የሆኑ የልዩ ቡና ዝርያዎችን በማቅረብ እና በማገልገል የቆየውን የኢትዮጵያ ቡና ሥነ-ሥርዓት ባህል ለማክበር እና ለመጠበቅ።',
+      'about.f2Title': 'ግብ የእኛ',
+      'about.f2Text': 'የቡና አፍቃሪዎችን ከከፍተኛ ቦታ አነስተኛ አምራች ገበሬዎች ጋር በማገናኘት፣ ፍትሃዊ ንግድ እና ልዩ ጣዕም ማረጋገጥ።',
+      'about.f3Title': 'ለምን እኛ?',
+      'about.f3Text': 'እያንዳንዱ ኩባያ በጥንቃቄ የተቆላ እና የሚፈስ ሲሆን፣ በመካከላችን የመሰብሰብ እና የእንግዳ ተቀባይነት መንፈስን ሕያው ያደርጋል።',
+      'about.cta': 'ተጨማሪ ያንብቡ',
 
       // Signature Coffee
       'coffee.eyebrow': 'ልዩ ቡና',
