@@ -2143,7 +2143,7 @@
                         </div>
                         <div class="res-detail">
                             <div class="res-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
-                            <div class="res-detail-text"><strong data-i18n="res.contactUs">Contact Us</strong><span data-i18n="res.contactVal">+251 931 190 440</span></div>
+                            <div class="res-detail-text"><strong data-i18n="res.contactUs">Contact Us</strong><span data-i18n="res.contactVal">+251 91 162 0989</span></div>
                         </div>
                     </div>
                 </div>
@@ -2211,8 +2211,8 @@
                 <div class="footer-col">
                     <h4 data-i18n="footer.contact">Contact</h4>
                     <ul>
-                        <li><a href="tel:+251931190440">+251 931 190 440</a></li>
-                        <li><a href="mailto:hello@futfutcoffee.com">hello@futfutcoffee.com</a></li>
+                        <li><a href="tel:+251911620989">+251 91 162 0989</a></li>
+                        <li><a href="mailto:hello@fufutcoffee.com">hello@fufutcoffee.com</a></li>
                         <li><a href="#">Bole Road</a></li>
                         <li><a href="#">Addis Ababa, Ethiopia</a></li>
                     </ul>
@@ -3964,15 +3964,15 @@
 
             // Footer — hours column (3rd footer-col)
             var ftHoursCol = document.querySelectorAll('.footer-col');
-            var ftHoursEl  = ftHoursCol[1] ? ftHoursCol[1].querySelectorAll('li a') : [];
+            var ftHoursEl  = ftHoursCol[2] ? ftHoursCol[2].querySelectorAll('li a') : [];
             if (ft.monFri   && ftHoursEl[0]) ftHoursEl[0].textContent = ft.monFri;
             if (ft.sat      && ftHoursEl[1]) ftHoursEl[1].textContent = ft.sat;
             if (ft.sun      && ftHoursEl[2]) ftHoursEl[2].textContent = ft.sun;
             if (ft.holidays && ftHoursEl[3]) ftHoursEl[3].textContent = ft.holidays;
 
             // Footer — contact column (4th footer-col)
-            var ftContactEl = ftHoursCol[2] ? ftHoursCol[2].querySelectorAll('li a') : [];
-            if (ft.phone    && ftContactEl[0]) { ftContactEl[0].href = 'tel:' + ft.phone.replace(/s/g,''); ftContactEl[0].textContent = ft.phone; }
+            var ftContactEl = ftHoursCol[3] ? ftHoursCol[3].querySelectorAll('li a') : [];
+            if (ft.phone    && ftContactEl[0]) { ftContactEl[0].href = 'tel:' + ft.phone.replace(/\s/g,''); ftContactEl[0].textContent = ft.phone; }
             if (ft.email    && ftContactEl[1]) { ftContactEl[1].href = 'mailto:' + ft.email; ftContactEl[1].textContent = ft.email; }
             if (ft.address1 && ftContactEl[2]) ftContactEl[2].textContent = ft.address1;
             if (ft.address2 && ftContactEl[3]) ftContactEl[3].textContent = ft.address2;
