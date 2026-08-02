@@ -512,34 +512,6 @@
             padding: 0 24px; max-width: 860px;
             will-change: transform, opacity, filter;
         }
-        /* Owner portrait — right of hero on desktop */
-        .hero-owner {
-            position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
-            z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 12px;
-            opacity: 0; /* animated in via GSAP */
-        }
-        .hero-owner-frame {
-            width: 220px; height: 220px; border-radius: 50%; overflow: hidden;
-            border: 3px solid rgba(214,179,106,.4);
-            box-shadow: 0 8px 40px rgba(0,0,0,.3), 0 0 80px rgba(15,123,120,.15);
-            position: relative;
-        }
-        .hero-owner-frame::after {
-            content: ''; position: absolute; inset: 0; border-radius: 50%;
-            background: linear-gradient(180deg, transparent 50%, rgba(4,35,33,.4) 100%);
-            pointer-events: none;
-        }
-        .hero-owner-img {
-            width: 100%; height: 100%; object-fit: cover;
-            filter: saturate(.85) contrast(1.05);
-        }
-        .hero-owner-label {
-            font-size: 10px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: .15em; color: rgba(255,255,255,.5);
-            background: rgba(255,255,255,.08); backdrop-filter: blur(8px);
-            padding: 4px 14px; border-radius: var(--radius-pill);
-            border: 1px solid rgba(255,255,255,.1);
-        }
         .hero-amharic {
             font-family: var(--font-script); font-size: 2.4rem;
             color: var(--gold-300); margin-bottom: 6px;
@@ -580,9 +552,7 @@
         .hero-scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--gold-500), transparent); animation: scrollPulse 2.5s ease-in-out infinite; }
         @keyframes scrollPulse { 0%,100% { opacity: 1; transform: scaleY(1); } 50% { opacity: .3; transform: scaleY(.5); } }
 
-        @media(max-width:900px) {
-            .hero-owner { display: none; }
-        }
+
         @media(max-width:640px) {
             .hero { min-height: 100svh; }
             .hero-amharic { font-size: 1.75rem; }
