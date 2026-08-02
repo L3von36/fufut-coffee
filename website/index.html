@@ -2627,12 +2627,17 @@
         return str.split('/')[0].trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     }
 
+    // Store raw categories for re-rendering on language change
+    var rawMenuCategories = [];
+
     function buildTabs(categories) {
+        rawMenuCategories = categories || [];
         var container = document.getElementById('menuTabs');
+        var isAm = window.FufutI18n && window.FufutI18n.getLang() === 'am';
         var buttonsHtml = '';
         categories.forEach(function(cat, i) {
             var key = slugify(cat.name);
-            var label = cat.name.split('/')[0].trim();
+            var label = isAm && cat.name_am ? cat.name_am : cat.name.split('/')[0].trim();
             buttonsHtml += '<button class="menu-tab' + (i === 0 ? ' active' : '') + '" data-tab="' + key + '" data-category="' + cat.name.replace(/"/g, '&quot;') + '">' + label + '</button>';
         });
         container.innerHTML = buttonsHtml + '<button class="menu-filter-btn" id="veganFilter" data-filter="vegan" aria-pressed="false">' + (window.FufutI18n ? window.FufutI18n.t('menu.vegan') : '🌱 Vegan') + '</button>';
@@ -2693,8 +2698,10 @@
 
                 return {
                     name: item.name,
+                    name_am: item.name_am || '',
                     price: String(priceNum),
                     desc: desc,
+                    desc_am: item.description_am || '',
                     image: image,
                     tags: tags,
                     modifiers: item.modifiers || [],
@@ -2738,7 +2745,10 @@
         if (!grid) return;
         var items = menuData[cat] || [];
         if (activeFilter) items = items.filter(menuItemMatchesFilter);
+        var isAm = window.FufutI18n && window.FufutI18n.getLang() === 'am';
         grid.innerHTML = items.map(m => {
+            const displayName = isAm && m.name_am ? m.name_am : m.name;
+            const displayDesc = isAm && m.desc_am ? m.desc_am : m.desc;
             const tagsHTML = m.tags ? m.tags.map(t => `<span class="menu-card-tag ${t.toLowerCase().replace(/[^a-z0-9]+/g, '-')}">${t}</span>`).join('') : '';
             const tagsAttr = m.tags ? m.tags.join(',').replace(/'/g, '&#39;') : '';
             const catLabel = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -2746,9 +2756,11 @@
                 <div class="menu-card"
                      data-id="${m.id || ''}"
                      data-name="${m.name}"
+                     data-name-am="${m.name_am || ''}"
                      data-price="${m.price}"
                      data-meta="${catLabel}"
                      data-desc="${m.desc}"
+                     data-desc-am="${m.desc_am || ''}"
                      data-image="${m.image}"
                      data-tags="${tagsAttr}"
                      data-flavor="${(m.flavorNotes || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;')}"
@@ -2761,8 +2773,8 @@
                         <div class="menu-card-tags">${tagsHTML}</div>
                     </div>
                     <div class="menu-card-body">
-                        <h3 class="menu-card-name">${m.name}</h3>
-                        <p class="menu-card-desc">${m.desc}</p>
+                        <h3 class="menu-card-name">${displayName}</h3>
+                        <p class="menu-card-desc">${displayDesc}</p>
                         <div class="menu-card-footer">
                             <div class="menu-card-price">${!m.price || m.price === '0' || isNaN(parseFloat(m.price)) ? '' : 'ETB ' + parseFloat(m.price)}</div>
                             <button class="btn-menu-order" aria-label="Order ${m.name}">
@@ -3176,10 +3188,11 @@
 
     function openDetailModal(data) {
         const modal = document.getElementById('detailModal');
+        const isAm = window.FufutI18n && window.FufutI18n.getLang() === 'am';
         document.getElementById('modalImageSide').style.backgroundImage = `url('${data.image}')`;
-        document.getElementById('modalTitle').textContent = data.name;
+        document.getElementById('modalTitle').textContent = isAm && data.name_am ? data.name_am : data.name;
         document.getElementById('modalMeta').textContent = data.meta;
-        document.getElementById('modalDesc').textContent = data.desc;
+        document.getElementById('modalDesc').textContent = isAm && data.desc_am ? data.desc_am : data.desc;
         document.getElementById('modalQty').textContent = '1';
 
         _modalBasePrice = parseFloat(data.price) || 0;
@@ -3568,9 +3581,11 @@
         if (card) {
             openDetailModal({
                 name:  card.dataset.name,
+                name_am:  card.dataset.nameAm || '',
                 price: card.dataset.price,
                 meta:  card.dataset.meta,
                 desc:  card.dataset.desc,
+                desc_am:  card.dataset.descAm || '',
                 image: card.dataset.image,
                 tags:  card.dataset.tags,
                 flavorNotes: card.dataset.flavor || '',
@@ -4036,6 +4051,20 @@
     <script>
     // Re-render dynamic content on language change
     document.addEventListener('fufut:langchange', function() {
+        // Re-build tabs with translated category names
+        if (rawMenuCategories.length) {
+            var activeTab = document.querySelector('.menu-tab.active');
+            var activeTabKey = activeTab ? activeTab.dataset.tab : null;
+            buildTabs(rawMenuCategories);
+            // Restore active tab
+            if (activeTabKey) {
+                var tabToActivate = document.querySelector('.menu-tab[data-tab="' + activeTabKey + '"]');
+                if (tabToActivate) {
+                    document.querySelectorAll('.menu-tab').forEach(function(t) { t.classList.remove('active'); });
+                    tabToActivate.classList.add('active');
+                }
+            }
+        }
         // Re-render active menu tab
         var activeTab = document.querySelector('.menu-tab.active');
         if (activeTab && menuData && Object.keys(menuData).length) renderMenu(activeTab.dataset.tab);
