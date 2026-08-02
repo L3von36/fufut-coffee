@@ -42,8 +42,8 @@
       'story.feat4': 'Friendly Community',
 
       // Signature Coffee
-      'coffee.eyebrow': 'Single Origin',
-      'coffee.title': 'Signature Coffee',
+      'coffee.eyebrow': 'Signature Coffee',
+      'coffee.title': 'Yirgacheffe Grade 1 Coffee',
 
       // Menu section
       'menu.script': 'Menu',
@@ -93,7 +93,7 @@
       'res.location': 'Location',
       'res.locationVal': 'Bole Road, Addis Ababa',
       'res.contactUs': 'Contact Us',
-      'res.contactVal': '+251 931 190 440',
+      'res.contactVal': '+251 91 162 0989',
       'res.formTitle': 'Make a Reservation',
       'res.fullName': 'Full Name',
       'res.email': 'Email',
@@ -180,8 +180,8 @@
       'story.feat4': 'ወዳጃዊ ማህበረሰብ',
 
       // Signature Coffee
-      'coffee.eyebrow': 'ነጠላ-ምንጭ',
-      'coffee.title': 'ልዩ ቡናዎቻችን',
+      'coffee.eyebrow': 'ልዩ ቡና',
+      'coffee.title': 'ይርጋቸፈ ግራድ 1 ቡና',
 
       // Menu section
       'menu.script': 'ዝርዝር',
@@ -231,7 +231,7 @@
       'res.location': 'አካባቢ',
       'res.locationVal': 'ቦሌ፣ አዲስ አበባ',
       'res.contactUs': 'ያግኙን',
-      'res.contactVal': '+251 931 190 440',
+      'res.contactVal': '+251 91 162 0989',
       'res.formTitle': 'ቦታ ያስይዙ',
       'res.fullName': 'ሙሉ ስም',
       'res.email': 'ኢሜይል',

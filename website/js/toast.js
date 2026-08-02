@@ -1,6 +1,7 @@
 /* ============================================================
    FU FUT COFFEE — Toast Notification System
-   Simple, reliable toast notifications with auto-dismiss
+   Global toast notifications with multiple types, icons, colors, and queuing
+   Uses CSS transitions + setTimeout for reliable show/hide
    ============================================================ */
 
 (function initToastSystem() {
@@ -15,7 +16,7 @@
     gap: 12
   };
 
-  var TYPES = {
+  var TOAST_TYPES = {
     success: {
       icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
       bg: 'rgba(46, 125, 50, 0.95)',
@@ -65,7 +66,7 @@
       + '.toast-container--top-left{top:0;left:0;align-items:flex-start}'
       + '.toast-container--bottom-right{bottom:0;right:0;align-items:flex-end}'
       + '.toast-container--bottom-left{bottom:0;left:0;align-items:flex-start}'
-      + '.toast-notification{position:relative;pointer-events:auto;width:100%;max-width:360px;min-width:240px;padding:14px 16px;border-radius:var(--r-md,8px);display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,0.18);backdrop-filter:blur(10px);opacity:0;transform:translateX(100%);transition:opacity ' + a + 'ms ease,transform ' + a + 'ms ease}'
+      + '.toast-notification{position:relative;pointer-events:auto;width:100%;max-width:340px;min-width:220px;padding:12px 14px;border-radius:8px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.18);backdrop-filter:blur(10px);opacity:0;transform:translateX(100%);transition:opacity ' + a + 'ms ease,transform ' + a + 'ms ease}'
       + '.toast-notification.toast-visible{opacity:1;transform:translateX(0)}'
       + '.toast-notification.toast-exit{opacity:0;transform:translateX(100%)}'
       + '.toast-notification .toast-icon{flex-shrink:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,0.15);color:#fff}'
@@ -73,15 +74,16 @@
       + '.toast-notification .toast-content{flex:1;min-width:0}'
       + '.toast-notification .toast-title{font-weight:600;font-size:13px;line-height:1.3;color:#fff;margin-bottom:2px}'
       + '.toast-notification .toast-message{font-size:13px;line-height:1.4;color:rgba(255,255,255,0.9)}'
-      + '.toast-notification .toast-dismiss{flex-shrink:0;background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;padding:6px;margin:-6px -6px -6px auto;border-radius:4px;transition:opacity 0.15s,color 0.15s}'
+      + '.toast-notification .toast-dismiss{flex-shrink:0;background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;padding:4px;margin:-4px -4px -4px auto;border-radius:4px;transition:opacity 0.15s,color 0.15s}'
       + '.toast-notification .toast-dismiss:hover{opacity:1;color:#fff}'
-      + '.toast-notification .toast-dismiss svg{width:16px;height:16px;display:block}'
-      + '.toast-notification.toast-success{background:' + TYPES.success.bg + ';border:1px solid ' + TYPES.success.border + '}'
-      + '.toast-notification.toast-error{background:' + TYPES.error.bg + ';border:1px solid ' + TYPES.error.border + '}'
-      + '.toast-notification.toast-info{background:' + TYPES.info.bg + ';border:1px solid ' + TYPES.info.border + '}'
-      + '.toast-notification.toast-warning{background:' + TYPES.warning.bg + ';border:1px solid ' + TYPES.warning.border + '}'
-      + '@media(prefers-reduced-motion:reduce){.toast-notification{transition:none !important}}'
-      + '@media(max-width:480px){.toast-notification{max-width:calc(100vw - 32px);min-width:auto}}';
+      + '.toast-notification .toast-dismiss svg{width:14px;height:14px;display:block}'
+      + '.toast-notification.toast-success{background:' + TOAST_TYPES.success.bg + ';border:1px solid ' + TOAST_TYPES.success.border + '}'
+      + '.toast-notification.toast-error{background:' + TOAST_TYPES.error.bg + ';border:1px solid ' + TOAST_TYPES.error.border + '}'
+      + '.toast-notification.toast-info{background:' + TOAST_TYPES.info.bg + ';border:1px solid ' + TOAST_TYPES.info.border + '}'
+      + '.toast-notification.toast-warning{background:' + TOAST_TYPES.warning.bg + ';border:1px solid ' + TOAST_TYPES.warning.border + '}'
+      + '.cart-drawer.open~.toast-container--top-right{right:390px;transition:right .3s ease}'
+      + '@media(prefers-reduced-motion:reduce){.toast-notification{transition:none !important;opacity:1;transform:none}}'
+      + '@media(max-width:480px){.toast-notification{max-width:calc(100vw - 32px);min-width:auto}.cart-drawer.open~.toast-container--top-right{right:16px}}';
   }
 
   function escapeHtml(text) {
@@ -102,7 +104,7 @@
     if (toast.timer) clearTimeout(toast.timer);
     toast.el.classList.remove('toast-visible');
     toast.el.classList.add('toast-exit');
-    // Guaranteed removal — don't rely on transitionend
+    // Guaranteed removal — do NOT rely on transitionend
     setTimeout(function() {
       if (toast.el && toast.el.parentNode) toast.el.remove();
     }, ANIM_MS + 50);
@@ -113,8 +115,8 @@
   function showOne(type, message, options) {
     options = options || {};
     initContainer();
-    var typeDef = TYPES[type] || TYPES.info;
-    var title = options.title || type.charAt(0).toUpperCase() + type.slice(1);
+    var typeDef = TOAST_TYPES[type] || TOAST_TYPES.info;
+    var title = options.title || getDefaultTitle(type);
     var duration = options.duration !== undefined ? options.duration : CONFIG.duration;
     var id = 'toast-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
 
@@ -159,14 +161,19 @@
     }
   }
 
+  function getDefaultTitle(type) {
+    var titles = { success: 'Success', error: 'Error', info: 'Info', warning: 'Warning' };
+    return titles[type] || 'Notification';
+  }
+
   // Public API
   window.toast = {
-    show:    function(type, msg, opts) { return showOne(type, msg, opts); },
+    show: function(type, msg, opts) { return showOne(type, msg, opts); },
     success: function(msg, opts) { return showOne('success', msg, opts); },
-    error:   function(msg, opts) { return showOne('error', msg, opts); },
-    info:    function(msg, opts) { return showOne('info', msg, opts); },
+    error: function(msg, opts) { return showOne('error', msg, opts); },
+    info: function(msg, opts) { return showOne('info', msg, opts); },
     warning: function(msg, opts) { return showOne('warning', msg, opts); },
-    dismiss:  removeToast,
+    dismiss: removeToast,
     dismissAll: function() {
       var ids = visible.map(function(t) { return t.id; });
       ids.forEach(removeToast);
@@ -175,7 +182,7 @@
     config: function(c) { Object.assign(CONFIG, c); }
   };
 
-  // Backwards compat
+  // Backwards compat — intercept calls to showToast(message, duration)
   if (typeof window.showToast === 'function') window.oldShowToast = window.showToast;
   window.showToast = function(message, duration) {
     window.toast.info(message, { duration: duration });
