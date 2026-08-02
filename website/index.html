@@ -1605,15 +1605,53 @@
 
     // ===== DETAIL MODAL =====
     let _modalBasePrice = 0;
+    let _isPkgModal = false;
 
     function openDetailModal(data) {
         const modal = document.getElementById('detailModal');
         const isAm = window.FufutI18n && window.FufutI18n.getLang() === 'am';
+
+        // Detect if this is a coffee package (pkg-card)
+        var pkgNames = ['Raw Coffee Beans', 'Roasted Coffee Beans', 'Ground Coffee'];
+        _isPkgModal = pkgNames.indexOf(data.name) !== -1;
+
         document.getElementById('modalImageSide').style.backgroundImage = `url('${data.image}')`;
         document.getElementById('modalTitle').textContent = isAm && data.name_am ? data.name_am : data.name;
-        document.getElementById('modalMeta').textContent = data.meta;
-        document.getElementById('modalDesc').textContent = isAm && data.desc_am ? data.desc_am : data.desc;
+        document.getElementById('modalMeta').textContent = _isPkgModal ? 'Yirgacheffe Grade 1 Coffee Package' : (data.meta || '');
+        document.getElementById('modalDesc').textContent = isAm && data.desc_am ? data.desc_am : (data.desc || '');
         document.getElementById('modalQty').textContent = '1';
+
+        // Toggle package vs menu details
+        var pkgOpts = document.getElementById('modalPkgOptions');
+        var menuDetails = document.getElementById('modalMenuDetails');
+        var flavorSection = document.querySelector('.modal-flavor-section');
+        if (_isPkgModal) {
+            pkgOpts.style.display = 'flex';
+            menuDetails.style.display = 'none';
+            flavorSection.style.display = 'none';
+            // Reset package selects
+            document.getElementById('pkgRoast').value = '';
+            document.getElementById('pkgGrind').value = '';
+            document.getElementById('pkgQtyKg').value = '1';
+            // For Raw beans: hide roast, keep grind (whole bean only)
+            var roastGroup = document.getElementById('pkgRoast').closest('.pkg-opt-group');
+            if (data.name === 'Raw Coffee Beans') {
+                roastGroup.style.display = 'none';
+            } else {
+                roastGroup.style.display = '';
+            }
+            // For Ground coffee: hide grind (already ground)
+            var grindGroup = document.getElementById('pkgGrind').closest('.pkg-opt-group');
+            if (data.name === 'Ground Coffee') {
+                grindGroup.style.display = 'none';
+            } else {
+                grindGroup.style.display = '';
+            }
+        } else {
+            pkgOpts.style.display = 'none';
+            menuDetails.style.display = '';
+            flavorSection.style.display = '';
+        }
 
         _modalBasePrice = parseFloat(data.price) || 0;
         document.getElementById('modalTotalPrice').textContent = `ETB ${_modalBasePrice.toFixed(2)}`;
@@ -1660,14 +1698,39 @@
         const qtyEl = document.getElementById('modalQty');
         let qty = Math.max(1, parseInt(qtyEl.textContent) + delta);
         qtyEl.textContent = qty;
-        document.getElementById('modalTotalPrice').textContent = `ETB ${(_modalBasePrice * qty).toFixed(2)}`;
+        // For packages, multiply by kg quantity too
+        var mult = _isPkgModal ? parseInt(document.getElementById('pkgQtyKg').value) || 1 : 1;
+        document.getElementById('modalTotalPrice').textContent = `ETB ${(_modalBasePrice * qty * mult).toFixed(2)}`;
     }
 
+    // Recalculate when package kg changes
+    document.addEventListener('change', function(e) {
+        if (!_isPkgModal) return;
+        if (e.target.id === 'pkgQtyKg') {
+            var qty = parseInt(document.getElementById('modalQty').textContent) || 1;
+            var mult = parseInt(e.target.value) || 1;
+            document.getElementById('modalTotalPrice').textContent = `ETB ${(_modalBasePrice * qty * mult).toFixed(2)}`;
+        }
+    });
+
     function addToOrderAction() {
-        const name = document.getElementById('modalTitle').textContent;
+        let name = document.getElementById('modalTitle').textContent;
         const qty  = parseInt(document.getElementById('modalQty').textContent);
-        const price = parseFloat(document.getElementById('modalTotalPrice').textContent.replace(/[^0-9.]/g, '')) / qty;
+        const totalPrice = parseFloat(document.getElementById('modalTotalPrice').textContent.replace(/[^0-9.]/g, ''));
+        const price = totalPrice / qty;
         const image = document.getElementById('modalImageSide').style.backgroundImage.match(/url\(["']?([^"')]+)/);
+
+        // Append package options to name
+        if (_isPkgModal) {
+            var opts = [];
+            var roast = document.getElementById('pkgRoast').value;
+            var grind = document.getElementById('pkgGrind').value;
+            var kg = document.getElementById('pkgQtyKg').value;
+            if (roast) opts.push(roast + ' Roast');
+            if (grind) opts.push(grind);
+            if (kg && parseInt(kg) > 1) opts.push(kg + 'kg');
+            if (opts.length) name += ' (' + opts.join(', ') + ')';
+        }
 
         addToCart({ name: name, price: price, image: image ? image[1] : '', qty: qty });
 
@@ -2173,8 +2236,42 @@
                     <div id="modalMeta" class="modal-meta-text">Category / Details</div>
                     <p id="modalDesc" class="modal-desc-text">Item description goes here.</p>
 
-                    <!-- Extended details bar -->
-                    <div class="modal-details-bar">
+                    <!-- Package options (hidden by default, shown for coffee packages) -->
+                    <div id="modalPkgOptions" class="modal-pkg-options" style="display:none">
+                        <div class="pkg-opt-group">
+                            <label class="pkg-opt-label">Roast Level</label>
+                            <select id="pkgRoast" class="pkg-opt-select">
+                                <option value="">Select roast</option>
+                                <option value="Light">Light Roast</option>
+                                <option value="Medium">Medium Roast</option>
+                                <option value="Dark">Dark Roast</option>
+                            </select>
+                        </div>
+                        <div class="pkg-opt-group">
+                            <label class="pkg-opt-label">Grind Type</label>
+                            <select id="pkgGrind" class="pkg-opt-select">
+                                <option value="">Select grind</option>
+                                <option value="Whole Bean">Whole Bean</option>
+                                <option value="Espresso">Espresso</option>
+                                <option value="Filter">Filter</option>
+                                <option value="French Press">French Press</option>
+                                <option value="Traditional Ethiopian">Traditional Ethiopian (ቡና ማፍሰሻ)</option>
+                            </select>
+                        </div>
+                        <div class="pkg-opt-group">
+                            <label class="pkg-opt-label">Quantity (kg)</label>
+                            <select id="pkgQtyKg" class="pkg-opt-select">
+                                <option value="1">1 kg</option>
+                                <option value="2">2 kg</option>
+                                <option value="5">5 kg</option>
+                                <option value="10">10 kg</option>
+                                <option value="25">25 kg</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Extended details bar (menu items) -->
+                    <div id="modalMenuDetails" class="modal-details-bar">
                         <div class="modal-detail-item">
                             <span class="modal-detail-icon" aria-hidden="true">🌶️</span>
                             <div>
