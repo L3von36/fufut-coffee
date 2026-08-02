@@ -311,7 +311,7 @@
     // Process queue
     processQueue();
 
-    return toastId;
+    return toast.id;
   }
 
   // Get default title for toast type
