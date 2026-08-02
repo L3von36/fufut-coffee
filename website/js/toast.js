@@ -114,13 +114,13 @@
         position: relative;
         pointer-events: auto;
         width: 100%;
-        max-width: 400px;
-        min-width: 280px;
-        padding: 14px 18px;
-        border-radius: var(--r-lg);
+        max-width: 320px;
+        min-width: 240px;
+        padding: 10px 14px;
+        border-radius: var(--r-md);
         display: flex;
         align-items: flex-start;
-        gap: 12px;
+        gap: 10px;
         box-shadow: var(--e-3);
         backdrop-filter: blur(10px);
         animation: toastSlideIn ${CONFIG.animationDuration}ms var(--ease-soft) both;
@@ -152,8 +152,8 @@
       }
       .toast-notification .toast-icon {
         flex-shrink: 0;
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
         color: currentColor;
       }
       .toast-notification .toast-content {
@@ -162,13 +162,13 @@
       }
       .toast-notification .toast-title {
         font-weight: 600;
-        font-size: var(--fs-14);
+        font-size: var(--fs-13);
         line-height: 1.3;
         color: #fff;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
       }
       .toast-notification .toast-message {
-        font-size: var(--fs-14);
+        font-size: var(--fs-13);
         line-height: 1.4;
         color: rgba(255, 255, 255, 0.9);
       }
@@ -178,8 +178,8 @@
         border: none;
         color: rgba(255, 255, 255, 0.7);
         cursor: pointer;
-        padding: 0;
-        margin: -4px -4px -4px auto;
+        padding: 8px;
+        margin: -8px -8px -8px auto;
         opacity: 0.7;
         transition: opacity var(--dur-1);
       }
@@ -193,8 +193,8 @@
         color: #fff;
       }
       .toast-notification .toast-dismiss svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         display: block;
       }
       .toast-notification.toast-success {
@@ -216,6 +216,16 @@
         background: var(--toast-warning-bg, ${TOAST_TYPES.warning.bg});
         border: 1px solid var(--toast-warning-border, ${TOAST_TYPES.warning.border});
         color: var(--toast-warning-color, ${TOAST_TYPES.warning.color});
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .toast-notification {
+          animation: none !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
+        .toast-notification.hidden {
+          animation: none !important;
+        }
       }
       @media (max-width: 480px) {
         .toast-notification {
