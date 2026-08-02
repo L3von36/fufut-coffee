@@ -2053,7 +2053,22 @@
 
     // ===== CARD CLICK DELEGATION =====
     document.addEventListener('click', function(e) {
-        const orderBtn = e.target.closest('.btn-order, .btn-menu-order, .btn-full');
+        const orderBtn = e.target.closest('.btn-menu-order, .btn-full');
+        // For package cards, the Order button should open detail modal (not add directly)
+        const pkgOrderBtn = e.target.closest('.pkg-card-order');
+        if (pkgOrderBtn) {
+            e.stopPropagation();
+            const card = pkgOrderBtn.closest('.pkg-card[data-name]');
+            if (card) {
+                openDetailModal({
+                    name: card.dataset.name,
+                    price: card.dataset.price,
+                    desc: card.dataset.desc,
+                    image: card.dataset.image
+                });
+            }
+            return;
+        }
         if (orderBtn) {
             e.stopPropagation();
             const card = orderBtn.closest('[data-name]');
