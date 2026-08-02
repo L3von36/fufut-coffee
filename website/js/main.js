@@ -131,24 +131,10 @@ const PREFERS_REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduc
   });
 })();
 
-// ---------- 7. Toast Notification (shared utility) ----------
-// Only define if inline script hasn't already defined it
-if (typeof window.showToast !== 'function') {
-  window.showToast = function(message, duration) {
-    duration = duration || 3000;
-    var toast = document.getElementById('toast');
-    if (!toast) return;
-
-    var msgEl = toast.querySelector('.toast__msg');
-    if (msgEl) msgEl.textContent = message;
-
-    toast.classList.add('show');
-    clearTimeout(toast._hideTimer);
-    toast._hideTimer = setTimeout(function() {
-      toast.classList.remove('show');
-    }, duration);
-  };
-}
+// ---------- 7. Toast Notification ----------
+// Toast functionality is now handled by toast.js
+// window.toast is available for success, error, info, warning notifications
+// Backwards compatible window.showToast still works but uses new toast system
 
 // ---------- 8. Active Nav Link Highlighting ----------
 (function initActiveNav() {
