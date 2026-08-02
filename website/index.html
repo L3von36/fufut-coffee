@@ -2181,7 +2181,7 @@
                 <div class="footer-brand">
                     <img src="assets/logo.webp" alt="Fu Fut Coffee Logo" class="footer-logo-img">
                     <div class="footer-brand-name">Fu Fut Coffee</div>
-                    <span class="footer-am">ፉፉቱ ኮፊ</span>
+                    <span class="footer-am" data-i18n="footer.amharicBrand">ፉፉቱ ኮፊ</span>
                     <p data-i18n="footer.desc">Ethiopian coffee heritage meets modern café culture. Serving single-origin excellence and traditional flavors since 2017.</p>
                     <div class="footer-social">
                         <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
@@ -2556,6 +2556,7 @@
 
                 // === FOOTER ===
                 if (c.footer) {
+                    if (c.footer.amharicBrand) setI18n('footer.amharicBrand', c.footer.amharicBrand);
                     if (c.footer.desc) setI18n('footer.desc', c.footer.desc);
                     if (c.footer.monFri) setI18n('footer.monFri', c.footer.monFri);
                     if (c.footer.sat) setI18n('footer.sat', c.footer.sat);
@@ -3952,12 +3953,15 @@
             if (resDetails[2] && rv.contactVal)  resDetails[2].textContent = rv.contactVal;
 
             // Footer — brand
+            var fAm     = document.querySelector('.footer-am');
             var fDesc  = document.querySelector('.footer-brand p');
             var fYear  = document.querySelector('.footer-bottom span:first-child');
             var fCraft = document.querySelector('.footer-bottom span:last-child');
+            var footAm    = ft.amharicBrand || '';
             var footDesc  = ft.desc  || c.footDesc  || '';
             var footYear  = ft.year  || c.footYear  || '';
             var footCraft = ft.craft || c.footCraft || '';
+            if (fAm    && footAm)    fAm.textContent = footAm;
             if (fDesc  && footDesc)  fDesc.textContent = footDesc;
             if (fYear  && footYear)  fYear.innerHTML   = '&copy; ' + footYear + ' Fu Fut Coffee. All rights reserved.';
             if (fCraft && footCraft) fCraft.textContent = footCraft;
