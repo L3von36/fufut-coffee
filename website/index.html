@@ -2228,23 +2228,7 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="closeDetailModal()" aria-label="Close modal">&times;</button>
             <div class="modal-grid">
-                <div class="modal-image-side" id="modalImageSide">
-                    <!-- Action overlay pinned to bottom of image -->
-                    <div class="modal-image-action">
-                        <div class="modal-interactive">
-                            <div class="quantity-control">
-                                <button onclick="updateQty(-1)" class="btn-qty" aria-label="Decrease quantity">-</button>
-                                <span id="modalQty">1</span>
-                                <button onclick="updateQty(1)" class="btn-qty" aria-label="Increase quantity">+</button>
-                            </div>
-                            <div class="modal-price-calc">
-                                <span class="price-label" data-i18n="modal.totalPrice">Total Price</span>
-                                <span id="modalTotalPrice" class="price-value">ETB 0.00</span>
-                            </div>
-                        </div>
-                        <button id="modalActionBtn" class="btn-modal-action" onclick="addToOrderAction()" data-i18n="modal.addToOrder">Add to Order</button>
-                    </div>
-                </div>
+                <div class="modal-image-side" id="modalImageSide"></div>
                 <div class="modal-info-side">
                     <div id="modalTags" class="modal-tags-container"></div>
                     <h3 id="modalTitle" class="modal-title">Item Name</h3>
@@ -2331,6 +2315,21 @@
                         <p id="modalFlavor" class="modal-flavor-text">—</p>
                     </div>
                 </div>
+            </div>
+            <!-- Action bar (outside grid for mobile sticky bottom) -->
+            <div class="modal-image-action" id="modalActionBar">
+                <div class="modal-interactive">
+                    <div class="quantity-control">
+                        <button onclick="updateQty(-1)" class="btn-qty" aria-label="Decrease quantity">-</button>
+                        <span id="modalQty">1</span>
+                        <button onclick="updateQty(1)" class="btn-qty" aria-label="Increase quantity">+</button>
+                    </div>
+                    <div class="modal-price-calc">
+                        <span class="price-label" data-i18n="modal.totalPrice">Total Price</span>
+                        <span id="modalTotalPrice" class="price-value">ETB 0.00</span>
+                    </div>
+                </div>
+                <button id="modalActionBtn" class="btn-modal-action" onclick="addToOrderAction()" data-i18n="modal.addToOrder">Add to Order</button>
             </div>
         </div>
     </div>
