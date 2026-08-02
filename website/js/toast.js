@@ -81,8 +81,9 @@
       + '.toast-notification.toast-error{background:' + TOAST_TYPES.error.bg + ';border:1px solid ' + TOAST_TYPES.error.border + '}'
       + '.toast-notification.toast-info{background:' + TOAST_TYPES.info.bg + ';border:1px solid ' + TOAST_TYPES.info.border + '}'
       + '.toast-notification.toast-warning{background:' + TOAST_TYPES.warning.bg + ';border:1px solid ' + TOAST_TYPES.warning.border + '}'
+      + '.cart-drawer.open~.toast-container--top-right{right:390px;transition:right .3s ease}'
       + '@media(prefers-reduced-motion:reduce){.toast-notification{transition:none !important;opacity:1;transform:none}}'
-      + '@media(max-width:480px){.toast-notification{max-width:calc(100vw - 32px);min-width:auto}}';
+      + '@media(max-width:480px){.toast-notification{max-width:calc(100vw - 32px);min-width:auto}.cart-drawer.open~.toast-container--top-right{right:16px}}';
   }
 
   function escapeHtml(text) {
