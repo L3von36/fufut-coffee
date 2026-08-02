@@ -500,30 +500,6 @@
             72%       { transform: translate(14px,20px) scale(.82); opacity: .85; }
         }
 
-        /* Floating coffee beans */
-        .hero-bean {
-            position: absolute; pointer-events: none;
-            width: 16px; height: 21px;
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            background: linear-gradient(135deg, rgba(107,66,38,.6), rgba(60,36,21,.6));
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,.1);
-            opacity: .5;
-        }
-        .hero-bean::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 1.5px; height: 65%; background: rgba(0,0,0,.3);
-            transform: translate(-50%,-50%) rotate(90deg); border-radius: 2px;
-        }
-        .bean-a { top: 15%; left: 6%; animation: beanFloat 8s ease-in-out infinite; }
-        .bean-b { top: 70%; left: 10%; animation: beanFloat 9s ease-in-out 1.5s infinite; width: 12px; height: 16px; opacity: .35; }
-        .bean-c { top: 25%; right: 7%; animation: beanFloat 7s ease-in-out .8s infinite; }
-        .bean-d { top: 68%; right: 9%; animation: beanFloat 10s ease-in-out 2.5s infinite; width: 13px; height: 17px; opacity: .4; }
-        .bean-e { top: 45%; left: 3%; animation: beanFloat 11s ease-in-out 3.5s infinite; width: 10px; height: 13px; opacity: .3; }
-        @keyframes beanFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(8deg); }
-        }
-
         /* Large decorative circles */
         .hero-ring {
             position: absolute; border-radius: 50%; pointer-events: none;
@@ -1774,13 +1750,6 @@
         <div class="hero-ring hero-ring-1"></div>
         <div class="hero-ring hero-ring-2"></div>
         <div class="hero-ring hero-ring-3"></div>
-
-        <!-- Floating beans -->
-        <div class="hero-bean bean-a"></div>
-        <div class="hero-bean bean-b"></div>
-        <div class="hero-bean bean-c"></div>
-        <div class="hero-bean bean-d"></div>
-        <div class="hero-bean bean-e"></div>
 
         <!-- Steam curls -->
         <div class="hero-steam-wrap">
