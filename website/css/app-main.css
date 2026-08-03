@@ -206,6 +206,15 @@
             transition: all var(--duration-fast); cursor: pointer; white-space: nowrap;
         }
         .btn-primary-nav:hover { background: var(--color-primary-dark); transform: translateY(-1px); }
+        .nav-about-link {
+            color: rgba(255,255,255,0.85); font-weight: 600; font-size: var(--text-sm);
+            text-decoration: none; letter-spacing: 0.5px; transition: all var(--duration-fast);
+            white-space: nowrap; flex-shrink: 0;
+        }
+        .nav-about-link:hover { color: #fff; }
+        .nav.scrolled .nav-about-link { color: var(--color-primary-dark); }
+        .nav.scrolled .nav-about-link:hover { color: var(--color-primary); }
+        @media(max-width:1080px) { .nav-about-link { display: none; } }
         .btn-nav-desktop { flex-shrink: 0; margin-left: 24px; }
         @media(min-width:1081px) { .nav-drawer-footer .nav-actions { display: none; } }
         @media(max-width:1080px) { .btn-nav-desktop { display: none; } }
