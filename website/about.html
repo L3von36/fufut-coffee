@@ -930,88 +930,89 @@ var wpforms_settings = {"val_required":"This field is required.","val_email":"Pl
 <link rel="stylesheet" href="https://startersites.io/blocksy/persona/wp-content/themes/blocksy/static/bundle/back-to-top.min.css?ver=2.1.20">
 <script>
 (function(){
-  // Parallax for background-image sections
-  var bgSections = ['.stk-3c28047', '.stk-ca14d9d', '.stk-47f3fe7', '.stk-2976898'];
-  bgSections.forEach(function(sel){
-    var el = document.querySelector(sel);
-    if(el){ el.style.backgroundAttachment = 'fixed'; }
-  });
+  var vh = window.innerHeight;
 
-  // Parallax for image blocks — move the wrapper, not the img
-  // This avoids overflow:hidden clipping the transform
-  var imgBlocks = document.querySelectorAll('.stk-c358997, .stk-c39336a, .stk-1ff1ecb, .stk-5eca0c5, .stk-2b008f4, .stk-2060c36, .stk-f2831ff');
-  imgBlocks.forEach(function(block){
-    block.style.overflow = 'visible';
-    block.style.position = 'relative';
-    block.style.zIndex = '1';
-    var img = block.querySelector('img');
-    if(img){
-      img.style.transition = 'transform 0.05s linear';
-      img.style.willChange = 'transform';
-      img.style.objectFit = 'cover';
-    }
-  });
-
-  // Also parallax the service cards and blog cards
-  var cards = document.querySelectorAll('.stk-622c7a4, .stk-a7c50c6, .stk-fe0d40e');
-  cards.forEach(function(card, i){
-    card.style.willChange = 'transform';
-    card.style.transition = 'transform 0.05s linear';
-  });
-
-  // CTA person image
-  var ctaImg = document.querySelector('.stk-f2831ff img');
-  if(ctaImg){
-    ctaImg.style.transition = 'transform 0.05s linear';
-    ctaImg.style.willChange = 'transform';
+  // HERO: dynamic background-position parallax (very visible)
+  var hero = document.querySelector('.stk-3c28047');
+  if(hero){
+    hero.style.backgroundAttachment = 'scroll';
+    hero.style.backgroundSize = '120% auto';
+    hero.style.willChange = 'background-position-y';
   }
 
-  function onScroll(){
-    var scrollY = window.pageYOffset;
-    var vh = window.innerHeight;
+  // Section backgrounds: fixed parallax
+  ['.stk-ca14d9d', '.stk-47f3fe7', '.stk-2976898'].forEach(function(s){
+    var el = document.querySelector(s);
+    if(el) el.style.backgroundAttachment = 'fixed';
+  });
 
+  // Image blocks: overflow visible + scale for parallax room
+  var imgBlocks = document.querySelectorAll('.stk-c358997, .stk-c39336a, .stk-1ff1ecb, .stk-5eca0c5, .stk-2b008f4, .stk-2060c36');
+  imgBlocks.forEach(function(b){
+    b.style.cssText += ';overflow:visible!important;position:relative;z-index:1;';
+    var img = b.querySelector('img');
+    if(img){ img.style.willChange = 'transform'; img.style.objectFit = 'cover'; }
+  });
+
+  // Service cards
+  var cards = document.querySelectorAll('.stk-622c7a4, .stk-a7c50c6, .stk-fe0d40e');
+  cards.forEach(function(c){ c.style.willChange = 'transform'; });
+
+  // CTA person image
+  var ctaWrap = document.querySelector('.stk-f2831ff');
+  var ctaImg = ctaWrap ? ctaWrap.querySelector('img') : null;
+  if(ctaWrap){ ctaWrap.style.overflow = 'visible'; }
+  if(ctaImg){ ctaImg.style.willChange = 'transform'; }
+
+  function update(){
+    var sy = window.pageYOffset;
+    vh = window.innerHeight;
+
+    // Hero background shifts
+    if(hero && sy < vh * 1.5){
+      var heroH = hero.offsetHeight;
+      var pct = Math.min(sy / heroH, 1);
+      hero.style.backgroundPositionY = (50 - pct * 30) + '%';
+    }
+
+    // Video grid images
     imgBlocks.forEach(function(block){
       var rect = block.getBoundingClientRect();
       var img = block.querySelector('img');
       if(!img) return;
-      // Only animate when near viewport
-      if(rect.bottom < -200 || rect.top > vh + 200){
-        img.style.transform = '';
-        return;
-      }
-      var progress = (vh - rect.top) / (vh + rect.height);
-      var offset = (progress - 0.5) * 150;
-      img.style.transform = 'translateY(' + offset + 'px) scale(1.18)';
+      if(rect.bottom < -300 || rect.top > vh + 300){ img.style.transform = ''; return; }
+      var center = rect.top + rect.height / 2;
+      var dist = center - vh / 2;
+      var off = dist * 0.25;
+      img.style.transform = 'translateY(' + off + 'px) scale(1.2)';
     });
 
-    // Service cards — alternating float
+    // Service cards - alternating
     cards.forEach(function(card, i){
       var rect = card.getBoundingClientRect();
-      if(rect.bottom < -100 || rect.top > vh + 100) return;
-      var progress = (vh - rect.top) / (vh + rect.height);
-      var offset = (progress - 0.5) * 50;
+      if(rect.bottom < -150 || rect.top > vh + 150) return;
+      var center = rect.top + rect.height / 2;
+      var dist = center - vh / 2;
       var dir = i % 2 === 0 ? 1 : -1;
-      card.style.transform = 'translateY(' + (offset * dir) + 'px)';
+      card.style.transform = 'translateY(' + (dist * 0.08 * dir) + 'px)';
     });
 
     // CTA image
     if(ctaImg){
       var r = ctaImg.getBoundingClientRect();
-      if(r.bottom > -200 && r.top < vh + 200){
-        var p = (vh - r.top) / (vh + r.height);
-        var o = (p - 0.5) * 100;
-        ctaImg.style.transform = 'translateY(' + o + 'px) scale(1.1)';
+      if(r.bottom > -300 && r.top < vh + 300){
+        var c = r.top + r.height / 2;
+        ctaImg.style.transform = 'translateY(' + ((c - vh/2) * 0.2) + 'px) scale(1.1)';
       }
     }
   }
 
-  var t = false;
-  window.addEventListener('scroll', function(){
-    if(!t){ requestAnimationFrame(function(){ onScroll(); t = false; }); t = true; }
+  var busy = false;
+ window.addEventListener('scroll', function(){
+    if(!busy){ busy = true; requestAnimationFrame(function(){ update(); busy = false; }); }
   }, {passive:true});
 
-  // Run after a short delay so layout is settled
-  setTimeout(onScroll, 300);
-  window.addEventListener('load', onScroll);
+  setTimeout(update, 400);
+ window.addEventListener('load', update);
 })();
 </script></body></html>
