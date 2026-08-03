@@ -930,89 +930,152 @@ var wpforms_settings = {"val_required":"This field is required.","val_email":"Pl
 <link rel="stylesheet" href="https://startersites.io/blocksy/persona/wp-content/themes/blocksy/static/bundle/back-to-top.min.css?ver=2.1.20">
 <script>
 (function(){
-  var vh = window.innerHeight;
+  'use strict';
 
-  // HERO: dynamic background-position parallax (very visible)
-  var hero = document.querySelector('.stk-3c28047');
-  if(hero){
-    hero.style.backgroundAttachment = 'scroll';
-    hero.style.backgroundSize = '120% auto';
-    hero.style.willChange = 'background-position-y';
+  /* ===== CONFIG ===== */
+  var HERO_SPEED   = 0.45;
+  var IMG_SPEED    = 0.35;
+  var CTA_SPEED    = 0.30;
+  var CARD_SPEED   = 0.06;
+  var BG_SPEED     = 0.35;
+  var IMG_SCALE    = 1.25;
+  var MOBILE_BREAK = 768;
+  var TABLET_BREAK = 1024;
+
+  function getSpeed(base){
+    var w = window.innerWidth;
+    if(w < MOBILE_BREAK) return base * 0.3;
+    if(w < TABLET_BREAK) return base * 0.6;
+    return base;
   }
 
-  // Section backgrounds: fixed parallax
-  ['.stk-ca14d9d', '.stk-47f3fe7', '.stk-2976898'].forEach(function(s){
-    var el = document.querySelector(s);
-    if(el) el.style.backgroundAttachment = 'fixed';
+  /* ===== 1. HERO — inject real <img> for reliable parallax ===== */
+  var hero = document.querySelector('.stk-3c28047');
+  var heroImgWrap = null;
+  if(hero){
+    hero.style.backgroundImage = 'none';
+    hero.style.position = 'relative';
+    hero.style.overflow = 'hidden';
+
+    heroImgWrap = document.createElement('div');
+    heroImgWrap.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:130%;z-index:0;pointer-events:none;will-change:transform;';
+
+    var hImg = document.createElement('img');
+    hImg.src = 'https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/home_hero@1.5x.jpg';
+    hImg.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+    hImg.setAttribute('alt','');
+    hImg.setAttribute('loading','eager');
+
+    heroImgWrap.appendChild(hImg);
+    hero.insertBefore(heroImgWrap, hero.firstChild);
+
+    var heroContent = hero.querySelector('.stk-3c28047-column');
+    if(heroContent) heroContent.style.position = 'relative';
+  }
+
+  /* ===== 2. CLIENTS SECTION — inject real <img> ===== */
+  var clients = document.querySelector('.stk-ca14d9d');
+  var clientsImgWrap = null;
+  if(clients){
+    clients.style.backgroundImage = 'none';
+    clients.style.backgroundAttachment = 'scroll';
+    clients.style.position = 'relative';
+    clients.style.overflow = 'hidden';
+
+    clientsImgWrap = document.createElement('div');
+    clientsImgWrap.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:130%;z-index:0;pointer-events:none;will-change:transform;';
+
+    var cImg = document.createElement('img');
+    cImg.src = 'https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/clients_bg_desaturated@1.5x.jpg';
+    cImg.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center left;display:block;';
+    cImg.setAttribute('alt','');
+    clientsImgWrap.appendChild(cImg);
+    clients.insertBefore(clientsImgWrap, clients.firstChild);
+
+    var clientsContent = clients.querySelector('.stk-ca14d9d-column');
+    if(clientsContent) clientsContent.style.position = 'relative';
+  }
+
+  /* ===== 3. GRID IMAGES — transform parallax ===== */
+  var imgSelectors = '.stk-c358997, .stk-c39336a, .stk-1ff1ecb, .stk-5eca0c5, .stk-2b008f4, .stk-2060c36';
+  var imgBlocks = document.querySelectorAll(imgSelectors);
+  imgBlocks.forEach(function(block){
+    block.style.overflow = 'hidden';
+    block.style.position = 'relative';
+    var img = block.querySelector('img');
+    if(img){
+      img.style.willChange = 'transform';
+      img.style.transition = 'none';
+      img.style.objectFit = 'cover';
+    }
   });
 
-  // Image blocks: overflow visible + scale for parallax room
-  var imgBlocks = document.querySelectorAll('.stk-c358997, .stk-c39336a, .stk-1ff1ecb, .stk-5eca0c5, .stk-2b008f4, .stk-2060c36');
-  imgBlocks.forEach(function(b){
-    b.style.cssText += ';overflow:visible!important;position:relative;z-index:1;';
-    var img = b.querySelector('img');
-    if(img){ img.style.willChange = 'transform'; img.style.objectFit = 'cover'; }
-  });
-
-  // Service cards
+  /* ===== 4. SERVICE CARDS ===== */
   var cards = document.querySelectorAll('.stk-622c7a4, .stk-a7c50c6, .stk-fe0d40e');
-  cards.forEach(function(c){ c.style.willChange = 'transform'; });
+  cards.forEach(function(c){ c.style.willChange = 'transform'; c.style.transition = 'none'; });
 
-  // CTA person image
+  /* ===== 5. CTA PERSON IMAGE ===== */
   var ctaWrap = document.querySelector('.stk-f2831ff');
   var ctaImg = ctaWrap ? ctaWrap.querySelector('img') : null;
-  if(ctaWrap){ ctaWrap.style.overflow = 'visible'; }
-  if(ctaImg){ ctaImg.style.willChange = 'transform'; }
+  if(ctaWrap){ ctaWrap.style.overflow = 'hidden'; ctaWrap.style.position = 'relative'; }
+  if(ctaImg){ ctaImg.style.willChange = 'transform'; ctaImg.style.transition = 'none'; }
 
+  /* ===== SCROLL HANDLER ===== */
   function update(){
-    var sy = window.pageYOffset;
-    vh = window.innerHeight;
+    var vh = window.innerHeight;
+    var heroSpd = getSpeed(HERO_SPEED);
+    var imgSpd  = getSpeed(IMG_SPEED);
+    var ctaSpd  = getSpeed(CTA_SPEED);
+    var cardSpd = getSpeed(CARD_SPEED);
+    var bgSpd   = getSpeed(BG_SPEED);
 
-    // Hero background shifts
-    if(hero && sy < vh * 1.5){
-      var heroH = hero.offsetHeight;
-      var pct = Math.min(sy / heroH, 1);
-      hero.style.backgroundPositionY = (50 - pct * 30) + '%';
+    if(heroImgWrap){
+      var heroRect = hero.getBoundingClientRect();
+      var heroOffset = heroRect.top;
+      heroImgWrap.style.transform = 'translate3d(0,' + (heroOffset * heroSpd) + 'px,0)';
     }
 
-    // Video grid images
+    if(clientsImgWrap){
+      var cRect = clients.getBoundingClientRect();
+      clientsImgWrap.style.transform = 'translate3d(0,' + (cRect.top * bgSpd) + 'px,0)';
+    }
+
     imgBlocks.forEach(function(block){
       var rect = block.getBoundingClientRect();
       var img = block.querySelector('img');
       if(!img) return;
-      if(rect.bottom < -300 || rect.top > vh + 300){ img.style.transform = ''; return; }
+      if(rect.bottom < -500 || rect.top > vh + 500){ img.style.transform = ''; return; }
       var center = rect.top + rect.height / 2;
       var dist = center - vh / 2;
-      var off = dist * 0.25;
-      img.style.transform = 'translateY(' + off + 'px) scale(1.2)';
+      img.style.transform = 'translate3d(0,' + (dist * imgSpd) + 'px,0) scale(' + IMG_SCALE + ')';
     });
 
-    // Service cards - alternating
     cards.forEach(function(card, i){
       var rect = card.getBoundingClientRect();
-      if(rect.bottom < -150 || rect.top > vh + 150) return;
+      if(rect.bottom < -200 || rect.top > vh + 200){ card.style.transform = ''; return; }
       var center = rect.top + rect.height / 2;
       var dist = center - vh / 2;
       var dir = i % 2 === 0 ? 1 : -1;
-      card.style.transform = 'translateY(' + (dist * 0.08 * dir) + 'px)';
+      card.style.transform = 'translate3d(0,' + (dist * cardSpd * dir) + 'px,0)';
     });
 
-    // CTA image
     if(ctaImg){
       var r = ctaImg.getBoundingClientRect();
-      if(r.bottom > -300 && r.top < vh + 300){
+      if(r.bottom > -400 && r.top < vh + 400){
         var c = r.top + r.height / 2;
-        ctaImg.style.transform = 'translateY(' + ((c - vh/2) * 0.2) + 'px) scale(1.1)';
+        ctaImg.style.transform = 'translate3d(0,' + ((c - vh/2) * ctaSpd) + 'px,0) scale(1.15)';
       }
     }
   }
 
   var busy = false;
- window.addEventListener('scroll', function(){
+  window.addEventListener('scroll', function(){
     if(!busy){ busy = true; requestAnimationFrame(function(){ update(); busy = false; }); }
   }, {passive:true});
 
-  setTimeout(update, 400);
- window.addEventListener('load', update);
+  window.addEventListener('load', function(){ setTimeout(update, 200); });
+  setTimeout(update, 100);
+  setTimeout(update, 500);
+  window.addEventListener('resize', update);
 })();
 </script></body></html>
