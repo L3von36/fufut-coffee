@@ -2122,11 +2122,11 @@
     function initGallery() {
         const grid = document.getElementById('galleryGrid');
         if (!grid || !galleryData.length) return;
-        /* Layout classes for masonry feel */
-        const layout = ['featured','','','wide','full'];
+        /* Layout classes for masonry feel — featured cell only when we have enough images */
+        var layout = galleryData.length >= 5 ? ['featured','','','wide','full'] : [];
         grid.innerHTML = galleryData.map(function(item, i) {
             var cls = 'gallery-item' + (layout[i] ? ' ' + layout[i] : '');
-            return '<div class="' + cls + '" data-index="' + i + '" onclick="openLightbox(' + i + ')">' +
+            return '<div class="' + cls + '" data-index="' + i + '" onclick="openLightbox(' + i + ')" role="button" tabindex="0" aria-label="' + (item.title || 'Open image') + '">' +
                 '<img src="' + item.src + '" alt="' + item.alt + '" loading="lazy" onerror="onImgError(this)">' +
                 '<div class="gallery-overlay">' +
                     '<div class="g-title">' + item.title + '</div>' +
@@ -2135,6 +2135,15 @@
                 '<div class="gallery-zoom">+</div>' +
             '</div>';
         }).join('');
+        // Allow keyboard activation on the gallery cards
+        grid.querySelectorAll('.gallery-item').forEach(function(el) {
+            el.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLightbox(parseInt(el.getAttribute('data-index'), 10));
+                }
+            });
+        });
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initGallery);
@@ -2194,16 +2203,47 @@
     }
 
     function navigateLightbox(dir) {
-        var newIdx = galleryIndex + dir;
-        if (newIdx < 0 || newIdx >= galleryData.length) return;
+        if (!galleryData.length) return;
+        // Wrap-around navigation so the gallery loops continuously.
+        var newIdx = (galleryIndex + dir + galleryData.length) % galleryData.length;
         openLightbox(newIdx);
     }
 
     document.addEventListener('keydown', function(e) {
+        if (!_lbOpen) return;
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') navigateLightbox(-1);
         if (e.key === 'ArrowRight') navigateLightbox(1);
     });
+
+    // Touch swipe support for the lightbox on mobile.
+    (function() {
+        var touchStartX = 0, touchStartY = 0, touchActive = false;
+        var lbEl = document.getElementById('galleryLightbox');
+        if (!lbEl) return;
+        lbEl.addEventListener('touchstart', function(e) {
+            if (!_lbOpen) return;
+            var t = e.touches[0];
+            touchStartX = t.clientX;
+            touchStartY = t.clientY;
+            touchActive = true;
+        }, { passive: true });
+        lbEl.addEventListener('touchend', function(e) {
+            if (!touchActive || !_lbOpen) return;
+            touchActive = false;
+            var t = e.changedTouches[0];
+            var dx = t.clientX - touchStartX;
+            var dy = t.clientY - touchStartY;
+            // Only treat as a horizontal swipe if dx is dominant and above threshold.
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+                if (dx < 0) navigateLightbox(1);
+                else navigateLightbox(-1);
+            } else if (dy < -80 && Math.abs(dy) > Math.abs(dx) * 1.4) {
+                // Swipe up to close
+                closeLightbox();
+            }
+        }, { passive: true });
+    })();
 
     </script>
 
