@@ -118,7 +118,6 @@
             </div>
             <div class="nav-drawer-body">
                 <ul class="nav-links" id="navLinks">
-                    <li><a href="#about-persona" data-i18n="nav.about">About</a></li>
                     <li><a href="#coffee" data-i18n="nav.coffee">Coffee</a></li>
                     <li><a href="#menu" data-i18n="nav.menu">Menu</a></li>
                     <li><a href="#ceremony" data-i18n="nav.ceremony">Ceremony</a></li>
@@ -258,68 +257,6 @@
                             <span data-i18n="story.feat4">Friendly Community</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- BLOCKS REVOLUTIONARY "ABOUT PERSONA" SECTION -->
-    <section class="section about-persona-section" id="about-persona">
-        <div class="content">
-            <!-- Header Group -->
-            <div class="persona-about-header">
-                <span class="persona-breadcrumb" data-i18n="about.breadcrumb">HOME &nbsp;/&nbsp; ABOUT US</span>
-                <div class="persona-title-container">
-                    <span class="persona-title-outline" aria-hidden="true" data-i18n="about.outline">About Us</span>
-                    <h2 class="persona-main-title" data-i18n="about.title">About Us</h2>
-                </div>
-                <p class="persona-subtitle" data-i18n="about.subtitle">Elevating the traditional Ethiopian coffee ritual into a modern sensory journey. Born from heritage, perfected for today.</p>
-            </div>
-
-            <!-- Content Grid -->
-            <div class="persona-about-grid">
-                <!-- Left Column: Portrait Frame -->
-                <div class="persona-about-image-col">
-                    <div class="persona-image-wrapper">
-                        <img src="assets/gallery-1.jpg" alt="Fu Fut Coffee - Beautiful space" class="persona-portrait-img" loading="lazy">
-                    </div>
-                </div>
-
-                <!-- Right Column: Content Features -->
-                <div class="persona-about-content-col">
-                    <span class="persona-section-accent" data-i18n="about.accent">OUR KEY FEATURES</span>
-                    <h3 class="persona-section-heading" data-i18n="about.heading">Crafting Every Cup with Intention and Heritage</h3>
-
-                    <div class="persona-features-list">
-                        <!-- Feature 1 -->
-                        <div class="persona-feature-item">
-                            <span class="persona-feature-num">#1</span>
-                            <div class="persona-feature-text">
-                                <h4 data-i18n="about.f1Title">Our Mission</h4>
-                                <p data-i18n="about.f1Text">To honor and preserve the age-old tradition of Ethiopian coffee ceremonies while sourcing and serving the finest single-origin specialty coffees.</p>
-                            </div>
-                        </div>
-
-                        <!-- Feature 2 -->
-                        <div class="persona-feature-item">
-                            <span class="persona-feature-num">#2</span>
-                            <div class="persona-feature-text">
-                                <h4 data-i18n="about.f2Title">Our Goals</h4>
-                                <p data-i18n="about.f2Text">We aim to connect high-altitude smallholder farmers with coffee lovers worldwide, ensuring ethical trading and peerless flavor quality.</p>
-                            </div>
-                        </div>
-
-                        <!-- Feature 3 -->
-                        <div class="persona-feature-item">
-                            <span class="persona-feature-num">#3</span>
-                            <div class="persona-feature-text">
-                                <h4 data-i18n="about.f3Title">Why Us?</h4>
-                                <p data-i18n="about.f3Text">Every single cup is meticulously roasted and hand-poured, keeping the spirit of gathering and hospitality alive at the heart of our space.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn-gold persona-cta-btn" data-scroll="#reservation" data-i18n="about.cta">LEARN MORE</button>
                 </div>
             </div>
         </div>
@@ -1417,19 +1354,6 @@
                     .fromTo('.story-divider', { width: 0 }, { width: '100%', duration: .4, ease: 'expo.out' }, '-=.2')
                     .fromTo('.story-text p', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: .4, stagger: .1, ease: 'expo.out' }, '-=.2')
                     .fromTo('.story-feat', { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: .4, stagger: .08, ease: 'expo.out' }, '-=.1');
-
-                // Blocksy Persona Style About section animations
-                var aboutPersonaTl = gsap.timeline({ scrollTrigger: { trigger: '#about-persona', start: 'top 75%', once: true } });
-                aboutPersonaTl
-                    .fromTo('.persona-breadcrumb', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' })
-                    .fromTo('.persona-title-outline', { opacity: 0, scale: 0.95 }, { opacity: 0.05, scale: 1, duration: 0.6, ease: 'expo.out' }, '-=.2')
-                    .fromTo('.persona-main-title', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, '-=.4')
-                    .fromTo('.persona-subtitle', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, '-=.3')
-                    .fromTo('.persona-image-wrapper', { opacity: 0, scale: 0.96, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: 'expo.out' }, '-=.2')
-                    .fromTo('.persona-section-accent', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, '-=.5')
-                    .fromTo('.persona-section-heading', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: 'expo.out' }, '-=.3')
-                    .fromTo('.persona-feature-item', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: 'expo.out' }, '-=.3')
-                    .fromTo('.persona-cta-btn', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }, '-=.2');
 
                 // Coffee cards
                 ScrollTrigger.batch('.coffee-card', {
