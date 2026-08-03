@@ -151,6 +151,17 @@ body [class*="has-palette-color-3-color"] {
 .stk-ca14d9d:before { z-index: 0 !important; opacity: 0.85 !important; }
 .stk-ca14d9d > div:first-child { z-index: 1 !important; }
 .stk-ca14d9d-column { z-index: 2 !important; position: relative !important; }
+
+/* Hero CEO image */
+.stk-f2831ff-hero { align-self: flex-end !important; }
+.stk-f2831ff-hero img { border-radius: 12px !important; }
+@media screen and (max-width: 689px) {
+  .stk-67cd161 { display: none !important; }
+  .stk-31de384 { flex: 1 1 100% !important; }
+}
+@media screen and (min-width: 690px) and (max-width: 999px) {
+  .stk-f2831ff-hero .stk-img-wrapper { max-height: 380px !important; }
+}
 </style>
 
 <a class="skip-link screen-reader-text" href="#main">Skip to content</a><div class="ct-drawer-canvas" data-location="start">
@@ -361,7 +372,7 @@ body [class*="has-palette-color-3-color"] {
 
 
 
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-67cd161" data-v="4" data-block-id="67cd161"><div class="stk-column-wrapper stk-block-column__content stk-container stk-67cd161-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-67cd161-inner-blocks"></div></div></div>
+<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-67cd161" data-v="4" data-block-id="67cd161"><div class="stk-column-wrapper stk-block-column__content stk-container stk-67cd161-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-67cd161-inner-blocks"><div class="wp-block-stackable-image stk-block-image stk-block stk-f2831ff-hero" style="text-align:right;margin-top:-40px;" data-block-id="67cd161-img"><div class="stk-img-wrapper" style="height:auto;max-height:520px;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);"><img src="images/ceo.png" alt="Fu Fut Coffee - Premium Ethiopian Coffee" style="width:100%;height:100%;object-fit:cover;display:block;" loading="eager"></div></div></div></div></div>
 </div></div>
 
 
@@ -709,7 +720,14 @@ var ct_localizations = {"ajax_url":"https:\/\/startersites.io\/blocksy\/persona\
   var cards = document.querySelectorAll('.stk-622c7a4, .stk-a7c50c6, .stk-fe0d40e');
   cards.forEach(function(c){ c.style.willChange = 'transform'; c.style.transition = 'none'; });
 
-  /* ===== 5. CTA PERSON IMAGE ===== */
+  /* ===== 5. HERO CEO IMAGE — parallax ===== */
+  var heroCeoImg = document.querySelector('.stk-f2831ff-hero img');
+  if(heroCeoImg){
+    heroCeoImg.style.willChange = 'transform';
+    heroCeoImg.style.transition = 'none';
+  }
+
+  /* ===== 6. CTA PERSON IMAGE ===== */
   var ctaWrap = document.querySelector('.stk-f2831ff');
   var ctaImg = ctaWrap ? ctaWrap.querySelector('img') : null;
   if(ctaWrap){ ctaWrap.style.overflow = 'hidden'; ctaWrap.style.position = 'relative'; }
@@ -728,6 +746,16 @@ var ct_localizations = {"ajax_url":"https:\/\/startersites.io\/blocksy\/persona\
       var heroRect = hero.getBoundingClientRect();
       var heroOffset = heroRect.top;
       heroImgWrap.style.transform = 'translate3d(0,' + (heroOffset * heroSpd) + 'px,0)';
+    }
+
+    // Hero CEO image — subtle parallax lift
+    if(heroCeoImg){
+      var ceoRect = heroCeoImg.getBoundingClientRect();
+      if(ceoRect.bottom > -200 && ceoRect.top < vh + 200){
+        var ceoCenter = ceoRect.top + ceoRect.height / 2;
+        var ceoDist = ceoCenter - vh / 2;
+        heroCeoImg.style.transform = 'translate3d(0,' + (ceoDist * heroSpd * 0.3) + 'px,0)';
+      }
     }
 
     if(clientsImgWrap){
