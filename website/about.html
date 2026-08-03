@@ -930,65 +930,88 @@ var wpforms_settings = {"val_required":"This field is required.","val_email":"Pl
 <link rel="stylesheet" href="https://startersites.io/blocksy/persona/wp-content/themes/blocksy/static/bundle/back-to-top.min.css?ver=2.1.20">
 <script>
 (function(){
-  var parallaxEls = [];
+  // Parallax for background-image sections
+  var bgSections = ['.stk-3c28047', '.stk-ca14d9d', '.stk-47f3fe7', '.stk-2976898'];
+  bgSections.forEach(function(sel){
+    var el = document.querySelector(sel);
+    if(el){ el.style.backgroundAttachment = 'fixed'; }
+  });
 
-  // Hero background section
-  var hero = document.querySelector('.stk-3c28047');
-  if (hero) {
-    hero.style.backgroundAttachment = 'fixed';
-    hero.style.willChange = 'background-position';
-    parallaxEls.push({ el: hero, type: 'bg' });
-  }
-
-  // Clients section background
-  var clients = document.querySelector('.stk-ca14d9d');
-  if (clients) {
-    clients.style.backgroundAttachment = 'fixed';
-    clients.style.willChange = 'background-position';
-  }
-
-  // CTA section background
-  var cta = document.querySelector('.stk-2976898');
-  if (cta) {
-    cta.style.backgroundAttachment = 'fixed';
-    cta.style.willChange = 'background-position';
-  }
-
-  // Video grid & blog images — transform-based parallax
-  var imgSelectors = '.stk-c358997 img, .stk-c39336a img, .stk-1ff1ecb img, .stk-5eca0c5 img, .stk-2b008f4 img, .stk-2060c36 img, .stk-f2831ff img';
-  document.querySelectorAll(imgSelectors).forEach(function(img) {
-    var wrapper = img.closest('.stk-block-image');
-    if (wrapper) {
-      wrapper.style.overflow = 'hidden';
+  // Parallax for image blocks — move the wrapper, not the img
+  // This avoids overflow:hidden clipping the transform
+  var imgBlocks = document.querySelectorAll('.stk-c358997, .stk-c39336a, .stk-1ff1ecb, .stk-5eca0c5, .stk-2b008f4, .stk-2060c36, .stk-f2831ff');
+  imgBlocks.forEach(function(block){
+    block.style.overflow = 'visible';
+    block.style.position = 'relative';
+    block.style.zIndex = '1';
+    var img = block.querySelector('img');
+    if(img){
+      img.style.transition = 'transform 0.05s linear';
       img.style.willChange = 'transform';
-      img.style.transition = 'none';
-      parallaxEls.push({ el: img, type: 'img' });
+      img.style.objectFit = 'cover';
     }
   });
 
-  if (!parallaxEls.length) return;
+  // Also parallax the service cards and blog cards
+  var cards = document.querySelectorAll('.stk-622c7a4, .stk-a7c50c6, .stk-fe0d40e');
+  cards.forEach(function(card, i){
+    card.style.willChange = 'transform';
+    card.style.transition = 'transform 0.05s linear';
+  });
 
-  var ticking = false;
-  window.addEventListener('scroll', function() {
-    if (!ticking) {
-      requestAnimationFrame(function() {
-        var scrollY = window.pageYOffset;
-        var vh = window.innerHeight;
-        parallaxEls.forEach(function(item) {
-          if (item.type === 'img') {
-            var rect = item.el.getBoundingClientRect();
-            var centerY = rect.top + rect.height / 2;
-            var offset = (centerY - vh / 2) * 0.15;
-            item.el.style.transform = 'translateY(' + offset + 'px) scale(1.08)';
-          }
-        });
-        ticking = false;
-      });
-      ticking = true;
+  // CTA person image
+  var ctaImg = document.querySelector('.stk-f2831ff img');
+  if(ctaImg){
+    ctaImg.style.transition = 'transform 0.05s linear';
+    ctaImg.style.willChange = 'transform';
+  }
+
+  function onScroll(){
+    var scrollY = window.pageYOffset;
+    var vh = window.innerHeight;
+
+    imgBlocks.forEach(function(block){
+      var rect = block.getBoundingClientRect();
+      var img = block.querySelector('img');
+      if(!img) return;
+      // Only animate when near viewport
+      if(rect.bottom < -100 || rect.top > vh + 100){
+        img.style.transform = '';
+        return;
+      }
+      var progress = (vh - rect.top) / (vh + rect.height);
+      var offset = (progress - 0.5) * 60;
+      img.style.transform = 'translateY(' + offset + 'px) scale(1.12)';
+    });
+
+    // Service cards — subtle float
+    cards.forEach(function(card, i){
+      var rect = card.getBoundingClientRect();
+      if(rect.bottom < -50 || rect.top > vh + 50) return;
+      var progress = (vh - rect.top) / (vh + rect.height);
+      var offset = (progress - 0.5) * 20;
+      var dir = i % 2 === 0 ? 1 : -1;
+      card.style.transform = 'translateY(' + (offset * dir) + 'px)';
+    });
+
+    // CTA image
+    if(ctaImg){
+      var r = ctaImg.getBoundingClientRect();
+      if(r.bottom > -100 && r.top < vh + 100){
+        var p = (vh - r.top) / (vh + r.height);
+        var o = (p - 0.5) * 40;
+        ctaImg.style.transform = 'translateY(' + o + 'px) scale(1.05)';
+      }
     }
-  }, { passive: true });
+  }
 
-  // Initial call
-  window.dispatchEvent(new Event('scroll'));
+  var t = false;
+  window.addEventListener('scroll', function(){
+    if(!t){ requestAnimationFrame(function(){ onScroll(); t = false; }); t = true; }
+  }, {passive:true});
+
+  // Run after a short delay so layout is settled
+  setTimeout(onScroll, 300);
+  window.addEventListener('load', onScroll);
 })();
 </script></body></html>
