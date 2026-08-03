@@ -2102,13 +2102,9 @@
     });
 
     // ===== GALLERY DATA =====
-    const galleryData = [
-        { src: 'assets/gallery-1.jpg', alt: 'Cozy cafe interior on Bole Road', title: 'Warm Welcome', desc: 'The inviting ambiance of our cafe on Bole Road, Addis Ababa' },
-        { src: 'assets/gallery-2.jpg', alt: 'Latte art swirl', title: 'Art in a Cup', desc: 'Expertly crafted latte art — every pour tells a story' },
-        { src: 'assets/gallery-3.jpg', alt: 'Coffee and pastry pairing', title: 'Perfect Pairing', desc: 'Freshly baked pastries paired with our signature single-origin coffee' },
-        { src: 'assets/gallery-4.jpg', alt: 'Restaurant dining area', title: 'Dining Experience', desc: 'Elegant dining space where tradition meets contemporary comfort' },
-        { src: 'assets/gallery-5.jpg', alt: 'Freshly roasted coffee beans', title: 'Bean to Cup', desc: 'Premium Ethiopian beans, carefully roasted to perfection' },
-    ];
+    // Gallery is populated ONLY from the database via /api/content.
+    // No hardcoded images, no localStorage cache.
+    const galleryData = [];
     let galleryIndex = 0;
     let _lbOpen = false;
 
@@ -2178,9 +2174,8 @@
             });
         });
     }
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initGallery);
-    } else { initGallery(); }
+    // Gallery is built only when data arrives from the API (see rebuildGallery below).
+    // Do NOT call initGallery() here — there is no data yet.
 
     // Expose gallery rebuild so applyContent can swap in DB images after async fetch
     window.rebuildGallery = function(items) {
@@ -2630,45 +2625,11 @@
             applyContent(c);
         }
 
-        // 1st: try localStorage (admin preview — instant first paint only; we still
-        // fetch fresh data below to reconcile any stale cache).
-        try {
-            var raw = localStorage.getItem('fufut_admin');
-            if (raw) {
-                var admin = JSON.parse(raw);
-                if (admin.content) {
-                    var _ac = admin.content;
-                    applyContent(_ac); // immediate (i18n not loaded yet, but fast display)
-                    // Re-apply after all scripts load so we win over i18n's DOMContentLoaded pass
-                    window.addEventListener('load', function() { applyWithI18n(_ac); }, { once: true });
-                    // NOTE: do NOT return early — we still need to fetch fresh /api/content
-                    // so deletions made in admin are reflected on the public site.
-                }
-            }
-        } catch(e) {}
-
-        // 2nd: fetch from backend API — cache-busted so Cloudflare never serves stale content.
-        // This always runs and overrides any stale localStorage cache from a previous admin session.
+        // Fetch ALL content from the database. No localStorage, no hardcoded fallbacks.
         fetch(menuApiBase + '/api/content?t=' + Date.now(), { cache: 'no-store' })
             .then(function(r) { return r.ok ? r.json() : null; })
             .then(function(c) {
                 if (c) applyWithI18n(c);
-                // If the fresh server data differs from the localStorage cache, evict the
-                // stale localStorage entry so the next page load starts clean.
-                try {
-                    if (c && c.gallery) {
-                        var rawLocal = localStorage.getItem('fufut_admin');
-                        if (rawLocal) {
-                            var local = JSON.parse(rawLocal);
-                            var localGal = local && local.content && local.content.gallery;
-                            if (JSON.stringify(localGal) !== JSON.stringify(c.gallery)) {
-                                // Stale — sync localStorage with the server truth.
-                                local.content.gallery = c.gallery;
-                                localStorage.setItem('fufut_admin', JSON.stringify(local));
-                            }
-                        }
-                    }
-                } catch(e) {}
             })
             .catch(function() {});
     })();
