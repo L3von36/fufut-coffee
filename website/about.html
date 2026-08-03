@@ -975,21 +975,21 @@ var wpforms_settings = {"val_required":"This field is required.","val_email":"Pl
       var img = block.querySelector('img');
       if(!img) return;
       // Only animate when near viewport
-      if(rect.bottom < -100 || rect.top > vh + 100){
+      if(rect.bottom < -200 || rect.top > vh + 200){
         img.style.transform = '';
         return;
       }
       var progress = (vh - rect.top) / (vh + rect.height);
-      var offset = (progress - 0.5) * 60;
-      img.style.transform = 'translateY(' + offset + 'px) scale(1.12)';
+      var offset = (progress - 0.5) * 150;
+      img.style.transform = 'translateY(' + offset + 'px) scale(1.18)';
     });
 
-    // Service cards — subtle float
+    // Service cards — alternating float
     cards.forEach(function(card, i){
       var rect = card.getBoundingClientRect();
-      if(rect.bottom < -50 || rect.top > vh + 50) return;
+      if(rect.bottom < -100 || rect.top > vh + 100) return;
       var progress = (vh - rect.top) / (vh + rect.height);
-      var offset = (progress - 0.5) * 20;
+      var offset = (progress - 0.5) * 50;
       var dir = i % 2 === 0 ? 1 : -1;
       card.style.transform = 'translateY(' + (offset * dir) + 'px)';
     });
@@ -997,10 +997,10 @@ var wpforms_settings = {"val_required":"This field is required.","val_email":"Pl
     // CTA image
     if(ctaImg){
       var r = ctaImg.getBoundingClientRect();
-      if(r.bottom > -100 && r.top < vh + 100){
+      if(r.bottom > -200 && r.top < vh + 200){
         var p = (vh - r.top) / (vh + r.height);
-        var o = (p - 0.5) * 40;
-        ctaImg.style.transform = 'translateY(' + o + 'px) scale(1.05)';
+        var o = (p - 0.5) * 100;
+        ctaImg.style.transform = 'translateY(' + o + 'px) scale(1.1)';
       }
     }
   }
