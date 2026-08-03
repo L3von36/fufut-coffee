@@ -2630,7 +2630,8 @@
             applyContent(c);
         }
 
-        // 1st: try localStorage (admin preview — instant, then re-win after i18n init)
+        // 1st: try localStorage (admin preview — instant first paint only; we still
+        // fetch fresh data below to reconcile any stale cache).
         try {
             var raw = localStorage.getItem('fufut_admin');
             if (raw) {
@@ -2640,15 +2641,35 @@
                     applyContent(_ac); // immediate (i18n not loaded yet, but fast display)
                     // Re-apply after all scripts load so we win over i18n's DOMContentLoaded pass
                     window.addEventListener('load', function() { applyWithI18n(_ac); }, { once: true });
-                    return;
+                    // NOTE: do NOT return early — we still need to fetch fresh /api/content
+                    // so deletions made in admin are reflected on the public site.
                 }
             }
         } catch(e) {}
 
-        // 2nd: fetch from backend API — cache-busted so Cloudflare never serves stale content
+        // 2nd: fetch from backend API — cache-busted so Cloudflare never serves stale content.
+        // This always runs and overrides any stale localStorage cache from a previous admin session.
         fetch(menuApiBase + '/api/content?t=' + Date.now(), { cache: 'no-store' })
             .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(c) { applyWithI18n(c); })
+            .then(function(c) {
+                if (c) applyWithI18n(c);
+                // If the fresh server data differs from the localStorage cache, evict the
+                // stale localStorage entry so the next page load starts clean.
+                try {
+                    if (c && c.gallery) {
+                        var rawLocal = localStorage.getItem('fufut_admin');
+                        if (rawLocal) {
+                            var local = JSON.parse(rawLocal);
+                            var localGal = local && local.content && local.content.gallery;
+                            if (JSON.stringify(localGal) !== JSON.stringify(c.gallery)) {
+                                // Stale — sync localStorage with the server truth.
+                                local.content.gallery = c.gallery;
+                                localStorage.setItem('fufut_admin', JSON.stringify(local));
+                            }
+                        }
+                    }
+                } catch(e) {}
+            })
             .catch(function() {});
     })();
     </script>
