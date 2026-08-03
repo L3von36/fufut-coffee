@@ -2023,9 +2023,9 @@ textarea:focus-visible,
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 60% center;
+    object-position: 55% 28%;
     z-index: 0;
-    filter: brightness(0.85) contrast(1.05) saturate(0.95);
+    filter: brightness(0.88) contrast(1.05) saturate(0.95);
 }
 
 /* Left-to-right scrim — text-readable on the left, image-clear on the right */
@@ -2478,7 +2478,7 @@ textarea:focus-visible,
             rgba(8, 35, 35, 0.92) 100%);
     }
     .about-page-hero-bg-img {
-        object-position: 70% top;
+        object-position: 60% 22%;
     }
     .about-page-hero-inner {
         max-width: 760px;
