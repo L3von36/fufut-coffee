@@ -2118,21 +2118,54 @@
         im.parentNode.style.background = 'linear-gradient(135deg, var(--teal-100), var(--teal-50))';
     };
 
+    // Compute a clean 12-col magazine layout for any item count.
+    // Each row in the desktop grid adds up to exactly 12 cols — no orphan cells, no thin strips.
+    function computeGalleryLayout(n) {
+        if (n <= 0) return [];
+        if (n === 1) return ['full-tall'];
+        if (n === 2) return ['half', 'half'];
+        if (n === 3) return ['full', 'half', 'half'];
+        if (n === 4) return ['half', 'half', 'half', 'half'];
+        // 5+ items: hero (6×2) anchored on the left + 4 quarters (3×1) filling the right side
+        var base = ['featured', 'quarter', 'quarter', 'quarter', 'quarter'];
+        var remaining = n - 5;
+        if (remaining <= 0) return base;
+        // For the remaining items, pack each row to exactly 12 cols.
+        // Possible row patterns: 1×full, 2×half, 3×third, 4×quarter.
+        var rowPatterns = { 1: ['full'], 2: ['half','half'], 3: ['third','third','third'], 4: ['quarter','quarter','quarter','quarter'] };
+        var extra = [];
+        while (remaining > 0) {
+            if (rowPatterns[remaining]) {
+                extra = extra.concat(rowPatterns[remaining]);
+                remaining = 0;
+            } else {
+                // Take a full row of 4 quarters, continue
+                extra = extra.concat(rowPatterns[4]);
+                remaining -= 4;
+            }
+        }
+        return base.concat(extra);
+    }
+
+    // SVG expand icon (used instead of the bare "+" character for a more polished look)
+    var GALLERY_ZOOM_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
+
     // Build gallery grid from data
     function initGallery() {
         const grid = document.getElementById('galleryGrid');
         if (!grid || !galleryData.length) return;
-        /* Layout classes for masonry feel — featured cell only when we have enough images */
-        var layout = galleryData.length >= 5 ? ['featured','','','wide','full'] : [];
+        var layout = computeGalleryLayout(galleryData.length);
         grid.innerHTML = galleryData.map(function(item, i) {
             var cls = 'gallery-item' + (layout[i] ? ' ' + layout[i] : '');
+            var eyebrow = layout[i] === 'featured'
+                ? '<span class="gallery-eyebrow">Featured</span>'
+                : '';
+            var title = item.title ? '<div class="g-title">' + item.title + '</div>' : '';
+            var desc = item.desc ? '<div class="g-desc">' + item.desc + '</div>' : '';
             return '<div class="' + cls + '" data-index="' + i + '" onclick="openLightbox(' + i + ')" role="button" tabindex="0" aria-label="' + (item.title || 'Open image') + '">' +
-                '<img src="' + item.src + '" alt="' + item.alt + '" loading="lazy" onerror="onImgError(this)">' +
-                '<div class="gallery-overlay">' +
-                    '<div class="g-title">' + item.title + '</div>' +
-                    '<div class="g-desc">' + item.desc + '</div>' +
-                '</div>' +
-                '<div class="gallery-zoom">+</div>' +
+                '<img src="' + item.src + '" alt="' + (item.alt || item.title || '') + '" loading="lazy" onerror="onImgError(this)">' +
+                '<div class="gallery-overlay">' + eyebrow + title + desc + '</div>' +
+                '<div class="gallery-zoom">' + GALLERY_ZOOM_SVG + '</div>' +
             '</div>';
         }).join('');
         // Allow keyboard activation on the gallery cards
