@@ -927,4 +927,68 @@ var wpforms_settings = {"val_required":"This field is required.","val_email":"Pl
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a25707510ab408d1',t:'MTc4NTc3Nzk5OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;"></iframe>
 
 
-<link rel="stylesheet" href="https://startersites.io/blocksy/persona/wp-content/themes/blocksy/static/bundle/back-to-top.min.css?ver=2.1.20"></body></html>
+<link rel="stylesheet" href="https://startersites.io/blocksy/persona/wp-content/themes/blocksy/static/bundle/back-to-top.min.css?ver=2.1.20">
+<script>
+(function(){
+  var parallaxEls = [];
+
+  // Hero background section
+  var hero = document.querySelector('.stk-3c28047');
+  if (hero) {
+    hero.style.backgroundAttachment = 'fixed';
+    hero.style.willChange = 'background-position';
+    parallaxEls.push({ el: hero, type: 'bg' });
+  }
+
+  // Clients section background
+  var clients = document.querySelector('.stk-ca14d9d');
+  if (clients) {
+    clients.style.backgroundAttachment = 'fixed';
+    clients.style.willChange = 'background-position';
+  }
+
+  // CTA section background
+  var cta = document.querySelector('.stk-2976898');
+  if (cta) {
+    cta.style.backgroundAttachment = 'fixed';
+    cta.style.willChange = 'background-position';
+  }
+
+  // Video grid & blog images — transform-based parallax
+  var imgSelectors = '.stk-c358997 img, .stk-c39336a img, .stk-1ff1ecb img, .stk-5eca0c5 img, .stk-2b008f4 img, .stk-2060c36 img, .stk-f2831ff img';
+  document.querySelectorAll(imgSelectors).forEach(function(img) {
+    var wrapper = img.closest('.stk-block-image');
+    if (wrapper) {
+      wrapper.style.overflow = 'hidden';
+      img.style.willChange = 'transform';
+      img.style.transition = 'none';
+      parallaxEls.push({ el: img, type: 'img' });
+    }
+  });
+
+  if (!parallaxEls.length) return;
+
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() {
+        var scrollY = window.pageYOffset;
+        var vh = window.innerHeight;
+        parallaxEls.forEach(function(item) {
+          if (item.type === 'img') {
+            var rect = item.el.getBoundingClientRect();
+            var centerY = rect.top + rect.height / 2;
+            var offset = (centerY - vh / 2) * 0.15;
+            item.el.style.transform = 'translateY(' + offset + 'px) scale(1.08)';
+          }
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Initial call
+  window.dispatchEvent(new Event('scroll'));
+})();
+</script></body></html>
