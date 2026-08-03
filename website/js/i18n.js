@@ -135,7 +135,7 @@
       'footer.holidays': 'Holidays: 9am – 6pm',
       'footer.contact': 'Contact',
       'footer.desc': 'Ethiopian coffee heritage meets modern café culture. Serving single-origin excellence and traditional flavors since 2017.',
-      'footer.crafted': 'ፉፉቱ ኮፊ — Crafted with care.',
+      'footer.crafted': 'ፉ ፉት ኮፊ — Crafted with care.',
 
       // Cart / Order
       'cart.title': 'Your Order',
@@ -180,7 +180,7 @@
       // Story section
       'story.eyebrow': 'ታሪካችን',
       'story.title': 'ከስርዓት<br>ወደ <span class="accent">ማህበረሰብ</span>',
-      'story.p1': 'ፉፉቱ ኮፊ ቀስቃሽ እምነት አነሳች — የኢትዮጵያ የቡና ስርዓት ሞቃት በየቦታው ይገኝ እንደሆን ነው። ባህላዊ የማፍሰሻ ዘዴዎችን ከዘመናዊ ካፌ ተሞክሮ ጋር አቀናቅለናል።',
+      'story.p1': 'ፉ ፉት ኮፊ ቀስቃሽ እምነት አነሳች — የኢትዮጵያ የቡና ስርዓት ሞቃት በየቦታው ይገኝ እንደሆን ነው። ባህላዊ የማፍሰሻ ዘዴዎችን ከዘመናዊ ካፌ ተሞክሮ ጋር አቀናቅለናል።',
       'story.p2': 'እያንዳንዱ ቡና ኖት ከይርጋቸፈ፣ ሲዳሞ እና ጉጂ ክልሎች በሞላጋጅ መንገድ ይመጣል። እያንዳንዱ ምግብ ባህላዊ ጣዕምን አክብሮ ዘመናዊ ጣምማችን ያቀበለዋል።',
       'story.badge1Num': '9+',
       'story.badge1Label': 'ዓመት አገልግሎት',
@@ -236,7 +236,7 @@
       // Gallery
       'gallery.eyebrow': 'ምስሎች',
       'gallery.title': 'የእኛ ማዕከል',
-      'gallery.desc': 'የፉፉቱ ኮፊ ሞቃት፣ ጽዋ እና ጥበብ በምስሎች ይመልከቱ።',
+      'gallery.desc': 'የፉ ፉት ኮፊ ሞቃት፣ ጽዋ እና ጥበብ በምስሎች ይመልከቱ።',
 
       // Testimonials
       'testimonials.eyebrow': 'እንግዶች ይላሉ',
@@ -286,7 +286,7 @@
       'footer.holidays': 'በዓለት: 9am – 6pm',
       'footer.contact': 'ያግኙን',
       'footer.desc': 'የኢትዮጵያ ቡና ቅርስ ከዘመናዊ ካፌ ባህል ጋር ይገናናል። ነጠላ-ምንጭ ምርጥ እና ባህላዊ ጣዕም ከ2017 ጀምሮ።',
-      'footer.crafted': 'ፉፉቱ ኮፊ — በፍቅር ተሰራ።',
+      'footer.crafted': 'ፉ ፉት ኮፊ — በፍቅር ተሰራ።',
 
       // Cart / Order
       'cart.title': 'ትዕዛዙ',
