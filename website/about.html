@@ -132,6 +132,34 @@
             50% { opacity: 0.8; }
         }
 
+        /* CEO image */
+        .about-hero-ceo {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 58%;
+            height: 110%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .about-hero-ceo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: bottom right;
+            display: block;
+        }
+        /* Keep text above CEO image */
+        .about-hero-content { z-index: 2; text-align: left; margin: 0; padding: 80px 0 60px clamp(24px,6vw,80px); max-width: 54%; }
+        @media (max-width: 860px) {
+            .about-hero-ceo { width: 55%; opacity: 0.35; }
+            .about-hero-content { max-width: 90%; text-align: center; margin: 0 auto; padding: 60px 24px 50px; }
+        }
+        @media (max-width: 540px) {
+            .about-hero-ceo { display: none; }
+            .about-hero-content { max-width: 100%; text-align: center; padding: 52px 20px 44px; }
+        }
+
         /* ---- Section commons ---- */
         .about-section {
             padding: clamp(64px, 8vw, 112px) 0;
@@ -660,6 +688,12 @@
     <section class="about-hero">
         <div class="about-hero-deco about-hero-deco-1"></div>
         <div class="about-hero-deco about-hero-deco-2"></div>
+
+        <!-- CEO image — right side -->
+        <div class="about-hero-ceo" aria-hidden="true">
+            <img src="images/ceo.png" alt="Fu Fut Coffee CEO">
+        </div>
+
         <div class="about-hero-content">
             <div class="about-hero-eyebrow">Our Story</div>
             <h1>The <span class="accent">Soul</span> of Ethiopian Coffee</h1>
