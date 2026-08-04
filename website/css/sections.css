@@ -821,6 +821,17 @@
   margin-bottom: var(--s-2);
 }
 
+/* Ceremony CTA button */
+.ceremony-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--s-6);
+  text-decoration: none;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
 /* ============================================================
    8. GALLERY
    ============================================================ */
@@ -1518,6 +1529,11 @@
     grid-template-columns: 1fr;
   }
 
+  .ceremony-cta {
+    white-space: normal;
+    text-align: center;
+  }
+
   .coffee__grid,
   .menu__grid,
   .testimonials__grid {
@@ -1620,6 +1636,12 @@
   .btn--lg {
     padding: 16px 28px;
     font-size: var(--fs-14);
+  }
+
+  .ceremony-cta {
+    padding: 12px 24px;
+    font-size: var(--fs-14);
+    white-space: normal;
   }
 
   .menu__tabs {

@@ -678,10 +678,13 @@
         }
         function safeHtml(str) {
             if (!str) return '';
-            // Allow <br>, <span> with class only (from CMS)
+            // Allow <br>, <span> with class or style (from CMS)
+            // Note: we escape < > & first, but " quotes stay as " (not &quot;),
+            // so our unescape patterns must match plain " quotes
             return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
                        .replace(/&lt;br\s*\/?&gt;/gi, '<br>')
-                       .replace(/&lt;span class=&quot;([^&]*)&quot;&gt;(.*?)&lt;\/span&gt;/gi, '<span class="$1">$2</span>');
+                       .replace(/&lt;span\s+class="([^"]*)"&gt;(.*?)&lt;\/span&gt;/gi, '<span class="$1">$2</span>')
+                       .replace(/&lt;span\s+style="([^"]*)"&gt;(.*?)&lt;\/span&gt;/gi, '<span style="$1">$2</span>');
         }
 
         // Show preview banner if in preview mode
@@ -2434,7 +2437,7 @@
             var heroAmharic = h.amharic  || c.heroAmharic || '';
             var heroBtn1    = h.btn1     || c.heroBtn1    || '';
             var heroBtn2    = h.btn2     || c.heroBtn2    || '';
-            if (hTitle   && heroTitle)   hTitle.innerHTML   = heroTitle;
+            if (hTitle   && heroTitle)   hTitle.innerHTML   = safeHtml(heroTitle);
             if (hSub     && heroSub)     hSub.textContent   = heroSub;
             if (hAmh     && heroAmharic) hAmh.textContent   = heroAmharic;
             if (hBtns[0] && heroBtn1)    hBtns[0].textContent = heroBtn1;
@@ -2455,7 +2458,7 @@
             var badge2Num     = s.badge2Num   || c.badge2Num      || '';
             var badge2Label   = s.badge2Label || c.badge2Label    || '';
             if (sEye   && storyEyebrow) sEye.textContent    = storyEyebrow;
-            if (sTitle && storyTitle)   sTitle.innerHTML    = storyTitle;
+            if (sTitle && storyTitle)   sTitle.innerHTML    = safeHtml(storyTitle);
             if (sP[0]  && storyP1)      sP[0].textContent   = storyP1;
             if (sP[1]  && storyP2)      sP[1].textContent   = storyP2;
             if (sBadge[0]) {
@@ -2486,7 +2489,7 @@
             var cTitle = document.querySelector('#ceremony .sec-title');
             var cDesc  = document.querySelector('#ceremony .sec-desc');
             var cSteps = document.querySelectorAll('.ceremony-step-text');
-            var cCta   = document.querySelector('#ceremony .btn-gold');
+            var cCta   = document.querySelector('.ceremony-cta');
             var crSteps = Array.isArray(cr.steps) ? cr.steps : [];
             var cerEyebrow = cr.eyebrow || c.cerEyebrow || '';
             var cerTitle   = cr.title   || c.cerTitle   || '';
@@ -2552,7 +2555,7 @@
             var resDesc    = document.querySelector('#reservation .res-info > p');
             var resDetails = document.querySelectorAll('.res-detail-text span');
             if (resEye   && rv.eyebrow)      resEye.textContent      = rv.eyebrow;
-            if (resTitle && rv.title)        resTitle.innerHTML       = rv.title;
+            if (resTitle && rv.title)        resTitle.innerHTML       = safeHtml(rv.title);
             if (resDesc  && rv.desc)         resDesc.textContent      = rv.desc;
             if (resDetails[0] && rv.hoursVal)    resDetails[0].textContent = rv.hoursVal;
             if (resDetails[1] && rv.locationVal) resDetails[1].textContent = rv.locationVal;
