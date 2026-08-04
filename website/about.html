@@ -252,6 +252,100 @@
             font-weight: 500;
         }
 
+        /* ---- Founder ---- */
+        .founder-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: clamp(48px, 7vw, 96px);
+            align-items: start;
+        }
+        .founder-img-wrap {
+            position: relative;
+        }
+        .founder-img-wrap::before {
+            content: '';
+            position: absolute;
+            top: -14px; left: -14px; right: 14px; bottom: 14px;
+            border: 2px solid rgba(15,123,120,0.2);
+            border-radius: 18px;
+            pointer-events: none;
+        }
+        .founder-img-wrap img {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            object-position: top center;
+            border-radius: 16px;
+            display: block;
+            box-shadow: 0 24px 60px rgba(7,55,53,0.15), 0 8px 16px rgba(7,55,53,0.08);
+        }
+        .founder-body { display: flex; flex-direction: column; }
+        .founder-role {
+            display: inline-block;
+            font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+            text-transform: uppercase; color: var(--color-primary);
+            margin-bottom: 16px;
+        }
+        .founder-name {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            font-weight: 600;
+            color: var(--text-heading);
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+        }
+        .founder-teal-bar {
+            width: 40px; height: 3px;
+            background: var(--color-primary);
+            border-radius: 2px;
+            margin: 20px 0 28px;
+        }
+        .founder-bio p {
+            font-size: 1rem;
+            color: var(--text-body);
+            line-height: 1.85;
+            margin-bottom: 18px;
+        }
+        .founder-bio p:last-child { margin-bottom: 0; }
+        .founder-pillars {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 32px;
+        }
+        .founder-pillar {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--teal-50);
+            border: 1px solid rgba(15,123,120,0.18);
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-primary-dark);
+            letter-spacing: 0.02em;
+        }
+        .founder-pillar::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        @media (max-width: 900px) {
+            .founder-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .founder-img-wrap {
+                max-width: 320px;
+            }
+            .founder-img-wrap::before { display: none; }
+        }
+
         /* ---- Visit Us ---- */
         .visit-grid {
             display: grid;
@@ -455,7 +549,6 @@
             </div>
         </div>
 
-        <a href="about.html" class="nav-about-link" style="color:var(--color-primary-dark);font-weight:700;">About</a>
         <a href="index.html#menu" class="btn-primary-nav btn-nav-desktop">Order Online</a>
 
         <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
@@ -509,6 +602,37 @@
                 <div class="stat-item reveal" style="transition-delay:.3s">
                     <div class="stat-num">7</div>
                     <div class="stat-lbl">Days a Week</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================================================
+         FOUNDER
+    ========================================================= -->
+    <section class="about-section about-section-light">
+        <div class="about-inner">
+            <div class="founder-grid">
+                <div class="founder-img-wrap reveal reveal-left">
+                    <img src="images/ceo.png" alt="Henok Solomon Tefera — Founder of Fu Fut Coffee">
+                </div>
+                <div class="founder-body reveal reveal-right">
+                    <span class="founder-role">Founder &amp; Visionary</span>
+                    <h2 class="founder-name">Henok Solomon Tefera</h2>
+                    <div class="founder-teal-bar"></div>
+                    <div class="founder-bio">
+                        <p>Henok Solomon Tefera is the founder and driving force behind Fu Fut Coffee — a destination that has redefined specialty coffee culture in the heart of Addis Ababa's Kazanchis district. With a deep reverence for Ethiopia's coffee heritage and a forward-thinking approach to hospitality, Henok built Fu Fut from the ground up in 2016, transforming a passion for quality into one of the city's most celebrated café experiences.</p>
+                        <p>Guided by the belief that Ethiopia — the birthplace of coffee — deserves a space that honours that legacy with precision and pride, Henok curated direct relationships with farmers across Guji, Yirgacheffe, and Sidamo. His commitment to traceability and single-origin excellence has set Fu Fut apart in a competitive landscape, attracting coffee enthusiasts, professionals, and international visitors alike.</p>
+                        <p>Beyond the cup, Henok has cultivated a gathering place where culture, community, and cuisine intersect. His vision extends to the full dining experience — blending authentic Ethiopian culinary traditions with modern café sensibilities — creating an environment that is as welcoming to the daily regular as it is to the first-time guest.</p>
+                        <p>Henok's leadership is defined by an unwavering attention to detail, a respect for the people and the land behind every bean, and a genuine desire to share Ethiopia's coffee story with the world.</p>
+                    </div>
+                    <div class="founder-pillars">
+                        <span class="founder-pillar">Single-Origin Coffee</span>
+                        <span class="founder-pillar">Direct Farm Relationships</span>
+                        <span class="founder-pillar">Ethiopian Heritage</span>
+                        <span class="founder-pillar">Community &amp; Culture</span>
+                        <span class="founder-pillar">Est. 2016</span>
+                    </div>
                 </div>
             </div>
         </div>
