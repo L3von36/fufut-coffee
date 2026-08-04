@@ -571,7 +571,7 @@
                     <ul>
                         <li><a href="#" data-i18n="footer.monFri">Mon – Fri: 7am – 10pm</a></li>
                         <li><a href="#" data-i18n="footer.sat">Saturday: 8am – 11pm</a></li>
-                        <li><a href="#" data-i18n="footer.sun">Sunday: 8am – 9pm</a></li>
+                        <li><a href="#" data-i18n="footer.sun">Sunday: 7am – 10pm</a></li>
                         <li><a href="#" data-i18n="footer.holidays">Holidays: 9am – 6pm</a></li>
                     </ul>
                 </div>
@@ -580,9 +580,10 @@
                     <ul>
                         <li><a href="tel:+251931190440">+251 931 190 440</a></li>
                         <li><a href="tel:+251912934982">+251 912 934 982</a></li>
+                        <li><a href="tel:+251912934982">+251 91 293 4982</a></li>
                         <li><a href="mailto:hello@fufutcoffee.com">hello@fufutcoffee.com</a></li>
-                        <li><a href="#">Kazanchis, Addis Ababa</a></li>
-                        <li><a href="#">Near the Intercontinental Hotel</a></li>
+                        <li class="footer-address">Kazanchis, Addis Ababa, Ethiopia</li>
+                        <li class="footer-address">Near the Intercontinental Hotel</li>
                     </ul>
                 </div>
             </div>
@@ -955,6 +956,7 @@
                         var phoneEls = document.querySelectorAll('.footer-col:last-child a[href^="tel:"]');
                         if (phoneEls[0]) { phoneEls[0].textContent = c.footer.phone1; phoneEls[0].href = 'tel:' + c.footer.phone1.replace(/\s/g,''); }
                         if (c.footer.phone2 && phoneEls[1]) { phoneEls[1].textContent = c.footer.phone2; phoneEls[1].href = 'tel:' + c.footer.phone2.replace(/\s/g,''); }
+                        if (c.footer.phone3 && phoneEls[2]) { phoneEls[2].textContent = c.footer.phone3; phoneEls[2].href = 'tel:' + c.footer.phone3.replace(/\s/g,''); }
                     } else if (c.footer.phone) {
                         var phoneEl = document.querySelector('.footer-col:last-child a[href^="tel:"]');
                         if (phoneEl) phoneEl.textContent = c.footer.phone;
@@ -964,9 +966,9 @@
                         if (emailEl) emailEl.textContent = c.footer.email;
                     }
                     if (c.footer.address1) {
-                        var addrEls = document.querySelectorAll('.footer-col:last-child a[href="#"]');
-                        if (addrEls.length >= 2) addrEls[0].textContent = c.footer.address1;
-                        if (c.footer.address2 && addrEls.length >= 3) addrEls[1].textContent = c.footer.address2;
+                        var addrEls = document.querySelectorAll('.footer-col:last-child .footer-address');
+                        if (addrEls[0]) addrEls[0].textContent = c.footer.address1;
+                        if (c.footer.address2 && addrEls[1]) addrEls[1].textContent = c.footer.address2;
                     }
                 }
 
@@ -2579,12 +2581,14 @@
             if (ft.holidays && ftHoursEl[3]) ftHoursEl[3].textContent = ft.holidays;
 
             // Footer — contact column (4th footer-col)
-            var ftContactEl = ftHoursCol[3] ? ftHoursCol[3].querySelectorAll('li a') : [];
-            if (ft.phone1 && ftContactEl[0]) { ftContactEl[0].href = 'tel:' + ft.phone1.replace(/\s/g,''); ftContactEl[0].textContent = ft.phone1; }
-            if (ft.phone2 && ftContactEl[1]) { ftContactEl[1].href = 'tel:' + ft.phone2.replace(/\s/g,''); ftContactEl[1].textContent = ft.phone2; }
-            if (ft.email    && ftContactEl[2]) { ftContactEl[2].href = 'mailto:' + ft.email; ftContactEl[2].textContent = ft.email; }
-            if (ft.address1 && ftContactEl[3]) ftContactEl[3].textContent = ft.address1;
-            if (ft.address2 && ftContactEl[4]) ftContactEl[4].textContent = ft.address2;
+            var ftContactLinks = ftHoursCol[3] ? ftHoursCol[3].querySelectorAll('li a') : [];
+            var ftContactLis  = ftHoursCol[3] ? ftHoursCol[3].querySelectorAll('li') : [];
+            if (ft.phone1 && ftContactLinks[0]) { ftContactLinks[0].href = 'tel:' + ft.phone1.replace(/\s/g,''); ftContactLinks[0].textContent = ft.phone1; }
+            if (ft.phone2 && ftContactLinks[1]) { ftContactLinks[1].href = 'tel:' + ft.phone2.replace(/\s/g,''); ftContactLinks[1].textContent = ft.phone2; }
+            if (ft.phone3 && ftContactLinks[2]) { ftContactLinks[2].href = 'tel:' + ft.phone3.replace(/\s/g,''); ftContactLinks[2].textContent = ft.phone3; }
+            if (ft.email    && ftContactLinks[3]) { ftContactLinks[3].href = 'mailto:' + ft.email; ftContactLinks[3].textContent = ft.email; }
+            if (ft.address1 && ftContactLis[4]) ftContactLis[4].textContent = ft.address1;
+            if (ft.address2 && ftContactLis[5]) ftContactLis[5].textContent = ft.address2;
 
             // Footer — social links
             var socials = document.querySelectorAll('.footer-social a');
