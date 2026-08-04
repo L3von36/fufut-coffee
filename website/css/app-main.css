@@ -942,6 +942,7 @@
         }
         .ceremony-step-text h4 { font-family: var(--font-display); font-size: var(--text-md); margin: 0 0 4px; font-weight: 600; }
         .ceremony-step-text p { font-size: var(--text-sm); opacity: .7; margin: 0; line-height: 1.6; }
+        .ceremony-cta { display: inline-block; margin-top: 32px; text-decoration: none; }
 
         /* ===== GALLERY (12-col magazine grid) ===== */
         .gallery-grid {
@@ -1251,7 +1252,7 @@
         .res-info p { color: var(--text-body); line-height: var(--leading-relaxed); margin-bottom: var(--space-4); }
         .res-details { display: flex; flex-direction: column; gap: 16px; }
         .res-detail {
-            display: flex; align-items: center; gap: 16px;
+            display: flex; align-items: flex-start; gap: 16px;
             padding: 16px; border-radius: var(--radius-md);
             background: var(--color-surface); border: 1px solid var(--border-subtle);
             transition: box-shadow var(--duration-fast), transform var(--duration-fast);
@@ -1276,6 +1277,7 @@
         @media(max-width:640px){ .form-group.full { grid-column: span 1; } }
         .form-group label { font-size: var(--text-sm); font-weight: 500; color: var(--text-heading); }
         .form-group input, .form-group select, .form-group textarea {
+            width: 100%; box-sizing: border-box;
             padding: 12px 16px; border: 1.5px solid var(--border-subtle); border-radius: var(--radius-sm);
             font-family: var(--font-body); font-size: var(--text-base); color: var(--text-heading);
             background: var(--color-background); transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
@@ -1716,6 +1718,13 @@
             .back-to-top { bottom: 76px; right: 16px; }
             /* Coffee / menu grid: remove max-width cap so cards fill viewport naturally */
             .coffee-grid, .menu-grid { max-width: 100%; }
+            /* Ceremony CTA: full width on small tablets */
+            .ceremony-cta { display: block; width: 100%; text-align: center; margin-top: 24px; padding: 12px 24px; font-size: var(--text-sm); }
+            /* Reservation form: stack columns earlier */
+            .form-row { grid-template-columns: 1fr; gap: 12px; }
+            .form-group.full { grid-column: span 1; }
+            .res-form { padding: var(--space-4); }
+            .res-grid { gap: 32px; }
         }
 
         /* Phone */
@@ -1739,6 +1748,10 @@
             .story-features { grid-template-columns: 1fr; gap: 12px; }
             /* Reservation form: compact on phone */
             .res-form { padding: var(--space-3); }
+            .form-group input, .form-group select, .form-group textarea { padding: 10px 12px; font-size: var(--text-sm); }
+            .res-info h3 { font-size: var(--text-xl); }
+            /* Ceremony CTA: compact on phone */
+            .ceremony-cta { padding: 10px 20px; font-size: var(--text-xs); margin-top: 20px; }
             /* Menu tabs: fit more on one row */
             .menu-tab { padding: 6px 14px; font-size: var(--text-xs); }
             /* Card images: slightly shorter so body text isn't cut off */
