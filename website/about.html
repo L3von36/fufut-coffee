@@ -39,7 +39,7 @@
         /* ---- Page Hero ---- */
         .about-hero {
             position: relative;
-            min-height: 52vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -89,12 +89,12 @@
         }
         .about-hero h1 {
             font-family: var(--font-display);
-            font-size: clamp(2.4rem, 5.5vw, 4rem);
+            font-size: clamp(2.8rem, 6.5vw, 5.2rem);
             font-weight: 600;
             color: #fff;
-            line-height: 1.08;
+            line-height: 1.05;
             letter-spacing: -0.02em;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .about-hero h1 .accent { color: var(--gold-300); }
         .about-hero-sub {
@@ -135,10 +135,10 @@
         /* CEO image */
         .about-hero-ceo {
             position: absolute;
-            top: 0;
-            right: 0;
-            width: 58%;
-            height: 110%;
+            bottom: 0;
+            right: -2%;
+            width: 68%;
+            height: 105%;
             z-index: 1;
             pointer-events: none;
         }
@@ -150,14 +150,18 @@
             display: block;
         }
         /* Keep text above CEO image */
-        .about-hero-content { z-index: 2; text-align: left; margin: 0; padding: 80px 0 60px clamp(24px,6vw,80px); max-width: 54%; }
+        .about-hero-content { z-index: 2; text-align: left; margin: 0; padding: 140px 0 80px clamp(24px,6vw,96px); max-width: 50%; }
+        @media (max-width: 1024px) {
+            .about-hero-ceo { width: 62%; }
+            .about-hero-content { max-width: 55%; }
+        }
         @media (max-width: 860px) {
-            .about-hero-ceo { width: 55%; opacity: 0.35; }
-            .about-hero-content { max-width: 90%; text-align: center; margin: 0 auto; padding: 60px 24px 50px; }
+            .about-hero-ceo { width: 65%; opacity: 0.3; right: 0; }
+            .about-hero-content { max-width: 90%; text-align: center; margin: 0 auto; padding: 120px 24px 70px; }
         }
         @media (max-width: 540px) {
-            .about-hero-ceo { display: none; }
-            .about-hero-content { max-width: 100%; text-align: center; padding: 52px 20px 44px; }
+            .about-hero-ceo { width: 100%; opacity: 0.18; }
+            .about-hero-content { max-width: 100%; text-align: center; padding: 120px 20px 60px; }
         }
 
         /* ---- Section commons ---- */
