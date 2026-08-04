@@ -41,40 +41,57 @@
         ======================================================== */
         .about-hero {
             position: relative;
-            min-height: 72vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
             overflow: hidden;
             background: var(--teal-900);
         }
 
-        .hero-parallax-bg {
+        /* CEO image — fills the right half, zoomed in */
+        .hero-ceo-bg {
             position: absolute;
-            inset: 0;
+            inset: 0 0 0 35%;
             z-index: 0;
         }
-        .hero-parallax-bg img {
+        .hero-ceo-bg img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center 30%;
+            object-position: top center;
             display: block;
-            filter: brightness(0.45) saturate(1.1);
+            transform: scale(1.08);
+            transform-origin: top center;
         }
-        .hero-parallax-bg::after {
+        /* Gradient: solid teal on left fading to transparent on right */
+        .hero-ceo-bg::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(5, 38, 36, 0.55);
+            background: linear-gradient(to right,
+                var(--teal-900) 0%,
+                rgba(5,38,36,0.5) 40%,
+                rgba(5,38,36,0.05) 100%);
+            z-index: 1;
+        }
+        /* Subtle top/bottom vignette */
+        .hero-ceo-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(to bottom, rgba(5,38,36,0.5) 0%, transparent 20%),
+                linear-gradient(to top,    rgba(5,38,36,0.5) 0%, transparent 20%);
+            z-index: 1;
         }
 
+        /* Left text block */
         .about-hero-content {
             position: relative;
             z-index: 2;
-            text-align: center;
-            padding: 120px clamp(20px, 6vw, 80px) 100px;
-            max-width: 760px;
+            width: 54%;
+            padding: 140px clamp(24px, 5vw, 80px) 120px clamp(32px, 7vw, 100px);
+            text-align: left;
         }
 
         .about-hero-year {
@@ -94,12 +111,12 @@
 
         .about-hero h1 {
             font-family: var(--font-display);
-            font-size: clamp(2.8rem, 5.5vw, 5rem);
+            font-size: clamp(3rem, 5.5vw, 5.5rem);
             font-weight: 600;
             color: #fff;
-            line-height: 1.05;
-            letter-spacing: -0.02em;
-            margin-bottom: 20px;
+            line-height: 1.02;
+            letter-spacing: -0.025em;
+            margin-bottom: 22px;
         }
         .about-hero h1 .accent { color: var(--gold-300); font-style: italic; }
 
@@ -107,14 +124,13 @@
             font-size: 1.05rem;
             color: rgba(255,255,255,0.65);
             line-height: 1.8;
-            max-width: 52ch;
-            margin: 0 auto 40px;
+            max-width: 44ch;
+            margin-bottom: 42px;
         }
 
         .about-hero-ctas {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 20px;
         }
         .about-hero-cta-primary {
@@ -142,10 +158,31 @@
         }
         .about-hero-cta-secondary:hover { color: #fff; border-color: #fff; }
 
-        @media (max-width: 480px) {
-            .about-hero-content { padding: 110px 20px 80px; }
-            .about-hero h1 { font-size: 2.4rem; }
-            .about-hero-ctas { flex-direction: column; }
+        @media (max-width: 900px) {
+            .hero-ceo-bg { inset: 0 0 0 20%; }
+        }
+        @media (max-width: 640px) {
+            .about-hero { min-height: 100svh; }
+            .hero-ceo-bg {
+                inset: 0;
+            }
+            .hero-ceo-bg::before {
+                background: linear-gradient(to bottom,
+                    rgba(5,38,36,0.85) 0%,
+                    rgba(5,38,36,0.55) 60%,
+                    rgba(5,38,36,0.3) 100%);
+            }
+            .about-hero-content {
+                width: 100%;
+                text-align: center;
+                padding: 130px 24px 100px;
+            }
+            .about-hero-sub { max-width: 100%; }
+            .about-hero-year { justify-content: center; }
+            .about-hero-ctas { justify-content: center; flex-direction: column; }
+        }
+        @media (max-width: 400px) {
+            .about-hero h1 { font-size: 2.5rem; }
         }
 
         /* ---- Section commons ---- */
@@ -432,9 +469,9 @@
     ========================================================= -->
     <section class="about-hero" id="aboutHero">
 
-        <!-- Parallax background -->
-        <div class="hero-parallax-bg" id="heroBg" aria-hidden="true">
-            <img src="assets/ethiopian_coffee_ceremony.webp" alt="">
+        <!-- CEO image — right-side background -->
+        <div class="hero-ceo-bg" aria-hidden="true">
+            <img src="images/ceo.png" alt="">
         </div>
 
         <div class="about-hero-content">
@@ -612,10 +649,9 @@
         /* ---- Back to top ---- */
         var btt = document.getElementById('backToTop');
 
-        /* ---- Hero parallax + nav switch ---- */
-        var heroBg   = document.getElementById('heroBg');
-        var heroEl   = document.getElementById('aboutHero');
-        var ticking  = false;
+        /* ---- Nav switch + back-to-top ---- */
+        var heroEl  = document.getElementById('aboutHero');
+        var ticking = false;
 
         function onScroll() {
             if (!ticking) {
@@ -626,11 +662,6 @@
 
         function updateScroll() {
             var sy = window.scrollY;
-
-            /* Parallax: bg moves at 40% scroll speed */
-            if (heroBg) {
-                heroBg.style.transform = 'translateY(' + (sy * 0.4) + 'px)';
-            }
 
             /* Nav style switch once past hero */
             if (nav && heroEl) {
