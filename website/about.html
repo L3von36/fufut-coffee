@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
         <link rel="profile" href="https://gmpg.org/xfn/11">
 
-        <title>About – Fu Fut Coffee | Premium Ethiopian Coffee in Addis Ababa</title><link rel="preload" data-rocket-preload="" as="image" href="images/ceo.png" fetchpriority="high">
+        <title>About – Fu Fut Coffee | Premium Ethiopian Coffee in Addis Ababa</title><link rel="preload" data-rocket-preload="" as="image" href="https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/home_hero@1.5x.jpg" fetchpriority="high">
 <meta name="robots" content="index, follow"><meta name="description" content="Fu Fut Coffee — established in Kazanchis, Addis Ababa. Premium Ethiopian coffee, local & international cuisine, and a welcoming space to connect, work, and relax.">
         <style>img:is([sizes="auto" i], [sizes^="auto," i]) { contain-intrinsic-size: 3000px 1500px }</style>
         
@@ -152,7 +152,29 @@ body [class*="has-palette-color-3-color"] {
 .stk-ca14d9d > div:first-child { z-index: 1 !important; }
 .stk-ca14d9d-column { z-index: 2 !important; position: relative !important; }
 
-
+/* Hero CEO — right side portrait */
+.stk-hero-ceo { align-self: flex-end !important; margin-bottom: -80px !important; }
+.stk-hero-ceo-wrap {
+  height: 780px !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.3) !important;
+}
+.stk-hero-ceo-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: top center !important;
+  display: block !important;
+}
+@media screen and (max-width: 689px) {
+  .stk-67cd161 { display: none !important; }
+  .stk-31de384 { flex: 1 1 100% !important; }
+}
+@media screen and (min-width: 690px) and (max-width: 999px) {
+  .stk-hero-ceo-wrap { height: 500px !important; }
+  .stk-hero-ceo { margin-bottom: -40px !important; }
+}
 </style>
 
 <a class="skip-link screen-reader-text" href="#main">Skip to content</a><div class="ct-drawer-canvas" data-location="start">
@@ -387,6 +409,8 @@ body [class*="has-palette-color-3-color"] {
 <div class="wp-block-stackable-button stk-block-button stk-block stk-49009b2" data-block-id="49009b2"><a class="stk-link stk-button stk--hover-effect-darken" href="#"><span class="has-text-color has-palette-color-4-color stk-button__inner-text">View All Services</span></a></div>
 </div></div>
 </div></div></div>
+
+<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-67cd161" data-v="4" data-block-id="67cd161"><div class="stk-column-wrapper stk-block-column__content stk-container stk-67cd161-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-67cd161-inner-blocks"><div class="stk-hero-ceo" data-block-id="67cd161-img"><div class="stk-hero-ceo-wrap"><img src="images/ceo.png" alt="Fu Fut Coffee" class="stk-hero-ceo-img" loading="eager"></div></div></div></div></div>
 </div></div>
 
 
@@ -649,8 +673,8 @@ var ct_localizations = {"ajax_url":"https:\/\/startersites.io\/blocksy\/persona\
     heroImgWrap.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:130%;z-index:0;pointer-events:none;will-change:transform;';
 
     var hImg = document.createElement('img');
-    hImg.src = 'images/ceo.png';
-    hImg.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;display:block;';
+    hImg.src = 'https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/home_hero@1.5x.jpg';
+    hImg.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
     hImg.setAttribute('alt','');
     hImg.setAttribute('loading','eager');
 
