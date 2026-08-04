@@ -215,6 +215,8 @@
         .nav.scrolled .nav-about-link { color: var(--color-primary-dark); }
         .nav.scrolled .nav-about-link:hover { color: var(--color-primary); }
         @media(max-width:1080px) { .nav-about-link { display: none; } }
+        .nav-about-mobile { display: none; }
+        @media(max-width:1080px) { .nav-about-mobile { display: list-item; } }
         .btn-nav-desktop { flex-shrink: 0; margin-left: 24px; }
         @media(min-width:1081px) { .nav-drawer-footer .nav-actions { display: none; } }
         @media(max-width:1080px) { .btn-nav-desktop { display: none; } }
