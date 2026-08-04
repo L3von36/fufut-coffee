@@ -476,8 +476,10 @@
         /* ======================================================
            RESPONSIVE
         ====================================================== */
+
+        /* ---- Tablet (≤1024px) ---- */
         @media (max-width: 1024px) {
-            .visit-grid { grid-template-columns: 1fr; gap: 48px; }
+            .visit-grid { grid-template-columns: 1fr; gap: 40px; }
 
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .stat-item:nth-child(2) { border-right: none; }
@@ -485,21 +487,45 @@
             .stat-item:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.1); }
         }
 
+        /* ---- Mobile landscape / large phone (≤768px) ---- */
         @media (max-width: 768px) {
-            .about-hero { min-height: 44vh; }
-            .about-hero-content { padding: 60px 20px 50px; }
-
             .about-inner { padding: 0 20px; }
 
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            /* Hero: keep full height, text stays centered (handled at 640px) */
+            .about-hero { min-height: 100svh; }
+
+            /* Allow year tag lines to wrap on smaller screens */
+            .about-hero-year {
+                flex-wrap: wrap;
+                row-gap: 6px;
+            }
+            .about-hero-year span { letter-spacing: 0.15em; }
+
+            .stat-item { padding: 40px 16px; }
         }
 
+        /* ---- Small phone (≤540px) ---- */
         @media (max-width: 540px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+
+            /* Founder: image goes full width on small phones */
+            .founder-img-wrap { max-width: 100%; }
+
+            /* Visit */
+            .visit-cta { width: 100%; justify-content: center; }
+
+            /* Tighten section padding */
+            .about-section { padding: clamp(48px, 10vw, 80px) 0; }
+        }
+
+        /* ---- Smallest phones (≤400px) ---- */
+        @media (max-width: 400px) {
             .stats-grid { grid-template-columns: 1fr; }
             .stat-item { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.1); }
             .stat-item:last-child { border-bottom: none; }
 
-            .visit-cta { width: 100%; justify-content: center; }
+            .founder-name { font-size: 1.75rem; }
+            .founder-bio p { font-size: 0.95rem; }
 
             .about-hero h1 { font-size: 2.1rem; }
         }
