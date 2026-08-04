@@ -371,118 +371,251 @@ body [class*="has-palette-color-3-color"] {
 
 
 
-<div class="wp-block-stackable-spacer stk-block-spacer stk--no-padding stk-block stk-8ffdacd" data-block-id="8ffdacd"></div>
+<!-- ===== FUFUT ABOUT PAGE — REDESIGNED ===== -->
+<style>
+/* ---------- Shared Tokens ---------- */
+.ff-teal   { color: #0F7B78; }
+.ff-gold   { color: #D6B36A; }
+.ff-label  { display: block; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: #0F7B78; margin-bottom: 18px; }
 
+/* ---------- Our Story ---------- */
+.ff-story { background: #0f0e17; padding: 110px 0; }
+.ff-story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; align-items: center; max-width: 1220px; margin: 0 auto; padding: 0 60px; }
+.ff-story-text h2 { font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 800; color: #fffffe; line-height: 1.1; margin-bottom: 28px; }
+.ff-teal-bar { width: 52px; height: 3px; background: #0F7B78; margin-bottom: 32px; }
+.ff-story-text p { font-size: 1.02rem; color: rgba(255,255,255,0.68); line-height: 1.85; margin-bottom: 22px; }
+.ff-story-img-wrap { position: relative; }
+.ff-story-img-wrap::before { content: ''; position: absolute; top: -18px; left: -18px; right: 18px; bottom: 18px; border: 2px solid rgba(15,123,120,0.5); border-radius: 3px; pointer-events: none; }
+.ff-story-img-wrap img { position: relative; z-index: 1; width: 100%; height: 520px; object-fit: cover; border-radius: 3px; display: block; }
 
+/* ---------- Stats Bar ---------- */
+.ff-stats { background: #111019; border-top: 1px solid rgba(15,123,120,0.25); border-bottom: 1px solid rgba(15,123,120,0.25); }
+.ff-stats-inner { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 1220px; margin: 0 auto; padding: 0 60px; }
+.ff-stat { text-align: center; padding: 52px 20px; border-right: 1px solid rgba(255,255,255,0.08); }
+.ff-stat:last-child { border-right: none; }
+.ff-stat-num { font-size: clamp(2.8rem, 5vw, 4rem); font-weight: 800; color: #0F7B78; line-height: 1; margin-bottom: 10px; }
+.ff-stat-lbl { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
 
-<div class="wp-block-stackable-columns stk-block-columns stk-block stk-4dcce0e" data-block-id="4dcce0e"><div class="stk-row stk-inner-blocks stk--block-align-4dcce0e stk-block-content stk-content-align stk-4dcce0e-column">
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-329ce21" data-v="4" data-block-id="329ce21"><div class="stk-column-wrapper stk-block-column__content stk-container stk-329ce21-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-329ce21-inner-blocks">
-<div class="wp-block-stackable-text stk-block-text stk-block stk-b9bf2b7" data-block-id="b9bf2b7"><p class="stk-block-text__text has-text-color has-palette-color-1-color has-text-align-center-mobile">01.</p></div>
+/* ---------- Offerings ---------- */
+.ff-offerings { background: #0f0e17; padding: 110px 0; }
+.ff-offerings-inner { max-width: 1220px; margin: 0 auto; padding: 0 60px; }
+.ff-sec-head { margin-bottom: 56px; }
+.ff-sec-head h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #fffffe; margin-top: 10px; }
+.ff-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.ff-card { position: relative; border-radius: 3px; overflow: hidden; }
+.ff-card-img { width: 100%; height: 400px; object-fit: cover; display: block; transition: transform 0.65s ease; }
+.ff-card:hover .ff-card-img { transform: scale(1.06); }
+.ff-card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,8,16,0.93) 0%, rgba(8,8,16,0.35) 55%, transparent 100%); }
+.ff-card-body { position: absolute; bottom: 0; left: 0; right: 0; padding: 32px 28px; }
+.ff-card-tag { display: inline-block; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #0F7B78; margin-bottom: 10px; }
+.ff-card-body h3 { font-size: 1.25rem; font-weight: 700; color: #fffffe; margin-bottom: 10px; }
+.ff-card-body p { font-size: 0.87rem; color: rgba(255,255,255,0.62); line-height: 1.65; }
 
+/* ---------- Heritage Banner ---------- */
+.ff-heritage { position: relative; overflow: hidden; min-height: 540px; display: flex; align-items: center; justify-content: center; }
+.ff-heritage-bg { position: absolute; inset: 0; }
+.ff-heritage-bg img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ff-heritage-bg::after { content: ''; position: absolute; inset: 0; background: rgba(8,8,16,0.78); }
+.ff-heritage-body { position: relative; z-index: 2; max-width: 740px; padding: 90px 60px; text-align: center; }
+.ff-gold-bar { width: 46px; height: 2px; background: #D6B36A; margin: 0 auto 28px; }
+.ff-heritage-body blockquote { font-size: clamp(1.4rem, 3vw, 2.1rem); font-weight: 700; color: #fffffe; line-height: 1.35; margin: 0 0 28px; font-style: normal; }
+.ff-heritage-body p { font-size: 1rem; color: rgba(255,255,255,0.72); line-height: 1.85; }
 
+/* ---------- Gallery ---------- */
+.ff-gallery { background: #0a0a12; padding: 110px 0; }
+.ff-gallery-inner { max-width: 1220px; margin: 0 auto; padding: 0 60px; }
+.ff-gallery-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: 230px 230px; gap: 10px; margin-top: 50px; }
+.ff-gi { overflow: hidden; border-radius: 2px; }
+.ff-gi img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.55s ease; }
+.ff-gi:hover img { transform: scale(1.06); }
+.ff-gi-1 { grid-column: span 5; grid-row: span 2; }
+.ff-gi-2 { grid-column: span 4; }
+.ff-gi-3 { grid-column: span 3; }
+.ff-gi-4 { grid-column: span 3; }
+.ff-gi-5 { grid-column: span 4; }
 
-<div class="wp-block-stackable-heading stk-block-heading stk-block-heading--v2 stk-block stk-463b749 ct-advanced-heading" data-title="Services" id="services" data-block-id="463b749"><h2 class="stk-block-heading__text has-text-align-center-mobile">What We Offer</h2></div>
-</div></div></div>
+/* ---------- CTA / Visit ---------- */
+.ff-visit { background: #0d0c16; padding: 110px 0; }
+.ff-visit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 90px; align-items: start; max-width: 1220px; margin: 0 auto; padding: 0 60px; }
+.ff-visit-text h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: #fffffe; margin: 14px 0 24px; }
+.ff-visit-text p { font-size: 1rem; color: rgba(255,255,255,0.65); line-height: 1.8; margin-bottom: 40px; }
+.ff-btn { display: inline-block; background: #0F7B78; color: #fff !important; padding: 15px 38px; font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; text-decoration: none !important; border-radius: 2px; transition: background 0.3s; }
+.ff-btn:hover { background: #0C5F5B !important; }
+.ff-info-list { display: flex; flex-direction: column; gap: 30px; }
+.ff-info-item { display: flex; gap: 18px; align-items: flex-start; }
+.ff-info-icon { width: 46px; height: 46px; background: rgba(15,123,120,0.12); border: 1px solid rgba(15,123,120,0.35); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ff-info-icon svg { width: 20px; height: 20px; fill: #0F7B78; }
+.ff-info-copy h4 { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #0F7B78; margin-bottom: 6px; }
+.ff-info-copy p { font-size: 0.95rem; color: rgba(255,255,255,0.72); line-height: 1.65; margin: 0; }
 
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .ff-story-grid, .ff-visit-grid { grid-template-columns: 1fr; gap: 50px; padding: 0 32px; }
+  .ff-stats-inner { grid-template-columns: repeat(2,1fr); padding: 0 32px; }
+  .ff-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .ff-stat:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); }
+  .ff-cards { grid-template-columns: 1fr; }
+  .ff-offerings-inner, .ff-gallery-inner { padding: 0 32px; }
+  .ff-story-img-wrap::before { display: none; }
+  .ff-story, .ff-offerings, .ff-gallery, .ff-visit { padding: 70px 0; }
+  .ff-gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .ff-gi-1, .ff-gi-2, .ff-gi-3, .ff-gi-4, .ff-gi-5 { grid-column: span 1; height: 200px; }
+  .ff-heritage-body { padding: 70px 32px; }
+}
+@media (max-width: 600px) {
+  .ff-stats-inner { grid-template-columns: 1fr; }
+  .ff-stat:nth-child(odd) { border-right: none; }
+  .ff-gallery-grid { grid-template-columns: 1fr; }
+  .ff-gi-1, .ff-gi-2, .ff-gi-3, .ff-gi-4, .ff-gi-5 { height: 220px; }
+}
+</style>
 
+<!-- OUR STORY -->
+<section class="ff-story">
+  <div class="ff-story-grid">
+    <div class="ff-story-text">
+      <span class="ff-label">Our Story</span>
+      <h2>Where Ethiopia's Coffee Soul Comes Alive</h2>
+      <div class="ff-teal-bar"></div>
+      <p>Born in the heart of Kazanchis, Addis Ababa, Fu Fut Coffee was founded on a single belief — that Ethiopia, the birthplace of coffee, deserves a space that honours that legacy with pride and precision.</p>
+      <p>We source directly from Ethiopia's finest growing regions: the fruity brightness of Guji, the wine-like depth of Yirgacheffe, and the bold earthiness of Sidamo. Every cup we brew is a tribute to the farmers, the land, and the centuries-old tradition of the Ethiopian coffee ceremony.</p>
+      <p>Beyond coffee, Fu Fut is a gathering place — where Kazanchis residents, visitors, and professionals come to connect, work, and share a meal in a space designed to feel both modern and deeply rooted in culture.</p>
+    </div>
+    <div class="ff-story-img-wrap">
+      <img src="assets/ethiopian_coffee_ceremony.webp" alt="Ethiopian Coffee Ceremony">
+    </div>
+  </div>
+</section>
 
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-1e41c0d" data-v="4" data-block-id="1e41c0d"><div class="stk-column-wrapper stk-block-column__content stk-container stk-1e41c0d-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-1e41c0d-inner-blocks">
-<div class="wp-block-stackable-button-group stk-block-button-group stk-block stk-b37d692" data-block-id="b37d692"><div class="stk-row stk-inner-blocks has-text-align-right has-text-align-center-mobile stk-block-content stk-button-group">
-<div class="wp-block-stackable-button stk-block-button stk-block stk-49009b2" data-block-id="49009b2"><a class="stk-link stk-button stk--hover-effect-darken" href="#"><span class="has-text-color has-palette-color-4-color stk-button__inner-text">View All Services</span></a></div>
-</div></div>
-</div></div></div>
+<!-- STATS -->
+<section class="ff-stats">
+  <div class="ff-stats-inner">
+    <div class="ff-stat">
+      <div class="ff-stat-num">2016</div>
+      <div class="ff-stat-lbl">Year Founded</div>
+    </div>
+    <div class="ff-stat">
+      <div class="ff-stat-num">3</div>
+      <div class="ff-stat-lbl">Coffee Origins</div>
+    </div>
+    <div class="ff-stat">
+      <div class="ff-stat-num">100+</div>
+      <div class="ff-stat-lbl">Menu Items</div>
+    </div>
+    <div class="ff-stat">
+      <div class="ff-stat-num">7</div>
+      <div class="ff-stat-lbl">Days a Week</div>
+    </div>
+  </div>
+</section>
 
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-67cd161" data-v="4" data-block-id="67cd161"><div class="stk-column-wrapper stk-block-column__content stk-container stk-67cd161-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-67cd161-inner-blocks"></div></div></div>
-</div></div>
+<!-- WHAT WE OFFER -->
+<section class="ff-offerings">
+  <div class="ff-offerings-inner">
+    <div class="ff-sec-head">
+      <span class="ff-label">01 — What We Offer</span>
+      <h2>Crafted for Every Moment</h2>
+    </div>
+    <div class="ff-cards">
+      <div class="ff-card">
+        <img class="ff-card-img" src="assets/coffee-yirgacheffe.jpg" alt="Premium Ethiopian Coffee">
+        <div class="ff-card-overlay"></div>
+        <div class="ff-card-body">
+          <span class="ff-card-tag">Speciality Coffee</span>
+          <h3>Premium Ethiopian Coffee</h3>
+          <p>Single-origin beans from Guji, Yirgacheffe &amp; Sidamo — roasted fresh and brewed with care. The full Ethiopian ceremony experience, every single day.</p>
+        </div>
+      </div>
+      <div class="ff-card">
+        <img class="ff-card-img" src="assets/dish-tibs.jpg" alt="Ethiopian and International Cuisine">
+        <div class="ff-card-overlay"></div>
+        <div class="ff-card-body">
+          <span class="ff-card-tag">Food &amp; Dining</span>
+          <h3>Local &amp; International Cuisine</h3>
+          <p>Authentic Ethiopian dishes — tibs, injera, shiro — alongside burgers, sandwiches and international favourites crafted for every palate.</p>
+        </div>
+      </div>
+      <div class="ff-card">
+        <img class="ff-card-img" src="assets/dish-photo-crop.jpg" alt="Fresh Juices and Beverages">
+        <div class="ff-card-overlay"></div>
+        <div class="ff-card-body">
+          <span class="ff-card-tag">Beverages</span>
+          <h3>Fresh Juices &amp; Wellness Drinks</h3>
+          <p>Squeezed-to-order juices, natural smoothies, and wellness blends — the perfect refreshing complement to every coffee or meal.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- HERITAGE BANNER -->
+<section class="ff-heritage">
+  <div class="ff-heritage-bg"><img src="assets/gallery-3.jpg" alt="Fu Fut Coffee Atmosphere"></div>
+  <div class="ff-heritage-body">
+    <div class="ff-gold-bar"></div>
+    <span class="ff-label" style="text-align:center;">Ethiopia's Coffee Birthplace</span>
+    <blockquote>"Coffee is not just a drink here — it is a ceremony, a culture, a conversation."</blockquote>
+    <p>Ethiopia gave the world coffee. At Fu Fut, we honour that gift — from the traditional clay jebena pot to the modern espresso bar. Every sip connects you to a lineage that stretches back centuries across the highlands of this extraordinary country.</p>
+  </div>
+</section>
 
+<!-- GALLERY -->
+<section class="ff-gallery">
+  <div class="ff-gallery-inner">
+    <div class="ff-sec-head">
+      <span class="ff-label">Our Space</span>
+      <h2>The Fu Fut Experience</h2>
+    </div>
+    <div class="ff-gallery-grid">
+      <div class="ff-gi ff-gi-1"><img src="assets/gallery-1.jpg" alt="Fu Fut Coffee"></div>
+      <div class="ff-gi ff-gi-2"><img src="assets/gallery-4.jpg" alt="Fu Fut Coffee"></div>
+      <div class="ff-gi ff-gi-3"><img src="assets/image1.JPG" alt="Fu Fut Coffee"></div>
+      <div class="ff-gi ff-gi-4"><img src="assets/gallery-5.jpg" alt="Fu Fut Coffee"></div>
+      <div class="ff-gi ff-gi-5"><img src="assets/gallery-2.jpg" alt="Fu Fut Coffee"></div>
+    </div>
+  </div>
+</section>
 
-<div class="wp-block-stackable-spacer stk-block-spacer stk--no-padding stk-block stk-f40eecc" data-block-id="f40eecc"></div>
-
-
-
-<div class="wp-block-stackable-columns stk-block-columns stk-block stk-a5bc981 ct-special-features" data-block-id="a5bc981"><div class="stk-row stk-inner-blocks stk-block-content stk-content-align stk-a5bc981-column">
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-622c7a4 stk-block-background" data-v="4" data-block-id="622c7a4"><div class="stk-column-wrapper stk-block-column__content stk-container stk-622c7a4-container stk--no-background stk--no-padding"><div class="has-text-align-left stk-block-content stk-inner-blocks stk-622c7a4-inner-blocks">
-<div class="wp-block-stackable-icon stk-block-icon has-text-align-left has-text-align-center-mobile stk-block stk-ea85267" data-block-id="ea85267"><span class="stk--svg-wrapper"><div class="stk--inner-svg"><svg style="height:0;width:0"><defs><linearGradient id="linear-gradient-ea85267" x1="0" x2="100%" y1="0" y2="0"><stop offset="0%" style="stop-opacity:1;stop-color:var(--linear-gradient-ea-85267-color-1)"></stop><stop offset="100%" style="stop-opacity:1;stop-color:var(--linear-gradient-ea-85267-color-2)"></stop></linearGradient></defs></svg><svg class="ugb-custom-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" aria-hidden="true" width="32" height="32">
-  <path d="M38 4c.5 0 1 .2 1.4.6.4.4.6.9.6 1.4v20c0 .5-.2 1-.6 1.4s-.9.6-1.4.6h-8V8H18v4H8V6c0-.5.2-1 .6-1.4.4-.4.9-.6 1.4-.6h28zm-23.5 6.4V8.6c0-.4-.2-.6-.6-.6H12c-.4 0-.6.2-.6.6v1.9c0 .4.2.6.6.6h1.9c.4-.1.6-.3.6-.7zm22 13v-1.9c0-.4-.2-.6-.6-.6H34c-.4 0-.6.2-.6.6v1.9c0 .4.2.6.6.6h1.9c.4 0 .6-.2.6-.6zm0-6.5V15c0-.4-.2-.6-.6-.6H34c-.4 0-.6.2-.6.6v1.9c0 .4.2.6.6.6h1.9c.4 0 .6-.2.6-.6zm0-6.5V8.6c0-.4-.2-.6-.6-.6H34c-.4 0-.6.2-.6.6v1.9c0 .4.2.6.6.6h1.9c.4-.1.6-.3.6-.7zM26 14c.5 0 1 .2 1.4.6.4.4.6.9.6 1.4v18c0 .5-.2 1-.6 1.4s-.9.6-1.4.6H2c-.5 0-1-.2-1.4-.6C.2 35 0 34.5 0 34V16c0-.5.2-1 .6-1.4.4-.4.9-.6 1.4-.6h24zM7.4 18.6C7 18.2 6.5 18 6 18s-1 .2-1.4.6c-.4.4-.6.9-.6 1.4s.2 1 .6 1.4c.4.4.9.6 1.4.6s1-.2 1.4-.6c.4-.4.6-.9.6-1.4s-.2-1-.6-1.4zM24 32v-6l-6-6-8 8-2-2-4 4v2h20z" fill="#fff"></path>
-</svg></div></span></div>
-
-
-
-<div class="wp-block-stackable-heading stk-block-heading stk-block-heading--v2 stk-block stk-592ef48" id="premium-coffee" data-block-id="592ef48"><h5 class="stk-block-heading__text has-text-align-center-mobile">Premium Coffee</h5></div>
-
-
-
-<div class="wp-block-stackable-text stk-block-text stk-block stk-a2f8734" data-block-id="a2f8734"><p class="stk-block-text__text has-text-color has-palette-color-4-color has-text-align-center-mobile">Freshly roasted, carefully prepared Ethiopian coffee sourced from the finest local value chains. Every cup tells the story of Ethiopia’s legendary coffee tradition.</p></div>
-</div></div></div>
-
-
-
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-a7c50c6 stk-block-background" data-v="4" data-block-id="a7c50c6"><div class="stk-column-wrapper stk-block-column__content stk-container stk-a7c50c6-container stk--no-background stk--no-padding"><div class="has-text-align-left stk-block-content stk-inner-blocks stk-a7c50c6-inner-blocks">
-<div class="wp-block-stackable-icon stk-block-icon has-text-align-left has-text-align-center-mobile stk-block stk-e5c647e" data-block-id="e5c647e"><span class="stk--svg-wrapper"><div class="stk--inner-svg"><svg style="height:0;width:0"><defs><linearGradient id="linear-gradient-e5c647e" x1="0" x2="100%" y1="0" y2="0"><stop offset="0%" style="stop-opacity:1;stop-color:var(--linear-gradient-e-5-c-647-e-color-1)"></stop><stop offset="100%" style="stop-opacity:1;stop-color:var(--linear-gradient-e-5-c-647-e-color-2)"></stop></linearGradient></defs></svg><svg class="ugb-custom-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" aria-hidden="true" width="32" height="32">
-  <path d="M9.1 17.1L1.6 9.4C.5 8.3 0 6.9 0 5.3c.1-1.6.7-2.9 2-4C3.1.4 4.3 0 5.7.1s2.6.7 3.6 1.7l.7.8.8-.9c1-1 2.2-1.5 3.6-1.7 1.3-.1 2.6.3 3.6 1.3 1.2 1 1.9 2.4 2 4 .1 1.6-.5 3-1.6 4.1l-7.6 7.7c-.2.3-.5.4-.9.4s-.5-.1-.8-.4zM20.4 25c.6 0 1.1.2 1.5.6.4.4.6.9.6 1.5v10.8c0 .3-.1.5-.2.8-.1.3-.3.5-.5.7-.2.2-.4.4-.7.5-.3.1-.5.2-.8.2H2.1c-.6 0-1.1-.2-1.5-.6-.4-.5-.6-1-.6-1.6V27.1c0-.6.2-1.1.6-1.5.5-.4.9-.6 1.5-.6h3.7l.5-1.1c.2-.4.4-.8.8-1 .4-.3.8-.4 1.2-.4h5.6c.4 0 .8.1 1.2.4.4.3.6.6.7 1l.6 1.1h4zm-12 10.4c.8.8 1.7 1.2 2.9 1.2s2.1-.4 2.9-1.2c.8-.8 1.2-1.7 1.2-2.9 0-1.1-.4-2.1-1.2-2.9-.8-.8-1.7-1.2-2.9-1.2s-2.1.4-2.9 1.2-1.2 1.7-1.2 2.9.4 2.1 1.2 2.9zM39 27.5c.4 0 .7.1.9.4.2.3.2.6 0 .8l-7.2 10.9c-.2.3-.5.4-.8.4s-.6-.1-.8-.3c-.2-.2-.3-.4-.2-.7l1.9-6.5H28c-.3 0-.6-.1-.8-.3-.2-.2-.3-.4-.2-.7l1.3-8.4c.1-.5.4-.7.9-.7h5.9c.3 0 .6.1.8.3.2.2.3.4.2.7l-1.7 4H39zM37.3 0c.7-.1 1.4.1 1.9.6s.8 1.1.8 1.9v11.2c0 1-.5 1.9-1.5 2.7-1 .7-2.2 1.1-3.6 1.1s-2.6-.4-3.5-1.1c-1-.7-1.4-1.6-1.4-2.7s.5-1.9 1.4-2.7c1-.7 2.1-1.1 3.6-1.1.4 0 .8.1 1.2.2V6.4l-8.7 1.4v8.4c0 1-.5 1.9-1.5 2.7S23.8 20 22.5 20s-2.6-.4-3.5-1.1-1.4-1.6-1.4-2.7.5-1.9 1.4-2.7c1-.7 2.1-1.1 3.6-1.1.4 0 .8.1 1.2.2V4.3c0-.6.2-1.2.6-1.6.4-.5.9-.8 1.4-.9L37.3 0z" fill="#fff"></path>
-</svg></div></span></div>
-
-
-
-<div class="wp-block-stackable-heading stk-block-heading stk-block-heading--v2 stk-block stk-4c586e3" id="cuisine" data-block-id="4c586e3"><h5 class="stk-block-heading__text has-text-align-center-mobile">Local &amp; International Cuisine</h5></div>
-
-
-
-<div class="wp-block-stackable-text stk-block-text stk-block stk-e224ee3" data-block-id="e224ee3"><p class="stk-block-text__text has-text-color has-palette-color-4-color has-text-align-center-mobile">A diverse menu featuring authentic Ethiopian dishes alongside international favorites — crafted with quality ingredients for every taste.</p></div>
-</div></div></div>
-
-
-
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-fe0d40e stk-block-background" data-v="4" data-block-id="fe0d40e"><div class="stk-column-wrapper stk-block-column__content stk-container stk-fe0d40e-container stk--no-background stk--no-padding"><div class="has-text-align-left stk-block-content stk-inner-blocks stk-fe0d40e-inner-blocks">
-<div class="wp-block-stackable-icon stk-block-icon has-text-align-left has-text-align-center-mobile stk-block stk-ab734d8" data-block-id="ab734d8"><span class="stk--svg-wrapper"><div class="stk--inner-svg"><svg style="height:0;width:0"><defs><linearGradient id="linear-gradient-ab734d8" x1="0" x2="100%" y1="0" y2="0"><stop offset="0%" style="stop-opacity:1;stop-color:var(--linear-gradient-ab-734-d-8-color-1)"></stop><stop offset="100%" style="stop-opacity:1;stop-color:var(--linear-gradient-ab-734-d-8-color-2)"></stop></linearGradient></defs></svg><svg class="ugb-custom-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" aria-hidden="true" width="32" height="32">
-  <path d="M17.5 7.5L16.2 5l-2.5-1.2 2.5-1.2L17.5 0l1.2 2.5 2.5 1.2L18.8 5l-1.3 2.5zm-11.3 5L4.1 8.4 0 6.2l4.1-2.1L6.2 0l2.1 4.1 4.1 2.1-4 2.2-2.2 4.1zm27.6 10l2.1 4.1 4.1 2.1-4.1 2.1-2.1 4.2-2.1-4.1-4.1-2.1 4.1-2.1 2.1-4.2zm5.5-15.2c.5.6.7 1.2.7 1.8s-.2 1.2-.7 1.7L10.9 39.3c-.5.5-1 .7-1.7.7s-1.3-.2-1.8-.7L.8 32.7c-.6-.6-.8-1.2-.8-1.8s.2-1.2.7-1.7L29.1.7c.5-.5 1-.7 1.7-.7s1.3.2 1.8.7l6.7 6.6zM28 15.9l6.8-6.7-4-4-6.7 6.8 3.9 3.9z" fill="#fff"></path>
-</svg></div></span></div>
-
-
-
-<div class="wp-block-stackable-heading stk-block-heading stk-block-heading--v2 stk-block stk-9ae91ee" id="healthy-beverages" data-block-id="9ae91ee"><h5 class="stk-block-heading__text has-text-align-center-mobile">Healthy Beverages</h5></div>
-
-
-
-<div class="wp-block-stackable-text stk-block-text stk-block stk-9dc6d4b" data-block-id="9dc6d4b"><p class="stk-block-text__text has-text-color has-palette-color-4-color has-text-align-center-mobile">Refreshing juices, smoothies, and wellness drinks made from fresh, natural ingredients. The perfect complement to our coffee experience.</p></div>
-</div></div></div>
-</div></div>
-
-
-
-
-
-
-<div class="wp-block-stackable-columns stk-block-columns stk-block stk-2976898 stk-block-background" data-block-id="2976898"><div class="stk-row stk-inner-blocks stk--block-align-2976898 stk-block-content stk-content-align stk-2976898-column">
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-86db01b" data-v="4" data-block-id="86db01b"><div class="stk-column-wrapper stk-block-column__content stk-container stk-86db01b-container stk--no-background stk--no-padding"><div class="has-text-align-center-mobile stk-block-content stk-inner-blocks stk-86db01b-inner-blocks">
-<div class="wp-block-stackable-text stk-block-text stk-block stk-684ab79" data-block-id="684ab79"><p class="stk-block-text__text has-text-color has-palette-color-1-color">03.</p></div>
-
-
-
-<div class="wp-block-stackable-heading stk-block-heading stk-block-heading--v2 stk-block stk-145e7f7" id="get-in-touch" data-block-id="145e7f7"><h2 class="stk-block-heading__text">Get In Touch</h2></div>
-
-
-
-<div class="wp-block-stackable-text stk-block-text stk-block stk-c84b1d7" data-block-id="c84b1d7"><p class="stk-block-text__text has-text-color has-palette-color-4-color">We'd love to hear from you. Visit us at our Kazanchis location or call to place a delivery order.</p></div>
-
-
-
-<div class="wp-block-stackable-button-group stk-block-button-group stk-block stk-bc95f5b" data-block-id="bc95f5b"><div class="stk-row stk-inner-blocks has-text-align-center-mobile stk-block-content stk-button-group">
-<div class="wp-block-stackable-button stk-block-button stk-block stk-f1e52d1" data-block-id="f1e52d1"><a class="stk-link stk-button stk--hover-effect-darken" href="#"><span class="stk-button__inner-text">Contact</span></a></div>
-</div></div>
-</div></div></div>
-
-
-
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-f2831ff" data-v="4" data-block-id="f2831ff"><div class="stk-column-wrapper stk-block-column__content stk-container stk-f2831ff-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-f2831ff-inner-blocks">
-<figure class="wp-block-image size-full"><img loading="lazy" decoding="async" width="800" height="800" src="https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/person-cta@2x.png" alt="" class="wp-image-229" srcset="https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/person-cta@2x.png 800w, https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/person-cta@2x-300x300.png 300w, https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/person-cta@2x-150x150.png 150w, https://startersites.io/blocksy/persona/wp-content/uploads/2021/06/person-cta@2x-768x768.png 768w" sizes="auto, (max-width: 800px) 100vw, 800px"></figure>
-</div></div></div>
-</div></div>
-
-
-
-<div class="wp-block-stackable-spacer stk-block-spacer stk--no-padding stk-block stk-d71d54f" data-block-id="d71d54f"></div>
+<!-- VISIT US -->
+<section class="ff-visit">
+  <div class="ff-visit-grid">
+    <div class="ff-visit-text">
+      <span class="ff-label">02 — Come Visit</span>
+      <h2>We'd Love to See You in Kazanchis</h2>
+      <p>Whether you're looking for a quiet morning pour-over, a working lunch, or a full Ethiopian coffee ceremony with friends — Fu Fut Coffee is your place. Come as you are.</p>
+      <a href="tel:0931190440" class="ff-btn">Call to Reserve</a>
+    </div>
+    <div class="ff-info-list">
+      <div class="ff-info-item">
+        <div class="ff-info-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        </div>
+        <div class="ff-info-copy">
+          <h4>Location</h4>
+          <p>Kazanchis, Addis Ababa, Ethiopia<br>Near the Intercontinental Hotel</p>
+        </div>
+      </div>
+      <div class="ff-info-item">
+        <div class="ff-info-icon">
+          <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+        </div>
+        <div class="ff-info-copy">
+          <h4>Phone</h4>
+          <p>+251 931 190 440<br>+251 912 934 982</p>
+        </div>
+      </div>
+      <div class="ff-info-item">
+        <div class="ff-info-icon">
+          <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L11 14V7h1.5v6.25l4.5 2.67-1.77 1.08z"/></svg>
+        </div>
+        <div class="ff-info-copy">
+          <h4>Hours</h4>
+          <p>Monday – Sunday<br>7:00 AM – 10:00 PM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
                 </div>
 
                 
