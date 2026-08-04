@@ -290,90 +290,6 @@
         }
         .about-section-title-light { color: #fff; }
 
-        /* ---- Our Story ---- */
-        .story-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: clamp(40px, 7vw, 90px);
-            align-items: center;
-            margin-top: 0;
-        }
-        .story-text-block { display: flex; flex-direction: column; }
-        .story-teal-bar {
-            width: 44px; height: 3px;
-            background: var(--color-primary);
-            border-radius: 2px;
-            margin: 20px 0 28px;
-        }
-        .story-text-block p {
-            font-size: 1.025rem;
-            color: var(--text-body);
-            line-height: 1.85;
-            margin-bottom: 18px;
-        }
-        .story-text-block p:last-child { margin-bottom: 0; }
-
-        .story-img-frame {
-            position: relative;
-        }
-        .story-img-frame::before {
-            content: '';
-            position: absolute;
-            top: -16px; left: -16px; right: 16px; bottom: 16px;
-            border: 2px solid rgba(15,123,120,0.25);
-            border-radius: 16px;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .story-img-frame img {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-            border-radius: 14px;
-            display: block;
-            box-shadow: 0 24px 60px rgba(7,55,53,0.18), 0 8px 16px rgba(7,55,53,0.1);
-        }
-        .story-img-badge {
-            position: absolute;
-            z-index: 2;
-            bottom: 28px;
-            left: -20px;
-            background: #fff;
-            border: 1px solid rgba(15,123,120,0.12);
-            border-radius: 14px;
-            padding: 16px 20px;
-            box-shadow: 0 8px 28px rgba(7,55,53,0.14);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 160px;
-        }
-        .story-img-badge-icon {
-            width: 40px; height: 40px;
-            background: var(--teal-50);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .story-img-badge-icon svg { width: 20px; height: 20px; fill: var(--color-primary); }
-        .story-img-badge-text strong {
-            display: block;
-            font-size: 1.15rem;
-            font-family: var(--font-display);
-            font-weight: 700;
-            color: var(--text-heading);
-            line-height: 1.1;
-        }
-        .story-img-badge-text span {
-            font-size: 0.72rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
         /* ---- Stats ---- */
         .stats-grid {
             display: grid;
@@ -402,151 +318,6 @@
             color: rgba(255,255,255,0.55);
             font-weight: 500;
         }
-
-        /* ---- Offerings ---- */
-        .offerings-head { margin-bottom: 52px; }
-        .offerings-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 22px;
-        }
-        .offering-card {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
-            background: var(--color-surface);
-            border: 1px solid rgba(15,123,120,0.1);
-            box-shadow: 0 4px 20px rgba(7,55,53,0.06);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .offering-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 48px rgba(7,55,53,0.14);
-        }
-        .offering-card-img {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.55s ease;
-        }
-        .offering-card:hover .offering-card-img { transform: scale(1.04); }
-        .offering-card-img-wrap { overflow: hidden; }
-        .offering-card-body {
-            padding: 24px 26px 28px;
-        }
-        .offering-card-tag {
-            display: inline-block;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--color-primary);
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .offering-card-body h3 {
-            font-family: var(--font-display);
-            font-size: 1.35rem;
-            font-weight: 600;
-            color: var(--text-heading);
-            margin-bottom: 10px;
-            line-height: 1.25;
-        }
-        .offering-card-body p {
-            font-size: 0.9rem;
-            color: var(--text-body);
-            line-height: 1.7;
-            margin: 0;
-        }
-
-        /* ---- Heritage Banner ---- */
-        .heritage-banner {
-            position: relative;
-            overflow: hidden;
-            min-height: 520px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .heritage-bg {
-            position: absolute;
-            inset: 0;
-        }
-        .heritage-bg img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .heritage-bg::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(7,55,53,0.82) 0%, rgba(3,30,28,0.88) 100%);
-        }
-        .heritage-body {
-            position: relative;
-            z-index: 2;
-            max-width: 760px;
-            padding: clamp(60px, 8vw, 100px) clamp(24px, 6vw, 60px);
-            text-align: center;
-            margin: 0 auto;
-        }
-        .heritage-gold-bar {
-            width: 44px; height: 2px;
-            background: var(--gold-500);
-            margin: 0 auto 24px;
-            border-radius: 2px;
-        }
-        .heritage-eyebrow {
-            display: block;
-            font-size: 11px; font-weight: 600; letter-spacing: 0.22em;
-            text-transform: uppercase; color: var(--gold-300);
-            margin-bottom: 24px;
-        }
-        .heritage-body blockquote {
-            font-family: var(--font-display);
-            font-size: clamp(1.5rem, 3.2vw, 2.2rem);
-            font-weight: 600;
-            color: #fff;
-            line-height: 1.35;
-            margin: 0 0 28px;
-            font-style: italic;
-        }
-        .heritage-body p {
-            font-size: 1rem;
-            color: rgba(255,255,255,0.72);
-            line-height: 1.85;
-            max-width: 60ch;
-            margin: 0 auto;
-        }
-
-        /* ---- Gallery ---- */
-        .gallery-head { margin-bottom: 44px; }
-        .gallery-mosaic {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: 240px 240px;
-            gap: 10px;
-        }
-        .gallery-item {
-            overflow: hidden;
-            border-radius: 12px;
-            cursor: pointer;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.55s ease;
-        }
-        .gallery-item:hover img { transform: scale(1.06); }
-        .gi-1 { grid-column: span 5; grid-row: span 2; }
-        .gi-2 { grid-column: span 4; }
-        .gi-3 { grid-column: span 3; }
-        .gi-4 { grid-column: span 3; }
-        .gi-5 { grid-column: span 4; }
 
         /* ---- Visit Us ---- */
         .visit-grid {
@@ -679,29 +450,12 @@
            RESPONSIVE
         ====================================================== */
         @media (max-width: 1024px) {
-            .story-grid { grid-template-columns: 1fr; gap: 48px; }
-            .story-img-frame { order: -1; }
-            .story-img-frame::before { display: none; }
-            .story-img-frame img { height: 420px; }
-            .story-img-badge { left: 12px; bottom: 16px; }
-
-            .offerings-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
-            .offerings-grid .offering-card:last-child {
-                grid-column: 1 / -1;
-                max-width: 500px;
-                margin: 0 auto;
-                width: 100%;
-            }
-
             .visit-grid { grid-template-columns: 1fr; gap: 48px; }
 
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .stat-item:nth-child(2) { border-right: none; }
             .stat-item:nth-child(1),
             .stat-item:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.1); }
-
-            .gallery-mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: auto; gap: 8px; }
-            .gi-1, .gi-2, .gi-3, .gi-4, .gi-5 { grid-column: span 1; height: 220px; }
         }
 
         @media (max-width: 768px) {
@@ -710,34 +464,13 @@
 
             .about-inner { padding: 0 20px; }
 
-            .offerings-grid { grid-template-columns: 1fr; }
-            .offerings-grid .offering-card:last-child { max-width: none; }
-
-            .offering-card-img { height: 220px; }
-
-            .gallery-mosaic {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto;
-            }
-            .gi-1 { grid-column: 1 / -1; height: 260px; }
-            .gi-2, .gi-3, .gi-4, .gi-5 { grid-column: span 1; height: 180px; }
-
             .stats-grid { grid-template-columns: 1fr 1fr; }
-
-            .story-img-frame img { height: 320px; }
-
-            .heritage-body blockquote { font-size: clamp(1.3rem, 4vw, 1.9rem); }
         }
 
         @media (max-width: 540px) {
             .stats-grid { grid-template-columns: 1fr; }
             .stat-item { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.1); }
             .stat-item:last-child { border-bottom: none; }
-
-            .gallery-mosaic { grid-template-columns: 1fr; }
-            .gi-1, .gi-2, .gi-3, .gi-4, .gi-5 { grid-column: 1; height: 220px; }
-
-            .story-img-badge { display: none; }
 
             .visit-cta { width: 100%; justify-content: center; }
 
@@ -826,7 +559,7 @@
             <h1>The <span class="accent">Soul</span> of<br>Ethiopian Coffee</h1>
             <p class="about-hero-sub">A space where Ethiopia's ancient coffee heritage meets modern café culture — brewed with care, served with pride.</p>
             <div class="about-hero-ctas">
-                <a href="#story" class="about-hero-cta-primary">Our Story</a>
+                <a href="#visit" class="about-hero-cta-primary">Visit Us</a>
                 <a href="index.html#menu" class="about-hero-cta-secondary">View Menu →</a>
             </div>
         </div>
@@ -857,36 +590,6 @@
     </section>
 
     <!-- =========================================================
-         OUR STORY
-    ========================================================= -->
-    <section class="about-section about-section-light">
-        <div class="about-inner">
-            <div class="story-grid">
-                <div class="story-text-block reveal reveal-left">
-                    <span class="about-eyebrow">Our Story</span>
-                    <h2 class="about-section-title">Where Ethiopia's Coffee Soul Comes Alive</h2>
-                    <div class="story-teal-bar"></div>
-                    <p>Born in the heart of Kazanchis, Addis Ababa, Fu Fut Coffee was founded on a single belief — that Ethiopia, the birthplace of coffee, deserves a space that honours that legacy with pride and precision.</p>
-                    <p>We source directly from Ethiopia's finest growing regions: the fruity brightness of Guji, the wine-like depth of Yirgacheffe, and the bold earthiness of Sidamo. Every cup we brew is a tribute to the farmers, the land, and the centuries-old tradition of the Ethiopian coffee ceremony.</p>
-                    <p>Beyond coffee, Fu Fut is a gathering place — where Kazanchis residents, visitors, and professionals come to connect, work, and share a meal in a space designed to feel both modern and deeply rooted in culture.</p>
-                </div>
-                <div class="story-img-frame reveal reveal-right">
-                    <img src="assets/ethiopian_coffee_ceremony.webp" alt="Ethiopian Coffee Ceremony at Fu Fut">
-                    <div class="story-img-badge">
-                        <div class="story-img-badge-icon">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        </div>
-                        <div class="story-img-badge-text">
-                            <strong>Kazanchis</strong>
-                            <span>Addis Ababa</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =========================================================
          STATS
     ========================================================= -->
     <section class="about-section-teal" style="padding:0;">
@@ -913,87 +616,9 @@
     </section>
 
     <!-- =========================================================
-         WHAT WE OFFER
-    ========================================================= -->
-    <section class="about-section about-section-white">
-        <div class="about-inner">
-            <div class="offerings-head">
-                <span class="about-eyebrow">What We Offer</span>
-                <h2 class="about-section-title">Crafted for Every Moment</h2>
-            </div>
-            <div class="offerings-grid">
-                <div class="offering-card reveal" style="transition-delay:.05s">
-                    <div class="offering-card-img-wrap">
-                        <img class="offering-card-img" src="assets/coffee-yirgacheffe.jpg" alt="Premium Ethiopian Coffee">
-                    </div>
-                    <div class="offering-card-body">
-                        <span class="offering-card-tag">Speciality Coffee</span>
-                        <h3>Premium Ethiopian Coffee</h3>
-                        <p>Single-origin beans from Guji, Yirgacheffe &amp; Sidamo — roasted fresh and brewed with care. The full Ethiopian ceremony experience, every single day.</p>
-                    </div>
-                </div>
-                <div class="offering-card reveal" style="transition-delay:.15s">
-                    <div class="offering-card-img-wrap">
-                        <img class="offering-card-img" src="assets/dish-tibs.jpg" alt="Ethiopian and International Cuisine">
-                    </div>
-                    <div class="offering-card-body">
-                        <span class="offering-card-tag">Food &amp; Dining</span>
-                        <h3>Local &amp; International Cuisine</h3>
-                        <p>Authentic Ethiopian dishes — tibs, injera, shiro — alongside burgers, sandwiches and international favourites crafted for every palate.</p>
-                    </div>
-                </div>
-                <div class="offering-card reveal" style="transition-delay:.25s">
-                    <div class="offering-card-img-wrap">
-                        <img class="offering-card-img" src="assets/dish-photo-crop.jpg" alt="Fresh Juices and Beverages">
-                    </div>
-                    <div class="offering-card-body">
-                        <span class="offering-card-tag">Beverages</span>
-                        <h3>Fresh Juices &amp; Wellness Drinks</h3>
-                        <p>Squeezed-to-order juices, natural smoothies, and wellness blends — the perfect refreshing complement to every coffee or meal.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =========================================================
-         HERITAGE BANNER
-    ========================================================= -->
-    <section class="heritage-banner">
-        <div class="heritage-bg">
-            <img src="assets/gallery-3.jpg" alt="Fu Fut Coffee Atmosphere">
-        </div>
-        <div class="heritage-body reveal">
-            <div class="heritage-gold-bar"></div>
-            <span class="heritage-eyebrow">Ethiopia's Coffee Birthplace</span>
-            <blockquote>"Coffee is not just a drink here — it is a ceremony, a culture, a conversation."</blockquote>
-            <p>Ethiopia gave the world coffee. At Fu Fut, we honour that gift — from the traditional clay jebena pot to the modern espresso bar. Every sip connects you to a lineage that stretches back centuries across the highlands of this extraordinary country.</p>
-        </div>
-    </section>
-
-    <!-- =========================================================
-         GALLERY
-    ========================================================= -->
-    <section class="about-section about-section-light">
-        <div class="about-inner">
-            <div class="gallery-head reveal">
-                <span class="about-eyebrow">Our Space</span>
-                <h2 class="about-section-title">The Fu Fut Experience</h2>
-            </div>
-            <div class="gallery-mosaic">
-                <div class="gallery-item gi-1 reveal"><img src="assets/gallery-1.jpg" alt="Fu Fut Coffee interior"></div>
-                <div class="gallery-item gi-2 reveal" style="transition-delay:.1s"><img src="assets/gallery-4.jpg" alt="Fu Fut Coffee atmosphere"></div>
-                <div class="gallery-item gi-3 reveal" style="transition-delay:.15s"><img src="assets/image1.JPG" alt="Fu Fut Coffee space"></div>
-                <div class="gallery-item gi-4 reveal" style="transition-delay:.2s"><img src="assets/gallery-5.jpg" alt="Fu Fut Coffee details"></div>
-                <div class="gallery-item gi-5 reveal" style="transition-delay:.25s"><img src="assets/gallery-2.jpg" alt="Fu Fut Coffee experience"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- =========================================================
          VISIT US
     ========================================================= -->
-    <section class="about-section about-section-white">
+    <section class="about-section about-section-white" id="visit">
         <div class="about-inner">
             <div class="visit-grid">
                 <div class="reveal reveal-left">
