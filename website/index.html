@@ -506,11 +506,11 @@
                         </div>
                         <div class="res-detail">
                             <div class="res-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-                            <div class="res-detail-text"><strong data-i18n="res.location">Location</strong><span data-i18n="res.locationVal">Bole Road, Addis Ababa</span></div>
+                            <div class="res-detail-text"><strong data-i18n="res.location">Location</strong><span data-i18n="res.locationVal">Kazanchis, Addis Ababa — Near the Intercontinental Hotel</span></div>
                         </div>
                         <div class="res-detail">
                             <div class="res-detail-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
-                            <div class="res-detail-text"><strong data-i18n="res.contactUs">Contact Us</strong><span data-i18n="res.contactVal">+251 91 162 0989</span></div>
+                            <div class="res-detail-text"><strong data-i18n="res.contactUs">Contact Us</strong><span data-i18n="res.contactVal"><a href="tel:+251931190440" style="color:inherit;text-decoration:none">+251 931 190 440</a> · <a href="tel:+251912934982" style="color:inherit;text-decoration:none">+251 912 934 982</a></span></div>
                         </div>
                     </div>
                 </div>
@@ -578,10 +578,11 @@
                 <div class="footer-col">
                     <h4 data-i18n="footer.contact">Contact</h4>
                     <ul>
-                        <li><a href="tel:+251911620989">+251 91 162 0989</a></li>
+                        <li><a href="tel:+251931190440">+251 931 190 440</a></li>
+                        <li><a href="tel:+251912934982">+251 912 934 982</a></li>
                         <li><a href="mailto:hello@fufutcoffee.com">hello@fufutcoffee.com</a></li>
-                        <li><a href="#">Bole Road</a></li>
-                        <li><a href="#">Addis Ababa, Ethiopia</a></li>
+                        <li><a href="#">Kazanchis, Addis Ababa</a></li>
+                        <li><a href="#">Near the Intercontinental Hotel</a></li>
                     </ul>
                 </div>
             </div>
@@ -950,7 +951,11 @@
                         if (twLink) twLink.href = c.footer.twitter;
                     }
                     // Contact column
-                    if (c.footer.phone) {
+                    if (c.footer.phone1) {
+                        var phoneEls = document.querySelectorAll('.footer-col:last-child a[href^="tel:"]');
+                        if (phoneEls[0]) { phoneEls[0].textContent = c.footer.phone1; phoneEls[0].href = 'tel:' + c.footer.phone1.replace(/\s/g,''); }
+                        if (c.footer.phone2 && phoneEls[1]) { phoneEls[1].textContent = c.footer.phone2; phoneEls[1].href = 'tel:' + c.footer.phone2.replace(/\s/g,''); }
+                    } else if (c.footer.phone) {
                         var phoneEl = document.querySelector('.footer-col:last-child a[href^="tel:"]');
                         if (phoneEl) phoneEl.textContent = c.footer.phone;
                     }
@@ -960,7 +965,6 @@
                     }
                     if (c.footer.address1) {
                         var addrEls = document.querySelectorAll('.footer-col:last-child a[href="#"]');
-                        // First # link in contact col is address line 1
                         if (addrEls.length >= 2) addrEls[0].textContent = c.footer.address1;
                         if (c.footer.address2 && addrEls.length >= 3) addrEls[1].textContent = c.footer.address2;
                     }
@@ -2576,10 +2580,11 @@
 
             // Footer — contact column (4th footer-col)
             var ftContactEl = ftHoursCol[3] ? ftHoursCol[3].querySelectorAll('li a') : [];
-            if (ft.phone    && ftContactEl[0]) { ftContactEl[0].href = 'tel:' + ft.phone.replace(/\s/g,''); ftContactEl[0].textContent = ft.phone; }
-            if (ft.email    && ftContactEl[1]) { ftContactEl[1].href = 'mailto:' + ft.email; ftContactEl[1].textContent = ft.email; }
-            if (ft.address1 && ftContactEl[2]) ftContactEl[2].textContent = ft.address1;
-            if (ft.address2 && ftContactEl[3]) ftContactEl[3].textContent = ft.address2;
+            if (ft.phone1 && ftContactEl[0]) { ftContactEl[0].href = 'tel:' + ft.phone1.replace(/\s/g,''); ftContactEl[0].textContent = ft.phone1; }
+            if (ft.phone2 && ftContactEl[1]) { ftContactEl[1].href = 'tel:' + ft.phone2.replace(/\s/g,''); ftContactEl[1].textContent = ft.phone2; }
+            if (ft.email    && ftContactEl[2]) { ftContactEl[2].href = 'mailto:' + ft.email; ftContactEl[2].textContent = ft.email; }
+            if (ft.address1 && ftContactEl[3]) ftContactEl[3].textContent = ft.address1;
+            if (ft.address2 && ftContactEl[4]) ftContactEl[4].textContent = ft.address2;
 
             // Footer — social links
             var socials = document.querySelectorAll('.footer-social a');
