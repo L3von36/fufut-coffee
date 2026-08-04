@@ -581,7 +581,7 @@
         .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
         @media(max-width:900px){ .story-grid { grid-template-columns: 1fr; gap: 40px; } }
 
-        .story-visual { position: relative; display: flex; align-items: center; justify-content: center; min-height: 480px; }
+        .story-visual { position: relative; display: flex; align-items: center; justify-content: center; min-height: 480px; overflow: hidden; }
         .story-visual-bg {
             position: absolute; width: 380px; height: 380px; border-radius: 50%;
             background: linear-gradient(135deg, var(--teal-50), var(--teal-100));
@@ -1181,7 +1181,7 @@
         }
 
         /* ===== TESTIMONIALS ===== */
-        #testimonials { background: var(--color-background); }
+        #testimonials { background: var(--color-background); overflow: hidden; }
         .testimonials-outer { position: relative; overflow: hidden; }
         .testimonials-outer::before,
         .testimonials-outer::after {
@@ -1191,7 +1191,7 @@
         .testimonials-outer::after { right: 0; background: linear-gradient(to left, var(--color-background), transparent); }
         .testimonials-track { display: flex; gap: 24px; padding: 16px 0; width: max-content; will-change: transform; }
         .testimonial-card {
-            min-width: 380px; max-width: 380px; flex-shrink: 0;
+            min-width: 280px; max-width: 380px; flex-shrink: 0;
             background: var(--color-surface); border-radius: var(--radius-lg);
             border: 1px solid var(--border-subtle); padding: 36px;
             box-shadow: var(--shadow-sm);
@@ -1204,7 +1204,8 @@
             color: var(--color-primary); opacity: .07; pointer-events: none;
         }
         .testimonial-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
-        @media(max-width:480px){ .testimonial-card { min-width: 300px; max-width: 300px; padding: 24px; } }
+        @media(max-width:480px){ .testimonial-card { min-width: 260px; max-width: 85vw; padding: 20px; } }
+        @media(max-width:768px){ .testimonial-card { min-width: 260px; } }
         .testimonial-stars { display: flex; gap: 4px; margin-bottom: 20px; }
         .testimonial-stars svg { width: 17px; height: 17px; fill: var(--color-accent); }
         .testimonial-quote {
@@ -1262,7 +1263,7 @@
         }
         .res-detail-icon svg { width: 20px; height: 20px; color: var(--color-primary); stroke: var(--color-primary); }
         .res-detail-text strong { display: block; font-size: var(--text-sm); font-weight: 600; color: var(--text-heading); margin-bottom: 2px; }
-        .res-detail-text span { font-size: var(--text-sm); color: var(--text-muted); }
+        .res-detail-text span { font-size: var(--text-sm); color: var(--text-muted); display: inline-block; max-width: 100%; overflow-wrap: break-word; word-break: break-word; }
         .res-form {
             background: var(--color-surface); border-radius: var(--radius-lg);
             padding: var(--space-5); box-shadow: var(--shadow-md);
@@ -1328,7 +1329,7 @@
         .footer-col li { margin-bottom: 8px; }
         .footer-col a { font-size: var(--text-sm); color: rgba(255,255,255,.6); transition: color var(--duration-fast); }
         .footer-col a:hover { color: var(--gold-300); }
-        .footer-address { font-size: var(--text-sm); color: rgba(255,255,255,.6); line-height: 1.4; }
+        .footer-address { font-size: var(--text-sm); color: rgba(255,255,255,.6); line-height: 1.4; overflow-wrap: break-word; word-break: break-word; }
         .footer-bottom {
             border-top: 1px solid rgba(255,255,255,.08); padding-top: 16px;
             display: flex; justify-content: space-between; align-items: center; font-size: var(--text-sm);
@@ -1711,7 +1712,6 @@
             .hero-btns .btn-gold,
             .hero-btns .btn-ghost { flex: 1 1 160px; text-align: center; }
             /* Story visual: prevent ring bleeds past viewport edge */
-            .story-visual { overflow: hidden; }
             /* Back-to-top position */
             .back-to-top { bottom: 76px; right: 16px; }
             /* Coffee / menu grid: remove max-width cap so cards fill viewport naturally */
