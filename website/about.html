@@ -152,15 +152,21 @@ body [class*="has-palette-color-3-color"] {
 .stk-ca14d9d > div:first-child { z-index: 1 !important; }
 .stk-ca14d9d-column { z-index: 2 !important; position: relative !important; }
 
-/* Hero CEO — right side portrait */
-.stk-hero-ceo { margin-top: -200px !important; margin-bottom: -100px !important; }
-.stk-hero-ceo-wrap {
-  height: 700px !important;
-  border-radius: 16px !important;
+/* Hero CEO — absolute positioned on right side */
+.stk-hero-ceo-abs {
+  position: absolute !important;
+  right: 5% !important;
+  bottom: -60px !important;
+ width: 38% !important;
+ max-width: 520px !important;
+ height: 75% !important;
+ z-index: 3 !important;
+ border-radius: 16px !important;
   overflow: hidden !important;
   box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.3) !important;
+ pointer-events: none !important;
 }
-.stk-hero-ceo-img {
+.stk-hero-ceo-abs img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
@@ -168,12 +174,12 @@ body [class*="has-palette-color-3-color"] {
   display: block !important;
 }
 @media screen and (max-width: 689px) {
+  .stk-hero-ceo-abs { display: none !important; }
   .stk-67cd161 { display: none !important; }
   .stk-31de384 { flex: 1 1 100% !important; }
 }
-@media screen and (min-width: 690px) and (max-width: 999px) {
-  .stk-hero-ceo-wrap { height: 450px !important; }
-  .stk-hero-ceo { margin-top: -100px !important; margin-bottom: -50px !important; }
+@media screen and (min-width: 690px) and (max-width: 1024px) {
+  .stk-hero-ceo-abs { width: 35% !important; bottom: -40px !important; }
 }
 </style>
 
@@ -410,7 +416,7 @@ body [class*="has-palette-color-3-color"] {
 </div></div>
 </div></div></div>
 
-<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-67cd161" data-v="4" data-block-id="67cd161"><div class="stk-column-wrapper stk-block-column__content stk-container stk-67cd161-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-67cd161-inner-blocks"><div class="stk-hero-ceo" data-block-id="67cd161-img" style="margin-top:-200px !important;margin-bottom:-100px !important;"><div class="stk-hero-ceo-wrap" style="height:700px !important;border-radius:16px !important;overflow:hidden !important;box-shadow:0 25px 80px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.3) !important;"><img src="images/ceo.png" alt="Fu Fut Coffee" style="width:100% !important;height:100% !important;object-fit:cover !important;object-position:top center !important;display:block !important;" loading="eager"></div></div></div></div></div>
+<div class="wp-block-stackable-column stk-block-column stk-column stk-block stk-67cd161" data-v="4" data-block-id="67cd161"><div class="stk-column-wrapper stk-block-column__content stk-container stk-67cd161-container stk--no-background stk--no-padding"><div class="stk-block-content stk-inner-blocks stk-67cd161-inner-blocks"></div></div></div>
 </div></div>
 
 
@@ -726,7 +732,16 @@ var ct_localizations = {"ajax_url":"https:\/\/startersites.io\/blocksy\/persona\
   var cards = document.querySelectorAll('.stk-622c7a4, .stk-a7c50c6, .stk-fe0d40e');
   cards.forEach(function(c){ c.style.willChange = 'transform'; c.style.transition = 'none'; });
 
-  /* ===== 5. CTA PERSON IMAGE ===== */
+  /* ===== 5. HERO CEO IMAGE — absolute right side ===== */
+  var heroEl = document.querySelector('.stk-3c28047');
+  if(heroEl){
+    var ceoBox = document.createElement('div');
+    ceoBox.className = 'stk-hero-ceo-abs';
+    ceoBox.innerHTML = '<img src="images/ceo.png" alt="Fu Fut Coffee">';
+    heroEl.appendChild(ceoBox);
+  }
+
+  /* ===== 6. CTA PERSON IMAGE ===== */
   var ctaWrap = document.querySelector('.stk-f2831ff');
   var ctaImg = ctaWrap ? ctaWrap.querySelector('img') : null;
   if(ctaWrap){ ctaWrap.style.overflow = 'hidden'; ctaWrap.style.position = 'relative'; }
