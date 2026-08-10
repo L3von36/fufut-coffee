@@ -814,31 +814,62 @@
                 if (c.signatureCoffee) {
                     if (c.signatureCoffee.eyebrow) setI18n('coffee.eyebrow', c.signatureCoffee.eyebrow);
                     if (c.signatureCoffee.title) setI18n('coffee.title', c.signatureCoffee.title);
-                    if (Array.isArray(c.signatureCoffee.cards)) {
-                        var coffeeGrid = document.querySelector('.coffee-grid');
-                        if (coffeeGrid) {
-                            coffeeGrid.innerHTML = c.signatureCoffee.cards.map(function(card) {
-                                var flavor = (card.flavor || '').split(',').map(function(f){return f.trim();}).slice(0,3).join(', ');
-                                return '<div class="coffee-card"'
-                                    + ' data-name="' + (card.name||'').replace(/"/g,'&quot;') + '"'
-                                    + ' data-price="' + (card.price||'') + '"'
-                                    + ' data-meta="' + (card.meta||'').replace(/"/g,'&quot;') + '"'
-                                    + ' data-desc="' + (card.desc||'').replace(/"/g,'&quot;') + '"'
-                                    + ' data-image="' + (card.image||'') + '"'
-                                    + ' data-tags="' + (card.badge||'') + '"'
-                                    + ' data-flavor="' + (card.flavor||'').replace(/"/g,'&quot;') + '"'
-                                    + ' data-dietary="Vegan" data-serves="1" data-allergens="None">'
-                                    + '<div class="coffee-card-img" style="background-image: url(\'' + (card.image||'') + '\')">'
-                                    + (card.badge ? '<span class="coffee-card-badge">' + card.badge + '</span>' : '')
+
+                    // Intro paragraph and the showcase photograph.
+                    if (c.signatureCoffee.intro) {
+                        var introEl = document.querySelector('.coffee-intro');
+                        if (introEl) introEl.textContent = c.signatureCoffee.intro;
+                    }
+                    if (c.signatureCoffee.image) {
+                        var showcaseImg = document.querySelector('.pkg-image');
+                        if (showcaseImg) showcaseImg.src = c.signatureCoffee.image;
+                    }
+
+                    // Packages (Raw / Roasted / Ground). These were hardcoded, while
+                    // the editor in admin wrote to signatureCoffee.cards and rendered
+                    // into a .coffee-grid that no longer exists in this page - so
+                    // editing them saved happily and changed nothing. This renders the
+                    // shape the section actually has.
+                    //
+                    // The icons stay in the page rather than in the content: they are
+                    // artwork, not copy, and letting a CMS field inject markup here
+                    // would be an HTML injection hole. Content picks one by key.
+                    var PKG_ICONS = {
+                        bean: '<path d="M17 8C17 10.7614 14.7614 13 12 13C9.23858 13 7 10.7614 7 8C7 5.23858 9.23858 3 12 3C14.7614 3 17 5.23858 17 8Z"/><path d="M12 13V21"/><path d="M8 21H16"/><path d="M7 8C5 8 3.5 9 3 11"/><path d="M17 8C19 8 20.5 9 21 11"/>',
+                        roast: '<path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>',
+                        ground: '<path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>'
+                    };
+                    function pkgEsc(s) {
+                        return String(s == null ? '' : s)
+                            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                    }
+                    var packages = c.signatureCoffee.packages;
+                    // Only replace the markup when there is something to replace it
+                    // with. An empty array would otherwise wipe the section, which is
+                    // worse than showing slightly stale copy.
+                    if (Array.isArray(packages) && packages.length) {
+                        var pkgWrap = document.querySelector('.pkg-cards');
+                        if (pkgWrap) {
+                            pkgWrap.innerHTML = packages.map(function(p) {
+                                var icon = PKG_ICONS[p.icon] || PKG_ICONS.bean;
+                                var price = Number(p.price) || 0;
+                                var unit = p.unit || '/kg';
+                                var img = p.image || (c.signatureCoffee.image || '');
+                                return '<div class="pkg-card' + (p.featured ? ' pkg-card--featured' : '') + '"'
+                                    + ' data-name="' + pkgEsc(p.name) + '"'
+                                    + ' data-price="' + pkgEsc(price) + '"'
+                                    + ' data-image="' + pkgEsc(img) + '"'
+                                    + ' data-desc="' + pkgEsc(p.desc) + '">'
+                                    + (p.ribbon ? '<div class="pkg-card-ribbon">' + pkgEsc(p.ribbon) + '</div>' : '')
+                                    + '<div class="pkg-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' + icon + '</svg></div>'
+                                    + '<div class="pkg-card-body">'
+                                    + '<h3>' + pkgEsc(p.name) + '</h3>'
+                                    + '<p>' + pkgEsc(p.desc) + '</p>'
                                     + '</div>'
-                                    + '<div class="coffee-card-body">'
-                                    + '<h3>' + (card.name||'') + '</h3>'
-                                    + '<div class="coffee-card-meta">' + (card.meta||'') + '</div>'
-                                    + '<div class="coffee-card-notes">' + flavor + '</div>'
-                                    + '<div class="coffee-card-footer">'
-                                    + '<div class="coffee-card-price">ETB ' + (card.price||'0') + '</div>'
-                                    + '<button class="btn-order" data-i18n="menu.order">' + (window.FufutI18n ? window.FufutI18n.t('menu.order') : 'Order') + '</button>'
-                                    + '</div></div></div>';
+                                    + '<button class="pkg-card-order btn-order" data-i18n="menu.order">' + (window.FufutI18n ? window.FufutI18n.t('menu.order') : 'Order') + '</button>'
+                                    + '<div class="pkg-card-price">ETB ' + price.toLocaleString() + '<span class="pkg-unit">' + pkgEsc(unit) + '</span></div>'
+                                    + '</div>';
                             }).join('');
                         }
                     }
