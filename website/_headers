@@ -1,3 +1,29 @@
+# The scripts and styles are unversioned — order.js is fetched as
+# /js/order.js, with no hash in the name — so whatever a phone has cached is
+# what it keeps. Cloudflare Pages' default is max-age=14400, which means a fix
+# pushed at the start of service does not reach a guest's phone until four
+# hours later, and the guests who most need it are the ones already sitting
+# down with the page open.
+#
+# no-cache does not mean "do not cache". The file is still stored and still
+# revalidated with an ETag, so the usual response is a 304 with no body. The
+# cost is one conditional request per asset per visit; the thing bought is
+# that a correction is live the moment it deploys.
+#
+# Hash the filenames and these become immutable, at which point this should
+# change to max-age=31536000.
+/js/*
+  Cache-Control: no-cache
+
+/css/*
+  Cache-Control: no-cache
+
 /*.html
   Cache-Control: no-cache
 
+# Images are content, not code: a changed photo gets a changed name.
+/images/*
+  Cache-Control: public, max-age=604800
+
+/assets/*
+  Cache-Control: public, max-age=604800

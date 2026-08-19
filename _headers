@@ -1,3 +1,8 @@
+# NOT THE DEPLOYED FILE. wrangler.toml sets pages_build_output_dir = "website",
+# so Pages serves website/ as the site root and reads website/_headers. Every
+# rule below is written against /website/... paths that therefore never match
+# a real request. The live rules are in website/_headers.
+#
 # Cache static assets
 /website/assets/*
   Cache-Control: public, max-age=31536000, immutable
