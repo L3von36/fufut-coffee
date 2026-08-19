@@ -47,11 +47,19 @@
         return m ? 'Table ' + m[1] : String(id);
     }
 
+    /** Extract just the display number ("4") from the raw param,
+        for showing inside the badge next to the "Table" label. */
+    function tableNumber(id) {
+        var m = String(id).match(/^T?(\d+)$/i);
+        return m ? m[1] : String(id);
+    }
+
     /* ── Display the table name in the header and cart banner ── */
     function applyTableInfo() {
+        var number = tableNumber(tableParam);
         var name = friendlyName(tableParam);
         var hdr = document.getElementById('orderTableName');
-        if (hdr) hdr.textContent = name;
+        if (hdr) hdr.textContent = number;
 
         /* Lock the order type and table number inside the cart drawer
            so the guest cannot change them. */

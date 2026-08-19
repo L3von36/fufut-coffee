@@ -53,6 +53,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: nowrap;
         background: var(--teal-50);
         border: 1px solid var(--teal-200);
         border-radius: var(--radius-pill);
@@ -65,12 +66,16 @@
         text-transform: uppercase;
         letter-spacing: 0.06em;
         color: var(--text-muted);
+        white-space: nowrap;
+        flex-shrink: 0;
     }
     .order-table-badge .badge-number {
         font-family: var(--font-display);
         font-size: 1.15rem;
         font-weight: 700;
         color: var(--color-primary-dark);
+        white-space: nowrap;
+        flex-shrink: 0;
     }
     .order-hint {
         font-size: var(--text-xs);
