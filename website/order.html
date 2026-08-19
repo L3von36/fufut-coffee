@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=coverage">
+    <title>Order — Fu Fut Coffee</title>
+    <meta name="description" content="Order from your table at Fu Fut Coffee. Scan your table QR code to see the menu and place your order.">
+    <meta name="theme-color" content="#0F7B78">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Great+Vibes&family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Design system -->
+    <link rel="stylesheet" href="css/app-main.css">
+
+    <style>
+    /* ===== ORDER PAGE: TABLE-SIDE ORDERING ===== */
+
+    /* Light background for the order page — no hero gradient */
+    body { background: var(--color-background); }
+
+    /* ─── Order Header (Table Identity) ─── */
+    .order-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--color-surface);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 14px 0 12px;
+        box-shadow: var(--shadow-xs);
+    }
+    .order-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .order-table-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--teal-50);
+        border: 1px solid var(--teal-200);
+        border-radius: var(--radius-pill);
+        padding: 6px 18px;
+        font-size: var(--text-sm);
+    }
+    .order-table-badge .badge-label {
+        font-size: var(--text-xs);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+    }
+    .order-table-badge .badge-number {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--color-primary-dark);
+    }
+    .order-hint {
+        font-size: var(--text-xs);
+        color: var(--text-muted);
+        margin-top: 8px;
+        max-width: 640px;
+        line-height: 1.5;
+    }
+
+    /* Language switcher overrides for light background */
+    .order-header .lang-switcher {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+    .order-header .lang-switcher .lang-btn {
+        border: 1px solid var(--border-subtle);
+        color: var(--text-body);
+        background: transparent;
+    }
+    .order-header .lang-switcher .lang-btn.active {
+        background: var(--color-primary);
+        border-color: var(--color-primary);
+        color: #fff;
+    }
+    .order-header .lang-switcher .lang-btn:not(.active):hover {
+        background: var(--neutral-50);
+        color: var(--text-heading);
+    }
+    .order-header .lang-switcher .lang-divider {
+        background: var(--border-subtle);
+    }
+
+    /* ─── Main ─── */
+    .order-main {
+        padding-top: var(--space-5);
+        padding-bottom: calc(var(--space-8) + 90px);
+    }
+
+    /* ─── Section Head (Menu) ── */
+    .order-section-head {
+        text-align: center;
+        margin-bottom: var(--space-5);
+    }
+    .order-section-head .sec-script {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        color: var(--color-primary);
+        display: block;
+        margin-bottom: 4px;
+    }
+    .order-section-head .sec-eyebrow {
+        font-size: var(--text-xs);
+        font-weight: 600;
+        letter-spacing: var(--tracking-wider);
+        text-transform: uppercase;
+        color: var(--color-primary);
+        margin-bottom: 8px;
+    }
+    .order-section-head .sec-title {
+        font-family: var(--font-display);
+        font-size: clamp(1.4rem, 3vw, var(--text-2xl));
+        font-weight: 500;
+        color: var(--text-heading);
+        line-height: var(--leading-tight);
+    }
+
+    /* ─── Menu tabs for order page ── */
+    .order-menu-tabs {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: var(--space-5);
+        padding: 0 var(--gutter);
+    }
+    .order-menu-tabs .menu-tab {
+        padding: 8px 20px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--border-subtle);
+        background: transparent;
+        color: var(--text-muted);
+        font-size: var(--text-sm);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--duration-fast);
+    }
+    .order-menu-tabs .menu-tab:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+    .order-menu-tabs .menu-tab.active {
+        background: var(--color-primary);
+        color: #fff;
+        border-color: var(--color-primary);
+    }
+
+    /* ─── Menu grid (reuse existing .menu-grid + .menu-card) ── */
+    .order-menu-grid {
+        padding: 0 var(--gutter);
+    }
+
+    /* ─── Loading / error states ── */
+    .order-loading {
+        text-align: center;
+        padding: 48px 16px;
+        color: var(--text-muted);
+    }
+    .order-loading-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        font-size: var(--text-sm);
+    }
+    .order-loading-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        animation: orderPulse 1.4s ease-in-out infinite both;
+    }
+    .order-loading-dot:nth-child(1) { animation-delay: -0.32s; }
+    .order-loading-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes orderPulse {
+        0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+        40% { opacity: 1; transform: scale(1); }
+    }
+    .order-error-box {
+        text-align: center;
+        padding: 48px 16px;
+        background: var(--color-surface);
+        border: 1.5px dashed var(--border-subtle);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .order-error-box .error-icon {
+        font-size: 2.5rem;
+        margin-bottom: 16px;
+        opacity: 0.4;
+    }
+    .order-error-box h3 {
+        font-family: var(--font-display);
+        font-size: var(--text-xl);
+        color: var(--text-heading);
+        margin-bottom: 8px;
+    }
+    .order-error-box p {
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+        margin-bottom: 20px;
+    }
+
+    /* ─── Cart FAB tweaks ── */
+    .order-page .cart-fab {
+        bottom: 24px;
+        right: 24px;
+    }
+    @media(max-width: 480px) {
+        .order-page .cart-fab {
+            bottom: 16px;
+            right: 16px;
+            width: 54px;
+            height: 54px;
+        }
+    }
+
+    /* ─── Amharic font support ── */
+    [lang="am"] .order-section-head .sec-script,
+    [lang="am"] .order-table-badge .badge-number {
+        font-family: "Noto Sans Ethiopic", var(--font-display);
+    }
+
+    @media(max-width: 640px) {
+        .order-header { padding: 12px 0; }
+        .order-table-badge { padding: 4px 14px; font-size: var(--text-sm); }
+        .order-table-badge .badge-number { font-size: 1rem; }
+    }
+    </style>
+</head>
+<body class="order-page">
+
+    <!-- ===== ORDER HEADER (Table Identity) ===== -->
+    <header class="order-header" id="orderHeader">
+        <div class="content">
+            <div class="order-header-row">
+                <div>
+                    <span class="order-table-badge">
+                        <span class="badge-label" data-i18n="order.table">Table</span>
+                        <span class="badge-number" id="orderTableName">—</span>
+                    </span>
+                </div>
+                <!-- Language switcher (rendered by i18n.js inline CSS) -->
+                <div class="lang-switcher" id="langSwitcherOrder">
+                    <button class="lang-btn" data-lang="en" aria-label="Switch to English">EN</button>
+                    <span class="lang-divider"></span>
+                    <button class="lang-btn" data-lang="am" aria-label="Switch to Amharic">አማ</button>
+                </div>
+            </div>
+            <p class="order-hint" data-i18n="order.scanHint">
+                Your order will be sent to the kitchen when a member of staff checks it.
+            </p>
+        </div>
+    </header>
+
+    <!-- ===== MENU ===== -->
+    <main class="order-main">
+        <div class="content">
+            <div class="order-section-head">
+                <span class="sec-script" data-i18n="menu.script">Menu</span>
+                <div class="sec-eyebrow" data-i18n="menu.eyebrow">Restaurant</div>
+                <h2 class="sec-title" data-i18n="menu.title">From Breakfast to Dinner</h2>
+            </div>
+
+            <!-- Loading state -->
+            <div class="order-loading" id="menuLoading">
+                <div class="order-loading-dots">
+                    <span class="order-loading-dot"></span>
+                    <span class="order-loading-dot"></span>
+                    <span class="order-loading-dot"></span>
+                </div>
+                <span style="margin-left:12px;font-size:var(--text-sm);color:var(--text-muted)" data-i18n="order.loading">Loading menu…</span>
+            </div>
+
+            <!-- Error state -->
+            <div class="order-error-box" id="menuError" style="display:none">
+                <div class="error-icon" aria-hidden="true">☕⚠️</div>
+                <h3 data-i18n="order.noMenu">Could not load menu</h3>
+                <p data-i18n="order.scanHint">Your order will be sent to the kitchen when a member of staff checks it.</p>
+                <button onclick="retryMenu()" class="btn btn-primary" data-i18n="order.tryAgain">Try Again</button>
+            </div>
+
+            <!-- Category tabs -->
+            <div class="order-menu-tabs" id="menuTabs" style="display:none">
+                <!-- Tabs generated dynamically -->
+            </div>
+
+            <!-- Menu grid -->
+            <div class="order-menu-grid menu-grid" id="menuGrid" style="display:none">
+                <!-- Menu items rendered here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- ===== FLOATING CART FAB ===== -->
+    <button id="cartFab" class="cart-fab" aria-label="Open cart" onclick="openCart()" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/>
+            <circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span id="cartCount" class="cart-count">0</span>
+    </button>
+
+    <!-- ===== CART DRAWER ===== -->
+    <div id="cartDrawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping Cart">
+        <div class="cart-header">
+            <h3 data-i18n="cart.title">Your Order</h3>
+            <button class="cart-close" aria-label="Close cart" onclick="closeCart()">&times;</button>
+        </div>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span data-i18n="cart.total">Total</span>
+                <span id="cartTotal">ETB 0.00</span>
+            </div>
+            <hr class="cart-divider">
+            <div class="cart-customer-fields">
+                <div class="cart-customer-row">
+                    <input type="text" id="cartName" data-i18n="cart.name" placeholder="Your name (optional)" autocomplete="name" aria-label="Your name">
+                    <input type="tel" id="cartPhone" data-i18n="cart.phone" placeholder="Phone (optional)" autocomplete="tel" aria-label="Phone number">
+                </div>
+                <input type="email" id="cartEmail" data-i18n="cart.email" placeholder="Email for confirmation (optional)" autocomplete="email" aria-label="Email for confirmation">
+                <div id="cartTableBanner" class="cart-table-banner" role="status">
+                    <strong>Ordering at <span id="cartTableName">this table</span></strong>
+                    <span class="cart-table-hint">Your order goes to the kitchen once a member of staff checks it.</span>
+                </div>
+                <select id="cartOrderType" aria-label="Dine-in / Takeaway?">
+                    <option value="dine-in">Dine-in</option>
+                </select>
+                <input type="text" id="cartTable" placeholder="Table number" aria-label="Table number" readonly style="background:var(--neutral-50)">
+                <textarea id="cartNotes" data-i18n="cart.notes" placeholder="Special requests or notes..." aria-label="Special requests or notes"></textarea>
+            </div>
+            <button id="cartSubmit" class="cart-submit" data-i18n="cart.sendOrder">Send Order</button>
+            <p class="cart-note" data-i18n="cart.note">We'll confirm your order by email.</p>
+        </div>
+        <div id="cartConfirm" class="cart-confirm" style="display:none">
+            <div class="cart-confirm-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="24" cy="24" r="22" stroke="var(--teal-600)" stroke-width="2.5" fill="var(--teal-50)"/>
+                    <polyline points="14 25 21 32 34 18" stroke="var(--teal-600)" stroke-width="3"/>
+                </svg>
+            </div>
+            <h4 class="cart-confirm-title" data-i18n="cart.orderSent">Order Received!</h4>
+            <p class="cart-confirm-msg">Your order has been sent to the kitchen.</p>
+            <div class="cart-confirm-ref">
+                <span class="cart-confirm-ref-label">Reference</span>
+                <span id="cartConfirmRef" class="cart-confirm-ref-code">—</span>
+            </div>
+            <p class="cart-confirm-note">Show this reference to your server, or we'll find you.</p>
+            <button class="cart-confirm-close" onclick="closeCart()">Done</button>
+        </div>
+    </div>
+    <div id="cartOverlay" class="cart-overlay" onclick="closeCart()"></div>
+
+    <!-- Scripts -->
+    <script src="js/i18n.js"></script>
+    <script src="js/buttonState.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/order.js"></script>
+</body>
+</html>
