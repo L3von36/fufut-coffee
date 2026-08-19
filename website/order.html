@@ -51,7 +51,9 @@
     }
     .order-table-badge {
         display: inline-flex;
-        align-items: center;
+        /* Baseline, not centre: the label and the number are text on the same
+           line, so they should sit on the same line. */
+        align-items: baseline;
         gap: 8px;
         flex-wrap: nowrap;
         background: var(--teal-50);
@@ -70,9 +72,16 @@
         flex-shrink: 0;
     }
     .order-table-badge .badge-number {
-        font-family: var(--font-display);
-        font-size: 1.15rem;
+        /* Deliberately the body face, not the display serif. Cormorant
+           Garamond ships old-style figures — 3, 4, 5, 7 and 9 hang below the
+           baseline — which made "Table 4" read as if the number had slipped
+           under the label. Inter's lining figures sit on the baseline and
+           match the prices further down the page. */
+        font-family: var(--font-body);
+        font-variant-numeric: lining-nums tabular-nums;
+        font-size: 1.05rem;
         font-weight: 700;
+        letter-spacing: 0.01em;
         color: var(--color-primary-dark);
         white-space: nowrap;
         flex-shrink: 0;
@@ -254,8 +263,7 @@
     }
 
     /* ─── Amharic font support ── */
-    [lang="am"] .order-section-head .sec-script,
-    [lang="am"] .order-table-badge .badge-number {
+    [lang="am"] .order-section-head .sec-script {
         font-family: "Noto Sans Ethiopic", var(--font-display);
     }
 
@@ -263,7 +271,7 @@
         .order-header { padding: 12px 0; }
         .order-header-row { gap: 10px; }
         .order-table-badge { padding: 4px 14px; font-size: var(--text-sm); }
-        .order-table-badge .badge-number { font-size: 1rem; }
+        .order-table-badge .badge-number { font-size: 0.95rem; }
         /* Header is ~75px tall on tablet; clear it with 80px of top padding */
         .order-main { padding-top: calc(var(--space-5) + 32px); }
     }
