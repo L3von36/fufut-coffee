@@ -40,18 +40,29 @@
        mirroring the landing page's window.fufutTable contract. */
     window.fufutTable = { id: tableParam, key: tableKey };
 
-    /** "T4" or "4" → "Table 4"; anything else is shown as-is so a
-        mis-scanned or forged code is immediately visible. */
-    function friendlyName(id) {
-        var m = String(id).match(/^T?(\d+)$/i);
-        return m ? 'Table ' + m[1] : String(id);
+    /** Just the number ("4") for the badge, which already prints the word
+        "Table" as its label.
+
+        The `t` on the card is whatever the floor plan calls the table, and
+        that has been spelled more than one way over the life of this system:
+        "T4" in the seeded rows, "Table 4" in the live ones, bare "4" in
+        orders written by hand. Matching only "T4" left the full "Table 4"
+        to fall through to the show-as-is branch, and the badge read
+        "Table Table 4". So the word is stripped wherever it appears.
+
+        Anything that isn't a numbered table — a named room, a forged code —
+        is still shown as-is, so a mis-scan is immediately visible. */
+    function tableNumber(id) {
+        var s = String(id).trim();
+        var m = s.match(/^(?:table|tbl|t)?[\s._-]*(\d+)$/i);
+        return m ? m[1] : s;
     }
 
-    /** Extract just the display number ("4") from the raw param,
-        for showing inside the badge next to the "Table" label. */
-    function tableNumber(id) {
-        var m = String(id).match(/^T?(\d+)$/i);
-        return m ? m[1] : String(id);
+    /** "T4", "Table 4" or "4" → "Table 4", for the cart drawer banner where
+        the word is not already on screen. */
+    function friendlyName(id) {
+        var n = tableNumber(id);
+        return /^\d+$/.test(n) ? 'Table ' + n : String(id).trim();
     }
 
     /* ── Display the table name in the header and cart banner ── */
