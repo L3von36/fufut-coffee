@@ -1542,6 +1542,23 @@
         .cart-submit:hover { background: var(--color-primary-dark); }
         .cart-submit:disabled { background: var(--neutral-300); cursor: not-allowed; }
         .cart-note { font-size: var(--text-xs); color: var(--text-muted); text-align: center; margin: 10px 0 0; }
+
+        /* Shown only when the page was opened from a table's printed code.
+           Deliberately prominent: a guest who scanned the wrong card should
+           notice before they order, not after the food arrives. */
+        .cart-table-banner {
+            display: flex; flex-direction: column; gap: 2px;
+            padding: 10px 12px; margin-bottom: 10px;
+            border-radius: 8px;
+            background: var(--accent-soft, rgba(15,123,120,.10));
+            border: 1px solid var(--accent, #0f7b78);
+            color: var(--text, inherit);
+        }
+        .cart-table-banner strong { font-size: var(--text-sm, .95rem); }
+        .cart-table-hint { font-size: var(--text-xs); color: var(--text-muted); }
+        /* A locked field still shows its value — the guest can see what the
+           code decided for them, and that it is not editable. */
+        #cartTable[disabled], #cartOrderType[disabled] { opacity: .75; cursor: not-allowed; }
         /* Order confirmation panel */
         .cart-confirm {
             display: flex; flex-direction: column; align-items: center; justify-content: center;

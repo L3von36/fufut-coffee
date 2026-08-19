@@ -613,6 +613,10 @@
                     <input type="tel" id="cartPhone" placeholder="Phone (optional)" autocomplete="tel" aria-label="Phone number">
                 </div>
                 <input type="email" id="cartEmail" placeholder="Email for confirmation (optional)" autocomplete="email" aria-label="Email for confirmation">
+                <div id="cartTableBanner" class="cart-table-banner" style="display:none" role="status">
+                    <strong>Ordering at <span id="cartTableName">this table</span></strong>
+                    <span class="cart-table-hint">Your order goes to the kitchen once a member of staff checks it.</span>
+                </div>
                 <select id="cartOrderType" aria-label="Dine-in / Takeaway?">
                     <option value="">Dine-in / Takeaway?</option>
                     <option value="dine-in">Dine-in</option>
@@ -1971,6 +1975,10 @@
                     email: orderEmail,
                     order_type: orderType,
                     table_number: orderTable,
+                    // Present only when the page was opened from a table's
+                    // printed code. Without it the server takes exactly the
+                    // path it always has.
+                    table_key: (window.fufutTable && window.fufutTable.key) || undefined,
                     notes: orderNotes,
                     status: 'new'
                 })
@@ -2706,7 +2714,68 @@
     <script src="js/buttonState.js"></script>
     <script src="js/toast.js"></script>
     <script src="js/main.js"></script>
-    </body>
+    
+<script>
+/**
+ * Ordering from the code on the table.
+ *
+ * The card carries `?t=<table>&k=<key>`. When both are present the guest is
+ * sitting at that table, so the page stops asking them questions it can
+ * already answer: the order type is dine-in and the table is fixed. Both
+ * controls are disabled rather than hidden, so a guest can see what the code
+ * decided on their behalf — a scan of the wrong card should be obvious, not
+ * silent.
+ *
+ * Nothing here runs on an ordinary visit. Without the parameters the cart
+ * behaves exactly as it always has, which is what keeps delivery and takeaway
+ * ordering untouched.
+ *
+ * The key is deliberately not stored anywhere. It lives in the URL for the
+ * life of the tab: a guest who returns tomorrow without scanning is simply an
+ * ordinary visitor again, and a phone that changes hands does not carry the
+ * table with it.
+ */
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var table = params.get('t');
+  var key = params.get('k');
+  if (!table || !key) return;
+
+  window.fufutTable = { id: table, key: key };
+
+  function apply() {
+    var typeEl = document.getElementById('cartOrderType');
+    var tableEl = document.getElementById('cartTable');
+    var banner = document.getElementById('cartTableBanner');
+    var nameEl = document.getElementById('cartTableName');
+    if (!typeEl || !tableEl) return;
+
+    typeEl.value = 'dine-in';
+    typeEl.disabled = true;
+    tableEl.value = table;
+    tableEl.disabled = true;
+    // A disabled input is not submitted, and the cart reads these by id — so
+    // the value is carried explicitly rather than relying on the field.
+    tableEl.setAttribute('data-locked', 'true');
+
+    if (banner) banner.style.display = '';
+    if (nameEl) nameEl.textContent = friendlyName(table);
+  }
+
+  /** "T4" is how the system names it; "Table 4" is how a guest reads it. */
+  function friendlyName(id) {
+    var m = String(id).match(/^T?(\d+)$/i);
+    return m ? 'Table ' + m[1] : String(id);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply);
+  } else {
+    apply();
+  }
+})();
+</script>
+</body>
 </html>
 
 
