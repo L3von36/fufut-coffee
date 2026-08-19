@@ -222,11 +222,14 @@
     .order-page .cart-fab {
         bottom: 24px;
         right: 24px;
+        /* iOS safe-area support so the FAB never hides behind the home indicator */
+        bottom: calc(24px + env(safe-area-inset-bottom));
+        right: calc(24px + env(safe-area-inset-right));
     }
     @media(max-width: 480px) {
         .order-page .cart-fab {
-            bottom: 16px;
-            right: 16px;
+            bottom: calc(16px + env(safe-area-inset-bottom));
+            right: calc(16px + env(safe-area-inset-right));
             width: 54px;
             height: 54px;
         }
@@ -242,6 +245,42 @@
         .order-header { padding: 12px 0; }
         .order-table-badge { padding: 4px 14px; font-size: var(--text-sm); }
         .order-table-badge .badge-number { font-size: 1rem; }
+    }
+
+    /* ─── Mobile (phone) ── */
+    @media(max-width: 480px) {
+        /* Header: tighter vertical spacing so the badge + hint take less height */
+        .order-header { padding: 10px 0; }
+        .order-hint { font-size: var(--text-xs); }
+
+        /* Menu grid: cards should fill the viewport width naturally */
+        .order-menu-grid { padding: 0 var(--gutter); }
+
+        /* Main: reduce the desktop-sized bottom padding (was 218px) so we
+           don't create a huge empty scroll gap on mobile. The FAB on mobile
+           is 54px at bottom:16px, so ~88px of bottom padding clears it. */
+        .order-main { padding-bottom: calc(var(--space-5) + 40px); }
+
+        /* Cart drawer: account for safe-area insets so content isn't
+           cut off by the home indicator on iOS. */
+        .cart-drawer { padding-bottom: env(safe-area-inset-bottom); }
+        .cart-drawer .cart-footer { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+
+        /* Menu tabs: more compact on phone */
+        .order-menu-tabs { margin-bottom: var(--space-4); }
+        .order-menu-tabs .menu-tab { padding: 6px 14px; font-size: var(--text-xs); }
+    }
+
+    /* On mobile, when the cart drawer is open the drawer takes 90vw of the
+       screen. The toast.js CSS shifts the toast to right:16px which puts it
+       inside the drawer's area, overlapping the drawer header. Instead, push
+       it below the drawer header so it doesn't override the close button. */
+    @media(max-width: 480px) {
+        .cart-drawer.open ~ .toast-container--top-right {
+            right: auto!important;
+            left: 16px!important;
+            top: 80px!important;
+        }
     }
     </style>
 </head>
