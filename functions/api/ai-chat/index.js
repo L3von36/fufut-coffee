@@ -3,10 +3,11 @@
  *
  * POST /api/ai-chat
  * Uses Cloudflare Workers AI (Llama 3.1 8B Instruct) to answer questions
- * about Fu Fut Coffee. The system prompt contains the cafe's knowledge base.
+ * about Fu Fut Coffee.
  *
- * Requires: Workers AI binding named "AI" on the Pages project.
- * Enable at: Cloudflare Dashboard > fufut-coffee > Settings > Functions > AI
+ * Supports two modes:
+ *   1. env.AI binding (preferred) — enable in Dashboard > Functions > AI
+ *   2. REST API fallback — uses CF_API_TOKEN and CF_ACCOUNT_ID env vars
  */
 
 const MODEL = '@cf/meta/llama-3.1-8b-instruct';
@@ -22,7 +23,7 @@ const SYSTEM_PROMPT = `You are the friendly AI assistant for Fu Fut Coffee (ፉ 
 
 ## Coffee Offerings
 - Single-origin beans from famous Ethiopian regions: Yirgacheffe, Sidamo, Guji, Harrar
-- Traditional Ethiopian coffee ceremony (የአማርኛ ቡና ስርዓት) — the iconic jebena brewing ritual
+- Traditional Ethiopian coffee ceremony (የአማርኛ ቡና ስርአት) — the iconic jebena brewing ritual
 - Espresso-based drinks (latte, cappuccino, macchiato, americano)
 - Cold brew, iced coffee, and seasonal specialties
 - Ethiopian tea (ሻይ) and fresh juices
@@ -61,16 +62,52 @@ function json(data, status = 200) {
   });
 }
 
+/**
+ * Call Workers AI via REST API using CF_API_TOKEN and CF_ACCOUNT_ID env vars.
+ * This is the fallback when the env.AI binding is not configured.
+ */
+async function callViaRestApi(env, messages) {
+  const token = env.CF_API_TOKEN;
+  const accountId = env.CF_ACCOUNT_ID || '8793f2ad3a46fcc18960393d39961ba5';
+  if (!token) return null;
+
+  const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${MODEL}`;
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ messages, max_tokens: 300, temperature: 0.7 }),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    console.error('[AI REST ERROR]', resp.status, errText);
+    throw new Error(`AI API returned ${resp.status}`);
+  }
+
+  const data = await resp.json();
+  return data?.result?.choices?.[0]?.message?.content
+    || data?.result?.response
+    || data?.response
+    || null;
+}
+
+/**
+ * Call Workers AI via the env.AI binding (preferred).
+ */
+async function callViaBinding(env, messages) {
+  const response = await env.AI.run(MODEL, {
+    messages,
+    max_tokens: 300,
+    temperature: 0.7,
+  });
+  return response?.response || response?.text || null;
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
-
-  // Check if AI binding is available
-  if (!env.AI) {
-    return json({
-      ok: false,
-      error: 'AI_SERVICE_NOT_CONFIGURED',
-    }, 503);
-  }
 
   let body;
   try {
@@ -84,12 +121,9 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: 'Message is required' }, 400);
   }
 
-  // Build message history: system prompt + conversation history + new message
-  const messages = [
-    { role: 'system', content: SYSTEM_PROMPT },
-  ];
+  // Build message array: system + history + new user message
+  const messages = [{ role: 'system', content: SYSTEM_PROMPT }];
 
-  // Include recent conversation history for context (last 6 messages max)
   if (Array.isArray(body.history) && body.history.length > 0) {
     const recent = body.history.slice(-6);
     for (const msg of recent) {
@@ -102,18 +136,20 @@ export async function onRequestPost(context) {
   messages.push({ role: 'user', content: userMessage });
 
   try {
-    const response = await env.AI.run(MODEL, {
-      messages,
-      max_tokens: 300,
-      temperature: 0.7,
-    });
+    let reply = null;
 
-    const reply = response?.response || response?.text || 'Sorry, I could not generate a response. Please try again.';
+    // Try AI binding first, fall back to REST API
+    if (env.AI) {
+      reply = await callViaBinding(env, messages);
+    } else {
+      reply = await callViaRestApi(env, messages);
+    }
 
-    return json({
-      ok: true,
-      reply: reply.trim(),
-    });
+    if (!reply) {
+      return json({ ok: false, error: 'AI did not return a response. Please try again.' }, 502);
+    }
+
+    return json({ ok: true, reply: reply.trim() });
   } catch (err) {
     console.error('[AI CHAT ERROR]', err.message || err);
     return json({
