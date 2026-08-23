@@ -1,23 +1,34 @@
 /* ============================================================
-   FU FUT COFFEE — AI Chat Widget
+   FU FUT COFFEE — AI Chat Widget + In-Chat Ordering
    Floating assistant powered by Cloudflare Workers AI.
+   Includes horizontal scrollable menu with images & real cart.
    ============================================================ */
 
 (function () {
   'use strict';
 
   var API_URL = (window.API || '') + '/api/ai-chat';
+  var MENU_API = (window.API || '') + '/api/menus';
+  var ORDER_API = (window.API || '') + '/api/orders';
+  var CART_KEY = 'fufutChatCart';
 
   // ---------- State ----------
   var isOpen = false;
   var isLoading = false;
   var messages = [];
+  var cart = loadCart();
+  var menuData = null;
+  var menuLoaded = false;
+  var activeCategory = null;
+
+  // ---------- Order intent keywords ----------
+  var ORDER_KEYWORDS = /\b(order|menu|food|coffee|drink|breakfast|lunch|dinner|eat|hungry|want\s+to\s+order|show\s+menu|what\s+do\s+you\s+have|i\s+want|get\s+me|can\s+i\s+(have|get)|ይህን|ልክልኝ|ምን\s+አለዎት|ማዘዣ)\b/i;
 
   // ---------- Suggestions ----------
   var SUGGESTIONS = [
     '\u2615 What coffees do you have?',
     '\uD83C\uDF3F Coffee ceremony',
-    '\uD83C\uDF7D Food menu',
+    '\uD83C\uDF7D \uD83D\uDEB2 View menu & order',
     '\uD83D\uDCCD Your location',
   ];
 
@@ -29,13 +40,14 @@
     backdrop.addEventListener('click', toggle);
     document.body.appendChild(backdrop);
 
-    // Bubble
+    // Bubble (with cart badge)
     var bubble = document.createElement('button');
     bubble.id = 'aiChatBubble';
     bubble.setAttribute('aria-label', 'Open AI assistant');
     bubble.innerHTML =
       '<svg class="ai-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-      '<svg class="ai-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      '<svg class="ai-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '<span class="ai-cart-badge" id="aiCartBadge" style="display:none">0</span>';
     bubble.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
     document.body.appendChild(bubble);
 
@@ -57,9 +69,29 @@
             '<span>Online &middot; Ask about our coffee & menu</span>' +
           '</div>' +
         '</div>' +
+        '<button class="ai-chat-header-close" id="aiChatHeaderClose" aria-label="Close">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</button>' +
       '</div>' +
       '<div class="ai-chat-messages" id="aiChatMessages"></div>' +
       '<div class="ai-suggestions" id="aiChatSuggestions"></div>' +
+      '<div class="ai-menu-carousel" id="aiMenuCarousel" style="display:none">' +
+        '<div class="ai-menu-carousel-header">' +
+          '<span class="ai-menu-carousel-title" id="aiMenuCarouselTitle">Menu</span>' +
+          '<div class="ai-menu-cats" id="aiMenuCats"></div>' +
+        '</div>' +
+        '<div class="ai-menu-scroll" id="aiMenuScroll"></div>' +
+      '</div>' +
+      '<div class="ai-cart-bar" id="aiCartBar" style="display:none">' +
+        '<div class="ai-cart-bar-info">' +
+          '<span class="ai-cart-bar-count" id="aiCartBarCount">0 items</span>' +
+          '<span class="ai-cart-bar-total" id="aiCartBarTotal">ETB 0</span>' +
+        '</div>' +
+        '<div class="ai-cart-bar-actions">' +
+          '<button class="ai-cart-bar-btn ai-cart-view" id="aiCartView">View Cart</button>' +
+          '<button class="ai-cart-bar-btn ai-cart-order" id="aiCartOrder">Place Order</button>' +
+        '</div>' +
+      '</div>' +
       '<div class="ai-chat-input">' +
         '<input type="text" id="aiChatInput" placeholder="Ask about our coffee..." autocomplete="off" />' +
         '<button class="ai-chat-send" id="aiChatSend" aria-label="Send message">' +
@@ -72,7 +104,9 @@
     // Events
     var input = document.getElementById('aiChatInput');
     var sendBtn = document.getElementById('aiChatSend');
+    var headerClose = document.getElementById('aiChatHeaderClose');
     sendBtn.addEventListener('click', sendMessage);
+    headerClose.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -83,8 +117,12 @@
       if (e.key === 'Escape' && isOpen) toggle();
     });
 
+    document.getElementById('aiCartView').addEventListener('click', showCartSummary);
+    document.getElementById('aiCartOrder').addEventListener('click', placeOrder);
+
     renderMessages();
     renderSuggestions();
+    updateCartUI();
   }
 
   // ---------- Toggle ----------
@@ -104,7 +142,7 @@
         document.getElementById('aiChatInput').focus();
       }, 350);
       if (messages.length === 0) {
-        addBotMessage('Welcome to Fu Fut Coffee! I\u2019m here to help you explore our Ethiopian coffee, traditional dishes, and caf\u00e9 experience. What would you like to know?');
+        addBotMessage('Welcome to Fu Fut Coffee! I\u2019m here to help you explore our Ethiopian coffee, traditional dishes, and caf\u00e9 experience. You can also order right here! What would you like to know?');
       }
     }
   }
@@ -114,7 +152,11 @@
     var container = document.getElementById('aiChatMessages');
     container.innerHTML = '';
     messages.forEach(function (msg) {
-      appendMessageDOM(msg.role, msg.content, false);
+      if (msg.type === 'cart-summary') {
+        appendCartSummaryDOM(msg.content, false);
+      } else {
+        appendMessageDOM(msg.role, msg.content, false);
+      }
     });
     if (messages.length) scrollBottom();
   }
@@ -148,6 +190,37 @@
     var bubble = document.createElement('div');
     bubble.className = 'ai-msg-bubble';
     bubble.textContent = content;
+
+    var time = document.createElement('div');
+    time.className = 'ai-msg-time';
+    time.textContent = formatTime(new Date());
+
+    div.appendChild(bubble);
+    div.appendChild(time);
+    container.appendChild(div);
+  }
+
+  function appendCartSummaryDOM(cartItems, animate) {
+    var container = document.getElementById('aiChatMessages');
+    var div = document.createElement('div');
+    div.className = 'ai-msg ai-msg--bot';
+    if (!animate) div.style.animation = 'none';
+
+    var bubble = document.createElement('div');
+    bubble.className = 'ai-msg-bubble ai-cart-summary';
+
+    var total = 0;
+    var html = '<div class="ai-cart-summary-title">\uD83D\uDCE6 Your Cart</div>';
+    cartItems.forEach(function (item) {
+      var subtotal = item.price * item.qty;
+      total += subtotal;
+      html += '<div class="ai-cart-summary-item">' +
+        '<span class="ai-cart-item-name">' + escapeHtml(item.name) + ' <small>x' + item.qty + '</small></span>' +
+        '<span class="ai-cart-item-price">ETB ' + subtotal + '</span>' +
+      '</div>';
+    });
+    html += '<div class="ai-cart-summary-total"><span>Total</span><span>ETB ' + total + '</span></div>';
+    bubble.innerHTML = html;
 
     var time = document.createElement('div');
     time.className = 'ai-msg-time';
@@ -194,6 +267,12 @@
     input.value = '';
     addUserMessage(text);
     renderSuggestions();
+
+    // Check if this is an order intent
+    if (ORDER_KEYWORDS.test(text) && !menuLoaded) {
+      showMenuCarousel();
+    }
+
     callAI(text);
   }
 
@@ -209,12 +288,218 @@
     scrollBottom();
   }
 
+  // ---------- Menu Carousel ----------
+  function showMenuCarousel(categoryName) {
+    var carousel = document.getElementById('aiMenuCarousel');
+    carousel.style.display = '';
+
+    if (menuLoaded) {
+      if (categoryName) switchCategory(categoryName);
+      scrollBottom();
+      return;
+    }
+
+    // Show loading skeleton
+    var scroll = document.getElementById('aiMenuScroll');
+    scroll.innerHTML = Array(4).join('<div class="ai-menu-card-skeleton"><div class="ai-menu-card-skeleton-img"></div><div class="ai-menu-card-skeleton-text"></div><div class="ai-menu-card-skeleton-text short"></div></div>');
+
+    fetch(MENU_API)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        menuData = data;
+        menuLoaded = true;
+        renderCategoryTabs();
+        renderMenuItems(categoryName || (data.categories[0] && data.categories[0].name));
+        scrollBottom();
+      })
+      .catch(function () {
+        scroll.innerHTML = '<div class="ai-menu-error">Could not load menu. Please try again.</div>';
+      });
+  }
+
+  function renderCategoryTabs() {
+    var container = document.getElementById('aiMenuCats');
+    if (!menuData || !menuData.categories) return;
+    container.innerHTML = '';
+    menuData.categories.forEach(function (cat) {
+      if (!cat.items || cat.items.length === 0) return;
+      var btn = document.createElement('button');
+      btn.className = 'ai-menu-cat-btn' + (activeCategory === cat.name ? ' active' : '');
+      btn.textContent = cat.name;
+      btn.addEventListener('click', function () { switchCategory(cat.name); });
+      container.appendChild(btn);
+    });
+  }
+
+  function switchCategory(catName) {
+    activeCategory = catName;
+    // Update tab styles
+    var tabs = document.querySelectorAll('.ai-menu-cat-btn');
+    tabs.forEach(function (t) {
+      t.classList.toggle('active', t.textContent === catName);
+    });
+    document.getElementById('aiMenuCarouselTitle').textContent = catName;
+    renderMenuItems(catName);
+  }
+
+  function renderMenuItems(catName) {
+    var scroll = document.getElementById('aiMenuScroll');
+    scroll.innerHTML = '';
+    var cat = null;
+    if (menuData && menuData.categories) {
+      cat = menuData.categories.find(function (c) { return c.name === catName; });
+    }
+    if (!cat || !cat.items || cat.items.length === 0) {
+      scroll.innerHTML = '<div class="ai-menu-empty">No items in this category.</div>';
+      return;
+    }
+
+    cat.items.forEach(function (item) {
+      if (!item.available) return;
+      var card = document.createElement('div');
+      card.className = 'ai-menu-card';
+
+      var imgDiv = document.createElement('div');
+      imgDiv.className = 'ai-menu-card-img';
+      if (item.image) {
+        imgDiv.style.backgroundImage = 'url(' + item.image + ')';
+      } else {
+        imgDiv.classList.add('no-img');
+        imgDiv.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>';
+      }
+
+      var info = document.createElement('div');
+      info.className = 'ai-menu-card-info';
+      info.innerHTML =
+        '<div class="ai-menu-card-name">' + escapeHtml(item.name) + '</div>' +
+        (item.description ? '<div class="ai-menu-card-desc">' + escapeHtml(item.description).slice(0, 50) + '</div>' : '') +
+        '<div class="ai-menu-card-bottom">' +
+          '<span class="ai-menu-card-price">ETB ' + item.price + '</span>' +
+          '<button class="ai-menu-card-add" aria-label="Add ' + escapeHtml(item.name) + ' to cart">+</button>' +
+        '</div>';
+
+      card.appendChild(imgDiv);
+      card.appendChild(info);
+
+      card.querySelector('.ai-menu-card-add').addEventListener('click', function (e) {
+        e.stopPropagation();
+        addToCart(item);
+      });
+
+      scroll.appendChild(card);
+    });
+
+    scrollBottom();
+  }
+
+  // ---------- Cart ----------
+  function addToCart(item) {
+    var existing = cart.find(function (c) { return c.id === item.id; });
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ id: item.id, name: item.name, price: item.price, image: item.image || '', qty: 1 });
+    }
+    saveCart();
+    updateCartUI();
+
+    // Flash the add button
+    var btn = event.target.closest('.ai-menu-card-add');
+    if (btn) {
+      btn.textContent = '\u2713';
+      btn.classList.add('added');
+      setTimeout(function () { btn.textContent = '+'; btn.classList.remove('added'); }, 800);
+    }
+  }
+
+  function showCartSummary() {
+    if (cart.length === 0) {
+      showError('Your cart is empty. Browse the menu above to add items!');
+      return;
+    }
+    messages.push({ type: 'cart-summary', content: cart.slice() });
+    appendCartSummaryDOM(cart, true);
+    scrollBottom();
+  }
+
+  function placeOrder() {
+    if (cart.length === 0) {
+      showError('Your cart is empty!');
+      return;
+    }
+
+    var orderItems = cart.map(function (c) {
+      return { menu_item_id: c.id, quantity: c.qty };
+    });
+
+    var body = { items: orderItems };
+
+    // If there's a table context, include it
+    if (window.fufutTable) {
+      body.table_key = window.fufutTable.key;
+    }
+
+    isLoading = true;
+    updateSendButton();
+    showTyping();
+
+    fetch(ORDER_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        hideTyping();
+        if (data.ok || data.id || data.order_id) {
+          var orderId = data.id || data.order_id || 'placed';
+          var total = cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0);
+          addBotMessage('Order ' + orderId.slice(0, 8) + ' placed! \uD83C\uDF89 ' + cart.length + ' item' + (cart.length > 1 ? 's' : '') + ' totaling ETB ' + total + '. Your coffee is on its way — konjo choice!');
+          cart = [];
+          saveCart();
+          updateCartUI();
+        } else {
+          showError(data.error || data.message || 'Could not place order. Please try again or order at the counter.');
+        }
+      })
+      .catch(function () {
+        hideTyping();
+        showError('Connection issue. Could not place order. Please try ordering at the counter.');
+      })
+      .finally(function () {
+        isLoading = false;
+        updateSendButton();
+      });
+  }
+
+  function updateCartUI() {
+    var totalItems = cart.reduce(function (s, c) { return s + c.qty; }, 0);
+    var totalPrice = cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0);
+
+    // Bubble badge
+    var badge = document.getElementById('aiCartBadge');
+    if (badge) {
+      badge.textContent = totalItems;
+      badge.style.display = totalItems > 0 ? '' : 'none';
+    }
+
+    // Cart bar
+    var bar = document.getElementById('aiCartBar');
+    if (bar) {
+      bar.style.display = totalItems > 0 ? '' : 'none';
+    }
+    var countEl = document.getElementById('aiCartBarCount');
+    if (countEl) countEl.textContent = totalItems + ' item' + (totalItems !== 1 ? 's' : '');
+    var totalEl = document.getElementById('aiCartBarTotal');
+    if (totalEl) totalEl.textContent = 'ETB ' + totalPrice;
+  }
+
   // ---------- API ----------
   function callAI(userText) {
     isLoading = true;
     updateSendButton();
     showTyping();
-    var history = messages.slice(-10);
+    var history = messages.filter(function (m) { return m.role; }).slice(-10);
     fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -224,6 +509,10 @@
       .then(function (data) {
         hideTyping();
         if (data.ok && data.reply) {
+          // If the reply suggests ordering, show the menu
+          if (ORDER_KEYWORDS.test(data.reply) && !menuLoaded) {
+            showMenuCarousel();
+          }
           addBotMessage(data.reply);
         } else if (data.error === 'AI_SERVICE_NOT_CONFIGURED') {
           showError('Almost ready! The AI binding needs to be enabled in the Cloudflare Dashboard (one-click under Settings > Functions > AI).');
@@ -243,7 +532,8 @@
   }
 
   function updateSendButton() {
-    document.getElementById('aiChatSend').disabled = isLoading;
+    var btn = document.getElementById('aiChatSend');
+    if (btn) btn.disabled = isLoading;
   }
 
   // ---------- Helpers ----------
@@ -260,7 +550,15 @@
     return el.innerHTML;
   }
 
-  // ---------- No persistence — fresh chat on every visit ----------
+  // ---------- Cart persistence (survives refresh) ----------
+  function loadCart() {
+    try { var r = localStorage.getItem(CART_KEY); return r ? JSON.parse(r) : []; }
+    catch (e) { return []; }
+  }
+  function saveCart() {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+    catch (e) { /* full */ }
+  }
 
   // ---------- Init ----------
   if (document.readyState === 'loading') {
