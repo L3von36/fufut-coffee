@@ -266,12 +266,16 @@
 .ai-chat-messages {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 20px 18px 12px;
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-height: 0;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
   background: #FAFAF8;
 }
 .ai-chat-messages::-webkit-scrollbar { width: 4px; }
@@ -389,6 +393,8 @@
   flex-wrap: wrap;
   gap: 6px;
   padding: 4px 18px 14px;
+  flex-shrink: 0;
+  background: #FAFAF8;
 }
 .ai-suggestion-btn {
   padding: 8px 16px;
