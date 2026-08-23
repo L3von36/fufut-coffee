@@ -471,16 +471,20 @@
         hideTyping();
         if (data.ok) {
           var orderId = data.id || 'placed';
-          addBotMessage('Order ' + orderId + ' placed! ' + String.fromCodePoint(0x1F389) + ' ' +
-            itemCount + ' item' + (itemCount > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
-            '. Your order is on its way — konjo choice!');
-          // Show cart summary as confirmation
+          // Save cart before clearing
           var savedCart = cart.slice();
-          messages.push({ type: 'cart-summary', content: savedCart });
-          appendCartSummaryDOM(savedCart, true);
+          // Clear cart and update UI FIRST (hides cart bar, frees space)
           cart = [];
           saveCart();
           updateCartUI();
+          // Now add confirmation messages into the freed-up space
+          addBotMessage('Order ' + orderId + ' placed! ' + String.fromCodePoint(0x1F389) + ' ' +
+            itemCount + ' item' + (itemCount > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
+            '. Your order is on its way — konjo choice!');
+          messages.push({ type: 'cart-summary', content: savedCart });
+          appendCartSummaryDOM(savedCart, true);
+          // Scroll after layout reflows (cart bar is now hidden)
+          setTimeout(function () { scrollBottom(); }, 50);
         } else {
           showError(data.error || 'Could not place order. Please try again or order at the counter.');
         }
