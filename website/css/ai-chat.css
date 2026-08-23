@@ -174,14 +174,15 @@
   color: #fff;
   flex-shrink: 0;
   position: relative;
-  overflow: hidden;
 }
 .ai-chat-header::before {
   content: '';
   position: absolute;
   inset: 0;
+  border-radius: 24px 24px 0 0;
   background: radial-gradient(ellipse at 85% 20%, rgba(255,255,255,0.08) 0%, transparent 55%);
   pointer-events: none;
+  z-index: 0;
 }
 .ai-chat-header-icon {
   position: relative;
@@ -247,16 +248,18 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.30);
+  border: 1.5px solid rgba(255, 255, 255, 0.50);
   color: #fff;
   cursor: pointer;
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
   transition: background 0.2s, transform 0.2s;
   -webkit-tap-highlight-color: transparent;
 }
 .ai-chat-header-close:hover {
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.50);
 }
 .ai-chat-header-close:active {
   transform: scale(0.9);
@@ -878,16 +881,17 @@
   }
   #aiChatBubble svg { width: 24px; height: 24px; }
 
-  /* Close button larger on mobile for easy tapping */
+  /* Close button larger and very visible on mobile */
   .ai-chat-header-close {
-    width: 44px;
-    height: 44px;
-    background: rgba(255, 255, 255, 0.22);
-    border: 1.5px solid rgba(255, 255, 255, 0.35);
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.35);
+    border: 2px solid rgba(255, 255, 255, 0.60);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
   }
   .ai-chat-header-close svg {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
   }
 
   /* Menu cards slightly smaller on mobile */
