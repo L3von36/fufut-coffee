@@ -168,6 +168,10 @@
             <div class="hero-btns">
                 <button class="btn-gold" data-scroll="#reservation" data-i18n="hero.reserve">Reserve Table</button>
                 <button class="btn-ghost" data-scroll="#menu" data-i18n="hero.viewMenu">View Menu</button>
+                <button class="btn-chat" id="heroAskChat" type="button" aria-label="Ask the AI assistant">
+                    <svg class="btn-chat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <span data-i18n="hero.askAssistant">Ask the Assistant</span>
+                </button>
             </div>
         </div>
         <div class="hero-scroll">
@@ -651,12 +655,22 @@
         <span id="cartCount" class="cart-count">0</span>
     </button>
 
-    <link rel="stylesheet" href="css/ai-chat.css?v=10">
+    <link rel="stylesheet" href="css/ai-chat.css?v=11">
 
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script>var API = '';</script>
+    <script>
+    // Hero "Ask the Assistant" — opens the AI chat widget
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('heroAskChat');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            if (window.FuFutChat) { window.FuFutChat.open(); }
+        });
+    });
+    </script>
     <script>
     // ===== CMS CONTENT LOADER =====
     // Fetches landing page content from /api/content and populates static sections.
@@ -2716,7 +2730,7 @@
     <script src="js/buttonState.js"></script>
     <script src="js/toast.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/ai-chat.js?v=10"></script>
+    <script src="js/ai-chat.js?v=11"></script>
     
 <script>
 /**

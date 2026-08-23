@@ -21,6 +21,8 @@
   var menuLoaded = false;
   var activeCategory = null;
   var chatLang = 'english';
+  var unreadCount = 0;
+  var autoWelcomed = false;
 
   // ---------- Order intent keywords ----------
   var ORDER_KEYWORDS = /\b(order|menu|food|coffee|drink|breakfast|lunch|dinner|eat|hungry|want\s+to\s+order|show\s+menu|what\s+do\s+you\s+have|i\s+want|get\s+me|can\s+i\s+(have|get)|ይህን|ልክልኝ|ምን\s+አለዎት|ማዘዣ)\b/i;
@@ -48,7 +50,8 @@
     bubble.innerHTML =
       '<svg class="ai-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
       '<svg class="ai-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-      '<span class="ai-cart-badge" id="aiCartBadge" style="display:none">0</span>';
+      '<span class="ai-cart-badge" id="aiCartBadge" style="display:none">0</span>' +
+      '<span class="ai-unread-badge" id="aiUnreadBadge" style="display:none"></span>';
     bubble.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
     document.body.appendChild(bubble);
 
@@ -71,8 +74,11 @@
           '</div>' +
         '</div>' +
         '<button class="ai-lang-toggle" id="aiLangToggle" aria-label="Switch language">EN</button>' +
+        '<button class="ai-chat-header-close" id="aiChatHeaderClose" aria-label="Close chat">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+        '</button>' +
       '</div>' +
-      '<div class="ai-chat-messages" id="aiChatMessages"></div>' +
+      '<div class="ai-chat-messages" id="aiChatMessages" role="log" aria-live="polite" aria-relevant="additions text"></div>' +
       '<div class="ai-suggestions" id="aiChatSuggestions"></div>' +
       '<div class="ai-menu-carousel" id="aiMenuCarousel" style="display:none">' +
         '<div class="ai-menu-carousel-header">' +
@@ -103,8 +109,9 @@
         '</button>' +
       '</div>' +
       '<div class="ai-chat-input">' +
-        '<input type="text" id="aiChatInput" placeholder="Ask about our coffee..." autocomplete="off" />' +
-        '<button class="ai-chat-send" id="aiChatSend" aria-label="Send message">' +
+        '<input type="text" id="aiChatInput" placeholder="Ask about our coffee..." autocomplete="off" aria-label="Type your question" />' +
+        '<button class="ai-chat-send" id="aiChatSend" aria-label="Send message" disabled>' +
+          '<span class="ai-send-spinner"></span>' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
         '</button>' +
       '</div>';
@@ -115,6 +122,7 @@
     var sendBtn = document.getElementById('aiChatSend');
     sendBtn.addEventListener('click', sendMessage);
     document.getElementById('aiChatCloseBtn').addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+    document.getElementById('aiChatHeaderClose').addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
     document.getElementById('aiLangToggle').addEventListener('click', toggleLang);
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
@@ -122,8 +130,19 @@
         sendMessage();
       }
     });
+    input.addEventListener('input', updateSendButton);
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && isOpen) toggle();
+      if (e.key === 'Escape' && isOpen) {
+        e.preventDefault();
+        toggle();
+      }
+      if (e.key === 'Tab') trapFocus(e);
+    });
+
+    // Scroll shadow on messages
+    var msgs = document.getElementById('aiChatMessages');
+    msgs.addEventListener('scroll', function () {
+      msgs.classList.toggle('scrolled', msgs.scrollTop > 6);
     });
 
     document.getElementById('aiCartOrder').addEventListener('click', placeOrder);
@@ -149,15 +168,26 @@
     bubble.classList.toggle('active', isOpen);
     backdrop.classList.toggle('visible', isOpen);
     bubble.setAttribute('aria-label', isOpen ? 'Close AI assistant' : 'Open AI assistant');
+    bubble.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     document.body.style.overflow = isOpen ? 'hidden' : '';
 
     if (isOpen) {
+      hideTooltip();
+      if (unreadCount > 0) {
+        unreadCount = 0;
+        renderUnread();
+      }
       setTimeout(function () {
         document.getElementById('aiChatInput').focus();
       }, 350);
       if (messages.length === 0) {
         addBotMessage('Welcome to Fu Fut Coffee! I\u2019m here to help you explore our Ethiopian coffee, traditional dishes, and caf\u00e9 experience. You can also order right here! What would you like to know?');
       }
+    } else {
+      setTimeout(function () {
+        if (!isOpen) bubble.focus();
+      }, 50);
+      scheduleTooltip();
     }
   }
 
@@ -168,6 +198,99 @@
     btn.textContent = chatLang === 'english' ? 'EN' : 'አማ';
     var input = document.getElementById('aiChatInput');
     input.placeholder = chatLang === 'english' ? 'Ask about our coffee...' : 'ስለ ኮፊያችን ይጠይቁ...';
+  }
+
+  // ---------- Focus trap (keeps Tab navigation inside the panel) ----------
+  function trapFocus(e) {
+    if (!isOpen) return;
+    var panel = document.getElementById('aiChatPanel');
+    if (!panel || e.key !== 'Tab') return;
+    var focusables = panel.querySelectorAll('button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    if (!focusables.length) return;
+    var first = focusables[0];
+    var last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  // ---------- FAB teaser tooltip ----------
+  var tooltipTimer = null;
+
+  function showTooltip() {
+    hideTooltip();
+    if (isOpen) return;
+    var tt = document.createElement('button');
+    tt.id = 'aiChatTooltip';
+    tt.className = 'ai-chat-tooltip';
+    tt.setAttribute('aria-label', 'Open AI assistant');
+    tt.innerHTML =
+      '<span class="ai-chat-tooltip-wave" aria-hidden="true">\u2615</span>' +
+      '<span class="ai-chat-tooltip-text">' + (chatLang === 'amharic' ? 'ስለ ቡናዎችን ይጠይቁ' : 'Hi! Ask about our coffee') + '</span>';
+    tt.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggle();
+    });
+    document.body.appendChild(tt);
+    tooltipTimer = setTimeout(hideTooltip, 12000);
+  }
+
+  function hideTooltip() {
+    if (tooltipTimer) { clearTimeout(tooltipTimer); tooltipTimer = null; }
+    var tt = document.getElementById('aiChatTooltip');
+    if (tt) tt.remove();
+  }
+
+  function scheduleTooltip() {
+    setTimeout(function () {
+      if (!isOpen) showTooltip();
+    }, 1400);
+  }
+
+  // ---------- Unread badge ----------
+  function renderUnread() {
+    var badge = document.getElementById('aiUnreadBadge');
+    if (!badge) return;
+    if (unreadCount > 0 && !isOpen) {
+      badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
+      badge.style.display = '';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  // ---------- Bot avatar + rich text ----------
+  function botAvatarHTML() {
+    return '<div class="ai-msg-avatar" aria-hidden="true">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>' +
+    '</div>';
+  }
+
+  function formatBotText(text) {
+    var esc = escapeHtml(text);
+    esc = esc.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    esc = esc.replace(/\n{2,}/g, '\u0000').replace(/\n/g, '<br>').replace(/\u0000/g, '</p><p>');
+    return '<p>' + esc + '</p>';
+  }
+
+  // ---------- First-visit welcome ----------
+  function maybeAutoWelcome() {
+    var visited = false;
+    try { visited = !!localStorage.getItem('fufutChatVisited'); } catch (e) {}
+    try { localStorage.setItem('fufutChatVisited', '1'); } catch (e) {}
+
+    if (!visited) {
+      // Auto-open once for brand-new visitors, after the preloader settles
+      setTimeout(function () {
+        if (!isOpen) toggle();
+      }, 2600);
+    } else {
+      scheduleTooltip();
+    }
   }
 
   // ---------- Render ----------
@@ -211,15 +334,26 @@
     if (!animate) div.style.animation = 'none';
 
     var bubble = document.createElement('div');
-    bubble.className = 'ai-msg-bubble';
-    bubble.textContent = content;
-
     var time = document.createElement('div');
     time.className = 'ai-msg-time';
     time.textContent = formatTime(new Date());
 
-    div.appendChild(bubble);
-    div.appendChild(time);
+    if (role === 'bot') {
+      var copy = document.createElement('div');
+      copy.className = 'ai-msg-copy';
+      bubble.className = 'ai-msg-bubble';
+      bubble.innerHTML = formatBotText(content);
+      copy.appendChild(bubble);
+      copy.appendChild(time);
+      div.innerHTML = botAvatarHTML();
+      div.appendChild(copy);
+    } else {
+      bubble.className = 'ai-msg-bubble';
+      bubble.textContent = content;
+      div.appendChild(bubble);
+      div.appendChild(time);
+    }
+
     container.appendChild(div);
   }
 
@@ -231,7 +365,6 @@
 
     var bubble = document.createElement('div');
     bubble.className = 'ai-msg-bubble ai-cart-summary';
-
     var total = 0;
     var html = '<div class="ai-cart-summary-title">\uD83D\uDCE6 Your Cart</div>';
     cartItems.forEach(function (item, idx) {
@@ -252,8 +385,12 @@
     time.className = 'ai-msg-time';
     time.textContent = formatTime(new Date());
 
-    div.appendChild(bubble);
-    div.appendChild(time);
+    var copy = document.createElement('div');
+    copy.className = 'ai-msg-copy';
+    copy.appendChild(bubble);
+    copy.appendChild(time);
+    div.innerHTML = botAvatarHTML();
+    div.appendChild(copy);
     container.appendChild(div);
 
     // Attach remove buttons
@@ -270,7 +407,8 @@
     var div = document.createElement('div');
     div.className = 'ai-msg ai-msg--bot';
     div.id = 'aiTypingIndicator';
-    div.innerHTML = '<div class="ai-msg-bubble ai-typing"><span></span><span></span><span></span></div>';
+    div.innerHTML = botAvatarHTML() +
+      '<div class="ai-msg-copy"><div class="ai-msg-bubble ai-typing"><span></span><span></span><span></span></div></div>';
     container.appendChild(div);
     scrollBottom();
   }
@@ -286,8 +424,12 @@
     div.className = 'ai-msg ai-msg--bot';
     var bubble = document.createElement('div');
     bubble.className = 'ai-msg-bubble ai-msg-error';
-    bubble.textContent = msg || 'Something went wrong. Please try again.';
-    div.appendChild(bubble);
+    bubble.innerHTML = '<p>' + escapeHtml(msg || 'Something went wrong. Please try again.') + '</p>';
+    var copy = document.createElement('div');
+    copy.className = 'ai-msg-copy';
+    copy.appendChild(bubble);
+    div.innerHTML = botAvatarHTML();
+    div.appendChild(copy);
     container.appendChild(div);
     scrollBottom();
   }
@@ -319,6 +461,10 @@
   function addBotMessage(text) {
     messages.push({ role: 'assistant', content: text });
     appendMessageDOM('assistant', text, true);
+    if (!isOpen) {
+      unreadCount++;
+      renderUnread();
+    }
     scrollBottom();
   }
 
@@ -347,7 +493,12 @@
         scrollBottom();
       })
       .catch(function () {
-        scroll.innerHTML = '<div class="ai-menu-error">Could not load menu. Please try again.</div>';
+        scroll.innerHTML =
+          '<div class="ai-menu-error">Could not load the menu. Please check your connection.</div>' +
+          '<button class="ai-menu-retry" id="aiMenuRetry" type="button">\u21bb Try again</button>';
+        var retry = document.getElementById('aiMenuRetry');
+        if (retry) retry.addEventListener('click', function () { showMenuCarousel(activeCategory); });
+        scrollBottom();
       });
   }
 
@@ -685,7 +836,12 @@
 
   function updateSendButton() {
     var btn = document.getElementById('aiChatSend');
-    if (btn) btn.disabled = isLoading;
+    if (!btn) return;
+    var input = document.getElementById('aiChatInput');
+    var empty = !input || !input.value.trim();
+    btn.disabled = isLoading || empty;
+    btn.classList.toggle('loading', isLoading);
+    btn.setAttribute('aria-label', isLoading ? 'Sending' : 'Send message');
   }
 
   // ---------- Helpers ----------
@@ -713,9 +869,24 @@
   }
 
   // ---------- Init ----------
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createWidget);
-  } else {
+  function init() {
     createWidget();
+    renderUnread();
+    maybeAutoWelcome();
+
+    // Public API — lets the landing page open the assistant from any CTA
+    window.FuFutChat = {
+      open: function () { if (!isOpen) toggle(); },
+      close: function () { if (isOpen) toggle(); },
+      toggle: toggle,
+      isOpen: function () { return isOpen; },
+    };
+    window.fufutOpenChat = window.FuFutChat.open;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 })();

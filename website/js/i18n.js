@@ -24,6 +24,7 @@
       'hero.sub': 'Where tradition meets modern taste. Single-origin beans, ceremony-brewed, served with heart.',
       'hero.reserve': 'Reserve Table',
       'hero.viewMenu': 'View Menu',
+      'hero.askAssistant': 'Ask the Assistant',
       'hero.scroll': 'Scroll',
 
       // Story section
@@ -192,6 +193,7 @@
       'hero.sub': 'ባህልና ዘመናዊ ጣዕም የሚገናኙበት ቦታ። ነጠላ-ምንጭ ቡና ኖትሶች፣ በስርዓት የተረፉ፣ በፍቅር የተሰጡ።',
       'hero.reserve': 'ቦታ ያስይዙ',
       'hero.viewMenu': 'ዝርዝሩን ይመልከቱ',
+      'hero.askAssistant': 'ረዳትን ይጠይቁ',
       'hero.scroll': 'ይንቀሳቀሱ',
 
       // Story section
