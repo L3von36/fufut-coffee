@@ -240,6 +240,29 @@
   50% { opacity: 0.4; }
 }
 
+/* ---------- Language toggle button ---------- */
+.ai-lang-toggle {
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ai-lang-toggle:hover {
+  background: rgba(255, 255, 255, 0.38);
+}
+.ai-lang-toggle:active {
+  transform: scale(0.93);
+}
+
 /* ---------- Bottom close bar ---------- */
 .ai-chat-bottom-bar {
   display: flex;
@@ -727,6 +750,15 @@
   border-color: #0F7B78 !important;
   color: #0F7B78;
 }
+.ai-cart-clear {
+  background: transparent;
+  border: 1.5px solid #E9E7E1 !important;
+  color: #D32F2F;
+}
+.ai-cart-clear:hover {
+  border-color: #D32F2F !important;
+  background: #FFF5F5;
+}
 .ai-cart-order {
   background: linear-gradient(145deg, #0F7B78, #0C5F5B);
   color: #fff;
@@ -753,12 +785,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 0;
+  padding: 6px 0;
   font-size: 12.5px;
   border-bottom: 1px solid #F0EDE6;
+  gap: 8px;
 }
-.ai-cart-summary-item:last-of-type {
-  border-bottom: none;
+.ai-cart-item-left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 .ai-cart-item-name {
   color: #524F47;
@@ -770,6 +807,36 @@
 .ai-cart-item-price {
   color: #0F7B78;
   font-weight: 600;
+  flex-shrink: 0;
+}
+.ai-cart-item-remove {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #E9E7E1;
+  background: #fff;
+  color: #D32F2F;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ai-cart-item-remove:hover {
+  background: #D32F2F;
+  color: #fff;
+  border-color: #D32F2F;
+}
+.ai-cart-item-remove:active {
+  transform: scale(0.85);
+}
+.ai-cart-summary-item:last-of-type {
+  border-bottom: none;
 }
 .ai-cart-summary-total {
   display: flex;

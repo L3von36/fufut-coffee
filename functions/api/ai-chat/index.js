@@ -46,18 +46,16 @@ const SYSTEM_PROMPT = `You are the friendly AI assistant for Fu Fut Coffee (ፉ 
 - Keep responses concise (2-4 sentences) unless the user asks for detail
 
 ## Language Rules (CRITICAL)
-- Use English by default for all responses
-- When the user writes in Amharic, respond in English BUT naturally weave in Amharic greetings, words, and phrases — like how bilingual Ethiopians actually talk in real life
-- Examples of natural code-switching: "Selam! Welcome to Fu Fut Coffee — ቡናው እጅግ ጣፋጭ ነው here!" or "Abebe, our Yirgacheffe is አስገራሚ — you'll love it!"
-- Use Amharic for greetings: Selam, Tenasteling, Addis? for How are you?
-- Use Amharic for food/coffee terms naturally: bunna, jebena, injera, doro wot, shiro, misir wot, tibs
-- Use Amharic for expressions of delight: Konjo! (beautiful/great), Tigist! (patience/also a name), Dess yilegnal! (it feels good!), Gobez! (amazing!)
-- Use Amharic for polite words: Egziabher yistelegn (God bless — after thanks), Min nesh? (what's up?), Enkwan deregewalhu (thank you)
-- DO NOT attempt to write full sentences in Amharic — the model does not produce fluent Amharic and it will sound unnatural
-- Think of it as seasoning your English with Amharic spice — a word here, a phrase there, never a full translated paragraph
+- By default, respond ONLY in clean English. No Amharic words mixed in.
+- If the user's message contains Amharic script (Ge'ez/Unicode), respond in English but you may include common Amharic food/coffee terms ONLY if they are well-known: bunna (coffee), jebena (coffee pot), injera, doro wot, kitfo, tibs, shiro
+- DO NOT add random Amharic words, greetings, or phrases to English responses — it sounds unnatural and confusing
+- DO NOT attempt full sentences in Amharic — the model cannot produce fluent Amharic
+- If the request includes "lang":"amharic", try your best to respond in simple Amharic, but keep it very short and simple
+- If the request includes "lang":"english", respond in pure English only
+- Keep responses concise (2-4 sentences) unless the user asks for detail
 
 ## Boundaries
-- If asked about politics, religion, or sensitive topics, politely redirect: "I'm just a coffee assistant — my expertise starts and ends with beans and buna! Ask me about our menu instead."
+- If asked about politics, religion, or sensitive topics, politely redirect: "I'm just a coffee assistant — my expertise starts and ends with beans and brews! Ask me about our menu instead."
 - Never make up specific prices, phone numbers, or exact addresses
 - If you don't know something, admit it honestly with charm: "Hmm, that's a great question — even my coffee-powered brain doesn't have that detail. Best to contact the café directly!"`;
 
@@ -128,7 +126,16 @@ export async function onRequestPost(context) {
   }
 
   // Build message array: system + history + new user message
+  const lang = (body.lang || 'english').toLowerCase();
   const messages = [{ role: 'system', content: SYSTEM_PROMPT }];
+
+  // Inject language instruction into the user message for the model
+  let userMsg = userMessage;
+  if (lang === 'amharic') {
+    userMsg = `[Respond in Amharic] ${userMessage}`;
+  } else {
+    userMsg = `[Respond in English only] ${userMessage}`;
+  }
 
   if (Array.isArray(body.history) && body.history.length > 0) {
     const recent = body.history.slice(-6);
@@ -139,7 +146,7 @@ export async function onRequestPost(context) {
     }
   }
 
-  messages.push({ role: 'user', content: userMessage });
+  messages.push({ role: 'user', content: userMsg });
 
   try {
     let reply = null;

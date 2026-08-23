@@ -20,6 +20,7 @@
   var menuData = null;
   var menuLoaded = false;
   var activeCategory = null;
+  var chatLang = 'english';
 
   // ---------- Order intent keywords ----------
   var ORDER_KEYWORDS = /\b(order|menu|food|coffee|drink|breakfast|lunch|dinner|eat|hungry|want\s+to\s+order|show\s+menu|what\s+do\s+you\s+have|i\s+want|get\s+me|can\s+i\s+(have|get)|ይህን|ልክልኝ|ምን\s+አለዎት|ማዘዣ)\b/i;
@@ -69,6 +70,7 @@
             '<span>Online &middot; Ask about our coffee & menu</span>' +
           '</div>' +
         '</div>' +
+        '<button class="ai-lang-toggle" id="aiLangToggle" aria-label="Switch language">EN</button>' +
       '</div>' +
       '<div class="ai-chat-messages" id="aiChatMessages"></div>' +
       '<div class="ai-suggestions" id="aiChatSuggestions"></div>' +
@@ -85,6 +87,7 @@
           '<span class="ai-cart-bar-total" id="aiCartBarTotal">ETB 0</span>' +
         '</div>' +
         '<div class="ai-cart-bar-actions">' +
+          '<button class="ai-cart-bar-btn ai-cart-clear" id="aiCartClear">Clear</button>' +
           '<button class="ai-cart-bar-btn ai-cart-view" id="aiCartView">View Cart</button>' +
           '<button class="ai-cart-bar-btn ai-cart-order" id="aiCartOrder">Place Order</button>' +
         '</div>' +
@@ -108,6 +111,7 @@
     var sendBtn = document.getElementById('aiChatSend');
     sendBtn.addEventListener('click', sendMessage);
     document.getElementById('aiChatCloseBtn').addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+    document.getElementById('aiLangToggle').addEventListener('click', toggleLang);
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -120,6 +124,7 @@
 
     document.getElementById('aiCartView').addEventListener('click', showCartSummary);
     document.getElementById('aiCartOrder').addEventListener('click', placeOrder);
+    document.getElementById('aiCartClear').addEventListener('click', clearCart);
 
     renderMessages();
     renderSuggestions();
@@ -146,6 +151,15 @@
         addBotMessage('Welcome to Fu Fut Coffee! I\u2019m here to help you explore our Ethiopian coffee, traditional dishes, and caf\u00e9 experience. You can also order right here! What would you like to know?');
       }
     }
+  }
+
+  // ---------- Toggle Language ----------
+  function toggleLang() {
+    chatLang = chatLang === 'english' ? 'amharic' : 'english';
+    var btn = document.getElementById('aiLangToggle');
+    btn.textContent = chatLang === 'english' ? 'EN' : 'አማ';
+    var input = document.getElementById('aiChatInput');
+    input.placeholder = chatLang === 'english' ? 'Ask about our coffee...' : 'ስለ ኮፊያችን ይጠይቁ...';
   }
 
   // ---------- Render ----------
@@ -212,12 +226,15 @@
 
     var total = 0;
     var html = '<div class="ai-cart-summary-title">\uD83D\uDCE6 Your Cart</div>';
-    cartItems.forEach(function (item) {
+    cartItems.forEach(function (item, idx) {
       var subtotal = item.price * item.qty;
       total += subtotal;
       html += '<div class="ai-cart-summary-item">' +
-        '<span class="ai-cart-item-name">' + escapeHtml(item.name) + ' <small>x' + item.qty + '</small></span>' +
-        '<span class="ai-cart-item-price">ETB ' + subtotal + '</span>' +
+        '<div class="ai-cart-item-left">' +
+          '<span class="ai-cart-item-name">' + escapeHtml(item.name) + ' <small>x' + item.qty + '</small></span>' +
+          '<span class="ai-cart-item-price">ETB ' + subtotal + '</span>' +
+        '</div>' +
+        '<button class="ai-cart-item-remove" data-idx="' + idx + '" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>' +
       '</div>';
     });
     html += '<div class="ai-cart-summary-total"><span>Total</span><span>ETB ' + total + '</span></div>';
@@ -230,6 +247,14 @@
     div.appendChild(bubble);
     div.appendChild(time);
     container.appendChild(div);
+
+    // Attach remove buttons
+    bubble.querySelectorAll('.ai-cart-item-remove').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var idx = parseInt(this.getAttribute('data-idx'), 10);
+        removeFromCart(idx);
+      });
+    });
   }
 
   function showTyping() {
@@ -394,6 +419,23 @@
   }
 
   // ---------- Cart ----------
+  function removeFromCart(idx) {
+    if (idx >= 0 && idx < cart.length) {
+      var removed = cart.splice(idx, 1)[0];
+      saveCart();
+      updateCartUI();
+      // Re-render messages to update cart summary if shown
+      renderMessages();
+      scrollBottom();
+    }
+  }
+
+  function clearCart() {
+    cart = [];
+    saveCart();
+    updateCartUI();
+  }
+
   function addToCart(item) {
     var existing = cart.find(function (c) { return c.id === item.id; });
     if (existing) {
@@ -532,7 +574,7 @@
     fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: userText, history: history }),
+      body: JSON.stringify({ message: userText, history: history, lang: chatLang }),
     })
       .then(function (r) { return r.json(); })
       .then(function (data) {
