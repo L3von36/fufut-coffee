@@ -428,11 +428,26 @@
       return;
     }
 
+    // Calculate total before clearing
+    var total = cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0);
+    var itemCount = cart.length;
+    var itemNames = cart.map(function (c) { return c.name; }).join(', ');
+
+    // Build items array with name and price — the backend needs these
     var orderItems = cart.map(function (c) {
-      return { menu_item_id: c.id, quantity: c.qty };
+      return {
+        menu_item_id: c.id,
+        name: c.name,
+        price: c.price,
+        qty: c.qty
+      };
     });
 
-    var body = { items: orderItems };
+    var body = {
+      items: orderItems,
+      total: total,
+      status: 'new'
+    };
 
     // If there's a table context, include it
     if (window.fufutTable) {
@@ -448,27 +463,36 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
-      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r.ok) throw new Error('Server error ' + r.status);
+        return r.json();
+      })
       .then(function (data) {
         hideTyping();
-        if (data.ok || data.id || data.order_id) {
-          var orderId = data.id || data.order_id || 'placed';
-          var total = cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0);
-          addBotMessage('Order ' + orderId.slice(0, 8) + ' placed! \uD83C\uDF89 ' + cart.length + ' item' + (cart.length > 1 ? 's' : '') + ' totaling ETB ' + total + '. Your coffee is on its way — konjo choice!');
+        if (data.ok) {
+          var orderId = data.id || 'placed';
+          addBotMessage('Order ' + orderId + ' placed! ' + String.fromCodePoint(0x1F389) + ' ' +
+            itemCount + ' item' + (itemCount > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
+            '. Your order is on its way — konjo choice!');
+          // Show cart summary as confirmation
+          var savedCart = cart.slice();
+          messages.push({ type: 'cart-summary', content: savedCart });
+          appendCartSummaryDOM(savedCart, true);
           cart = [];
           saveCart();
           updateCartUI();
         } else {
-          showError(data.error || data.message || 'Could not place order. Please try again or order at the counter.');
+          showError(data.error || 'Could not place order. Please try again or order at the counter.');
         }
       })
-      .catch(function () {
+      .catch(function (err) {
         hideTyping();
-        showError('Connection issue. Could not place order. Please try ordering at the counter.');
+        showError('Could not place order: ' + (err.message || 'Connection issue. Try ordering at the counter.'));
       })
       .finally(function () {
         isLoading = false;
         updateSendButton();
+        document.getElementById('aiChatInput').focus();
       });
   }
 
