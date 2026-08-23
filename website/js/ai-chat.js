@@ -7,13 +7,11 @@
   'use strict';
 
   var API_URL = (window.API || '') + '/api/ai-chat';
-  var HISTORY_KEY = 'aiChatHistory';
-  var MAX_HISTORY = 20;
 
   // ---------- State ----------
   var isOpen = false;
   var isLoading = false;
-  var messages = loadHistory();
+  var messages = [];
 
   // ---------- Suggestions ----------
   var SUGGESTIONS = [
@@ -201,16 +199,12 @@
 
   function addUserMessage(text) {
     messages.push({ role: 'user', content: text });
-    trimHistory();
-    saveHistory();
     appendMessageDOM('user', text, true);
     scrollBottom();
   }
 
   function addBotMessage(text) {
     messages.push({ role: 'assistant', content: text });
-    trimHistory();
-    saveHistory();
     appendMessageDOM('assistant', text, true);
     scrollBottom();
   }
@@ -266,18 +260,7 @@
     return el.innerHTML;
   }
 
-  // ---------- Persistence ----------
-  function loadHistory() {
-    try { var r = localStorage.getItem(HISTORY_KEY); return r ? JSON.parse(r) : []; }
-    catch (e) { return []; }
-  }
-  function saveHistory() {
-    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(messages.slice(-MAX_HISTORY))); }
-    catch (e) { /* full */ }
-  }
-  function trimHistory() {
-    if (messages.length > MAX_HISTORY) messages = messages.slice(-MAX_HISTORY);
-  }
+  // ---------- No persistence — fresh chat on every visit ----------
 
   // ---------- Init ----------
   if (document.readyState === 'loading') {
