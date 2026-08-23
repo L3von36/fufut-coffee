@@ -97,8 +97,7 @@
         '<button class="ai-chat-send" id="aiChatSend" aria-label="Send message">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
         '</button>' +
-      '</div>' +
-      '<div class="ai-chat-footer">Fu Fut Coffee &middot; \u1353 \u12D3 \u130B \u12AE &middot; AI responses may not always be accurate</div>';
+      '</div>';
     document.body.appendChild(panel);
 
     // Events
