@@ -69,9 +69,6 @@
             '<span>Online &middot; Ask about our coffee & menu</span>' +
           '</div>' +
         '</div>' +
-        '<button class="ai-chat-header-close" id="aiChatHeaderClose" aria-label="Close">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
-        '</button>' +
       '</div>' +
       '<div class="ai-chat-messages" id="aiChatMessages"></div>' +
       '<div class="ai-suggestions" id="aiChatSuggestions"></div>' +
@@ -92,6 +89,12 @@
           '<button class="ai-cart-bar-btn ai-cart-order" id="aiCartOrder">Place Order</button>' +
         '</div>' +
       '</div>' +
+      '<div class="ai-chat-bottom-bar">' +
+        '<button class="ai-chat-close-btn" id="aiChatCloseBtn" aria-label="Close chat">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+          '<span>Close</span>' +
+        '</button>' +
+      '</div>' +
       '<div class="ai-chat-input">' +
         '<input type="text" id="aiChatInput" placeholder="Ask about our coffee..." autocomplete="off" />' +
         '<button class="ai-chat-send" id="aiChatSend" aria-label="Send message">' +
@@ -103,9 +106,8 @@
     // Events
     var input = document.getElementById('aiChatInput');
     var sendBtn = document.getElementById('aiChatSend');
-    var headerClose = document.getElementById('aiChatHeaderClose');
     sendBtn.addEventListener('click', sendMessage);
-    headerClose.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+    document.getElementById('aiChatCloseBtn').addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
     input.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();

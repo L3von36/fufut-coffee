@@ -240,34 +240,41 @@
   50% { opacity: 0.4; }
 }
 
-/* Header close button — solid white, impossible to miss */
-.ai-chat-header-close {
+/* ---------- Bottom close bar ---------- */
+.ai-chat-bottom-bar {
+  display: flex;
+  justify-content: center;
+  padding: 6px 18px 4px;
+  background: #FAFAF8;
+  flex-shrink: 0;
+}
+.ai-chat-close-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  gap: 6px;
+  padding: 8px 28px;
+  border-radius: 20px;
+  border: 1.5px solid #E9E7E1;
   background: #FFFFFF;
-  border: none;
-  color: #0C5F5B;
+  color: #8C897F;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 2;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.2s;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
-.ai-chat-header-close:hover {
-  background: #F0EDE6;
+.ai-chat-close-btn svg {
+  width: 16px;
+  height: 16px;
 }
-.ai-chat-header-close:active {
-  transform: scale(0.9);
-}
-.ai-chat-header-close svg {
-  width: 18px;
-  height: 18px;
+.ai-chat-close-btn:hover,
+.ai-chat-close-btn:active {
+  color: #D32F2F;
+  border-color: #D32F2F;
+  background: #FFF5F5;
 }
 
 /* ---------- Messages area ---------- */
@@ -882,15 +889,15 @@
   }
   #aiChatBubble svg { width: 24px; height: 24px; }
 
-  /* Close button larger on mobile */
-  .ai-chat-header-close {
-    width: 44px;
-    height: 44px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  /* Close button bigger on mobile for easy thumb tap */
+  .ai-chat-close-btn {
+    padding: 10px 36px;
+    font-size: 13px;
+    border-radius: 24px;
   }
-  .ai-chat-header-close svg {
-    width: 22px;
-    height: 22px;
+  .ai-chat-close-btn svg {
+    width: 18px;
+    height: 18px;
   }
 
   /* Menu cards slightly smaller on mobile */
