@@ -133,8 +133,8 @@
   z-index: 9997;
   width: 400px;
   max-width: calc(100vw - 24px);
-  height: 560px;
-  max-height: calc(100vh - 140px);
+  height: 580px;
+  max-height: calc(100vh - 130px);
   background: #FFFFFF;
   border: 1px solid rgba(15, 123, 120, 0.10);
   border-radius: 24px;
@@ -263,9 +263,9 @@
   transform: scale(0.93);
 }
 
-/* ---------- Bottom close bar ---------- */
+/* ---------- Bottom close bar (mobile only) ---------- */
 .ai-chat-bottom-bar {
-  display: flex;
+  display: none;
   justify-content: center;
   padding: 6px 18px 4px;
   background: #FAFAF8;
@@ -534,16 +534,17 @@
 /* Horizontal scroll */
 .ai-menu-scroll {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 12px 18px 14px;
+  padding: 8px 18px 10px;
   scroll-snap-type: x mandatory;
   scrollbar-width: thin;
   scrollbar-color: rgba(15,123,120,0.25) transparent;
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   min-height: 0;
+  max-height: 140px;
 }
 .ai-menu-scroll::-webkit-scrollbar { height: 5px; }
 .ai-menu-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -558,9 +559,9 @@
 /* Menu card */
 .ai-menu-card {
   flex-shrink: 0;
-  width: 140px;
+  width: 120px;
   scroll-snap-align: start;
-  border-radius: 16px;
+  border-radius: 14px;
   border: 1px solid #E9E7E1;
   background: #fff;
   overflow: hidden;
@@ -568,12 +569,12 @@
   touch-action: manipulation;
 }
 .ai-menu-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.07);
 }
 .ai-menu-card-img {
   width: 100%;
-  height: 100px;
+  height: 72px;
   background-size: cover;
   background-position: center;
   background-color: #F0EDE6;
@@ -691,17 +692,28 @@
 }
 
 /* ============================================================
-   CART BAR — sticky bottom bar showing cart
+   CART BAR — stacked layout for desktop, compact for mobile
    ============================================================ */
 .ai-cart-bar {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 18px;
+  flex-direction: column;
+  padding: 10px 18px 8px;
   background: #fff;
   border-top: 1px solid #E9E7E1;
   flex-shrink: 0;
   animation: aiSlideUp 0.3s ease both;
+  gap: 0;
+}
+.ai-cart-bar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ai-cart-bar-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
 @keyframes aiSlideUp {
   from { opacity: 0; transform: translateY(10px); }
@@ -914,6 +926,131 @@
   height: 18px;
 }
 
+/* ---------- Cart item chips in bar ---------- */
+.ai-cart-bar-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px 0 0;
+  min-height: 0;
+}
+.ai-cart-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px 4px 10px;
+  border-radius: 14px;
+  background: #F0EDE6;
+  border: 1px solid #E9E7E1;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  color: #524F47;
+  animation: aiSlideUp 0.25s ease both;
+}
+.ai-cart-chip-name {
+  white-space: nowrap;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ai-cart-chip-remove {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: #E9E7E1;
+  color: #D32F2F;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ai-cart-chip-remove:hover {
+  background: #D32F2F;
+  color: #fff;
+}
+.ai-cart-chip-remove:active {
+  transform: scale(0.85);
+}
+
+/* ---------- Menu carousel close button ---------- */
+.ai-menu-carousel-close {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #E9E7E1;
+  background: #fff;
+  color: #8C897F;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ai-menu-carousel-close:hover {
+  background: #D32F2F;
+  color: #fff;
+  border-color: #D32F2F;
+}
+
+/* ---------- Undo toast ---------- */
+.ai-undo-toast {
+  position: absolute;
+  bottom: 80px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #221F1A;
+  color: #fff;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12.5px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  z-index: 10;
+  animation: aiUndoIn 0.3s ease both;
+}
+@keyframes aiUndoIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ai-undo-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ai-undo-btn {
+  padding: 5px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: #D6B36A;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.ai-undo-btn:hover,
+.ai-undo-btn:active {
+  background: rgba(214, 179, 106, 0.2);
+}
+
 /* ---------- Error message ---------- */
 .ai-msg-error {
   color: #D32F2F;
@@ -935,6 +1072,11 @@
     max-height: 100vh;
     border-radius: 0;
     transform-origin: bottom center;
+  }
+
+  /* Show the close bar on mobile for easy thumb tap */
+  .ai-chat-bottom-bar {
+    display: flex;
   }
 
   /* Hide the FAB when panel is open on mobile — prevents overlap */
@@ -973,6 +1115,23 @@
   }
   .ai-menu-card-img {
     height: 85px;
+  }
+  .ai-menu-scroll {
+    max-height: none;
+  }
+
+  /* Undo toast positioned higher on mobile (full screen) */
+  .ai-undo-toast {
+    bottom: 160px;
+  }
+  .ai-undo-btn {
+    padding: 8px 18px;
+    font-size: 13px;
+  }
+  .ai-cart-chip-remove {
+    width: 24px;
+    height: 24px;
+    font-size: 17px;
   }
 }
 

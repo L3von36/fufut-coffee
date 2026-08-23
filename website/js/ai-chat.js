@@ -78,17 +78,21 @@
         '<div class="ai-menu-carousel-header">' +
           '<span class="ai-menu-carousel-title" id="aiMenuCarouselTitle">Menu</span>' +
           '<div class="ai-menu-cats" id="aiMenuCats"></div>' +
+          '<button class="ai-menu-carousel-close" id="aiMenuCarouselClose" aria-label="Close menu">\u2715</button>' +
         '</div>' +
         '<div class="ai-menu-scroll" id="aiMenuScroll"></div>' +
       '</div>' +
       '<div class="ai-cart-bar" id="aiCartBar" style="display:none">' +
-        '<div class="ai-cart-bar-info">' +
-          '<span class="ai-cart-bar-count" id="aiCartBarCount">0 items</span>' +
-          '<span class="ai-cart-bar-total" id="aiCartBarTotal">ETB 0</span>' +
+        '<div class="ai-cart-bar-top">' +
+          '<div class="ai-cart-bar-info">' +
+            '<span class="ai-cart-bar-count" id="aiCartBarCount">0 items</span>' +
+            '<span class="ai-cart-bar-total" id="aiCartBarTotal">ETB 0</span>' +
+          '</div>' +
+          '<button class="ai-cart-bar-btn ai-cart-view" id="aiCartView">View Cart</button>' +
         '</div>' +
+        '<div class="ai-cart-bar-items" id="aiCartBarItems"></div>' +
         '<div class="ai-cart-bar-actions">' +
           '<button class="ai-cart-bar-btn ai-cart-clear" id="aiCartClear">Clear</button>' +
-          '<button class="ai-cart-bar-btn ai-cart-view" id="aiCartView">View Cart</button>' +
           '<button class="ai-cart-bar-btn ai-cart-order" id="aiCartOrder">Place Order</button>' +
         '</div>' +
       '</div>' +
@@ -122,9 +126,13 @@
       if (e.key === 'Escape' && isOpen) toggle();
     });
 
-    document.getElementById('aiCartView').addEventListener('click', showCartSummary);
     document.getElementById('aiCartOrder').addEventListener('click', placeOrder);
     document.getElementById('aiCartClear').addEventListener('click', clearCart);
+    document.getElementById('aiCartView').addEventListener('click', showCartSummary);
+    document.getElementById('aiMenuCarouselClose').addEventListener('click', function () {
+      document.getElementById('aiMenuCarousel').style.display = 'none';
+      scrollBottom();
+    });
 
     renderMessages();
     renderSuggestions();
@@ -409,7 +417,7 @@
 
       card.querySelector('.ai-menu-card-add').addEventListener('click', function (e) {
         e.stopPropagation();
-        addToCart(item);
+        addToCart(item, this);
       });
 
       scroll.appendChild(card);
@@ -424,7 +432,8 @@
       var removed = cart.splice(idx, 1)[0];
       saveCart();
       updateCartUI();
-      // Re-render messages to update cart summary if shown
+      // Remove stale cart summary DOM and messages, then re-render
+      messages = messages.filter(function (m) { return m.type !== 'cart-summary'; });
       renderMessages();
       scrollBottom();
     }
@@ -436,7 +445,52 @@
     updateCartUI();
   }
 
-  function addToCart(item) {
+  // Undo timer for last added item
+  var undoTimer = null;
+  var undoItem = null;
+
+  function showUndoToast(item) {
+    hideUndoToast();
+    undoItem = item;
+    var toast = document.createElement('div');
+    toast.id = 'aiUndoToast';
+    toast.className = 'ai-undo-toast';
+    toast.innerHTML = '<span class="ai-undo-text">Added ' + escapeHtml(item.name) + '</span>' +
+      '<button class="ai-undo-btn" id="aiUndoBtn">Undo</button>';
+    document.getElementById('aiChatPanel').appendChild(toast);
+    document.getElementById('aiUndoBtn').addEventListener('click', function () {
+      undoLastAdd();
+    });
+    // Auto-dismiss after 4 seconds
+    undoTimer = setTimeout(hideUndoToast, 4000);
+  }
+
+  function hideUndoToast() {
+    if (undoTimer) { clearTimeout(undoTimer); undoTimer = null; }
+    var toast = document.getElementById('aiUndoToast');
+    if (toast) toast.remove();
+    undoItem = null;
+  }
+
+  function undoLastAdd() {
+    if (!undoItem) return;
+    // Find and remove the last occurrence of this item
+    for (var i = cart.length - 1; i >= 0; i--) {
+      if (cart[i].id === undoItem.id) {
+        if (cart[i].qty > 1) {
+          cart[i].qty--;
+        } else {
+          cart.splice(i, 1);
+        }
+        break;
+      }
+    }
+    saveCart();
+    updateCartUI();
+    hideUndoToast();
+  }
+
+  function addToCart(item, addBtnEl) {
     var existing = cart.find(function (c) { return c.id === item.id; });
     if (existing) {
       existing.qty++;
@@ -445,9 +499,10 @@
     }
     saveCart();
     updateCartUI();
+    showUndoToast(item);
 
     // Flash the add button
-    var btn = event.target.closest('.ai-menu-card-add');
+    var btn = addBtnEl || null;
     if (btn) {
       btn.textContent = '\u2713';
       btn.classList.add('added');
@@ -523,7 +578,7 @@
           // Now add confirmation messages into the freed-up space
           addBotMessage('Order ' + orderId + ' placed! ' + String.fromCodePoint(0x1F389) + ' ' +
             itemCount + ' item' + (itemCount > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
-            '. Your order is on its way — konjo choice!');
+            '. Your order is on its way — great choice!');
           messages.push({ type: 'cart-summary', content: savedCart });
           appendCartSummaryDOM(savedCart, true);
           // Scroll after layout reflows (cart bar is now hidden)
@@ -563,6 +618,32 @@
     if (countEl) countEl.textContent = totalItems + ' item' + (totalItems !== 1 ? 's' : '');
     var totalEl = document.getElementById('aiCartBarTotal');
     if (totalEl) totalEl.textContent = 'ETB ' + totalPrice;
+
+    // Render item chips with remove buttons in the cart bar
+    var itemsEl = document.getElementById('aiCartBarItems');
+    if (itemsEl) {
+      if (cart.length === 0) {
+        itemsEl.innerHTML = '';
+        itemsEl.style.display = 'none';
+      } else {
+        itemsEl.style.display = '';
+        var html = '';
+        cart.forEach(function (item, idx) {
+          html += '<div class="ai-cart-chip">' +
+            '<span class="ai-cart-chip-name">' + escapeHtml(item.name) + (item.qty > 1 ? ' x' + item.qty : '') + '</span>' +
+            '<button class="ai-cart-chip-remove" data-idx="' + idx + '" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>' +
+          '</div>';
+        });
+        itemsEl.innerHTML = html;
+        // Attach remove events
+        itemsEl.querySelectorAll('.ai-cart-chip-remove').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var idx = parseInt(this.getAttribute('data-idx'), 10);
+            removeFromCart(idx);
+          });
+        });
+      }
+    }
   }
 
   // ---------- API ----------
