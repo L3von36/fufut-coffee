@@ -43,14 +43,13 @@
     backdrop.addEventListener('click', toggle);
     document.body.appendChild(backdrop);
 
-    // Bubble (with cart badge)
+    // Bubble (brand logo face + cart badge)
     var bubble = document.createElement('button');
     bubble.id = 'aiChatBubble';
     bubble.setAttribute('aria-label', 'Open AI assistant');
     bubble.setAttribute('aria-expanded', 'false');
     bubble.innerHTML =
-      '<svg class="ai-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
-      '<svg class="ai-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+      '<img src="images/logo-fab.png" alt="" aria-hidden="true" draggable="false" />' +
       '<span class="ai-cart-badge" id="aiCartBadge" style="display:none">0</span>' +
       '<span class="ai-unread-badge" id="aiUnreadBadge" style="display:none"></span>';
     bubble.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });

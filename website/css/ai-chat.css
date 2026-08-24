@@ -21,7 +21,7 @@
   visibility: visible;
 }
 
-/* ---------- Chat Bubble (FAB) ---------- */
+/* ---------- Chat Bubble (FAB) — brand logo face ---------- */
 #aiChatBubble {
   position: fixed;
   bottom: 28px;
@@ -30,30 +30,39 @@
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #0F7B78 0%, #0C5F5B 100%);
+  background: transparent;
   color: #fff;
   border: none;
+  padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
     0 4px 16px rgba(15, 123, 120, 0.30),
-    0 1px 3px rgba(15, 123, 120, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 1px 3px rgba(15, 123, 120, 0.15);
   transition:
     transform 0.28s cubic-bezier(.34, 1.56, .64, 1),
     box-shadow 0.3s ease,
-    opacity 0.3s;
+    opacity 0.3s,
+    visibility 0.3s;
   will-change: transform;
   outline: none;
+}
+#aiChatBubble img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  user-select: none;
 }
 #aiChatBubble:hover {
   transform: scale(1.1);
   box-shadow:
     0 8px 32px rgba(15, 123, 120, 0.40),
-    0 2px 8px rgba(15, 123, 120, 0.20),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    0 2px 8px rgba(15, 123, 120, 0.20);
 }
 #aiChatBubble:active {
   transform: scale(0.95);
@@ -62,23 +71,12 @@
   outline: 2px solid #D6B36A;
   outline-offset: 4px;
 }
-#aiChatBubble svg {
-  width: 26px;
-  height: 26px;
-  position: absolute;
-  transition: transform 0.3s cubic-bezier(.34, 1.56, .64, 1), opacity 0.2s;
-}
-#aiChatBubble.active .ai-icon-chat {
-  transform: rotate(90deg) scale(0);
+/* FAB fades out while the panel is open — the panel's own close
+   button, backdrop click, and Escape key all dismiss the chat. */
+#aiChatBubble.active {
   opacity: 0;
-}
-#aiChatBubble.active .ai-icon-close {
-  transform: rotate(0deg) scale(1);
-  opacity: 1;
-}
-#aiChatBubble:not(.active) .ai-icon-close {
-  transform: rotate(-90deg) scale(0);
-  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 /* Cart badge on bubble */
@@ -1309,24 +1307,13 @@
     display: flex;
   }
 
-  /* Hide the FAB when panel is open on mobile — prevents overlap */
+  /* FAB slightly smaller on mobile (hide-when-open is global now) */
   #aiChatBubble {
     bottom: 20px;
     right: 20px;
     width: 56px;
     height: 56px;
-    transition:
-      transform 0.28s cubic-bezier(.34, 1.56, .64, 1),
-      box-shadow 0.3s ease,
-      opacity 0.3s,
-      visibility 0.3s;
   }
-  #aiChatBubble.active {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-  #aiChatBubble svg { width: 24px; height: 24px; }
 
   /* Close button bigger on mobile for easy thumb tap */
   .ai-chat-close-btn {
@@ -1383,7 +1370,7 @@
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  #aiChatBubble, #aiChatBubble svg,
+  #aiChatBubble, #aiChatBubble img,
   #aiChatBubble::after,
   #aiChatPanel, #aiChatBackdrop,
   .ai-msg, .ai-typing span,
