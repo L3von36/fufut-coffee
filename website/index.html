@@ -939,6 +939,7 @@
                                 if (lblEl && m.labelKey) lblEl.setAttribute('data-i18n', m.labelKey);
                             }
                         });
+                        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
                     })
                     .catch(function() { /* fallback to CMS */ });
 
@@ -1480,7 +1481,8 @@
 
                 // Stats counter
                 gsap.utils.toArray('.stat-value').forEach(function(el) {
-                    var target = parseInt(el.dataset.target);
+                    var target = parseInt(el.dataset.target, 10);
+                    if (!el || Number.isNaN(target)) return;
                     ScrollTrigger.create({
                         trigger: el, start: 'top 88%', once: true,
                         onEnter: function() {
