@@ -939,7 +939,7 @@
                                 if (lblEl && m.labelKey) lblEl.setAttribute('data-i18n', m.labelKey);
                             }
                         });
-                        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+                        if (typeof animateStatCounters === 'function') animateStatCounters();
                     })
                     .catch(function() { /* fallback to CMS */ });
 
@@ -1479,20 +1479,17 @@
                     start: 'top 85%', once: true
                 });
 
-                // Stats counter
-                gsap.utils.toArray('.stat-value').forEach(function(el) {
-                    var target = parseInt(el.dataset.target, 10);
-                    if (!el || Number.isNaN(target)) return;
-                    ScrollTrigger.create({
-                        trigger: el, start: 'top 88%', once: true,
-                        onEnter: function() {
-                            gsap.from({ val: 0 }, {
-                                val: target, duration: 1.5, ease: 'expo.out',
-                                onUpdate: function() { el.textContent = Math.round(this.targets()[0].val).toLocaleString() + (target > 100 ? '+' : ''); }
-                            });
-                        }
+                // Stats counter animation
+                function animateStatCounters() {
+                    gsap.utils.toArray('.stat-value').forEach(function(el) {
+                        var target = parseInt(el.dataset.target, 10);
+                        if (!el || Number.isNaN(target)) return;
+                        gsap.from({ val: 0 }, {
+                            val: target, duration: 1.5, ease: 'expo.out',
+                            onUpdate: function() { el.textContent = Math.round(this.targets()[0].val).toLocaleString() + (target > 100 ? '+' : ''); }
+                        });
                     });
-                });
+                }
 
                 // Testimonial infinite scroll
                 var track = document.getElementById('testTrack');
