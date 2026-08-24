@@ -299,28 +299,42 @@ export async function onRequest(context) {
   // Fall through to proxy for non-CMS endpoints
   const target = WORKER_BASE + pathname + url.search;
 
-  const req = new Request(target, {
-    method: request.method,
-    headers: request.headers,
-    body: ['GET', 'HEAD'].includes(request.method)
-      ? undefined
-      : request.body,
-    redirect: 'follow',
-  });
-
   try {
-    const response = await fetch(req);
-    const headers = new Headers(response.headers);
-    headers.delete('access-control-allow-origin');
-    headers.delete('access-control-allow-credentials');
-    headers.delete('access-control-allow-methods');
-    headers.delete('access-control-allow-headers');
+    // Buffer the body before re-issuing the request. Building a Request with
+    // the original stream body requires workerd's duplex:'half' — without it
+    // the constructor throws and the page gets a bare 500 (GETs worked, every
+    // POST "order" failed). Buffering also lets fetch recompute
+    // Content-Length, so the stale forwarded header cannot mismatch.
+    const hasBody = !['GET', 'HEAD'].includes(request.method);
+    const body = hasBody ? await request.arrayBuffer() : undefined;
+
+    const headers = new Headers(request.headers);
+    // Hop-by-hop / recomputed headers must not cross the hop.
+    headers.delete('host');
+    headers.delete('content-length');
+    headers.delete('content-encoding');
+    headers.delete('transfer-encoding');
+    headers.delete('connection');
+
+    const response = await fetch(target, {
+      method: request.method,
+      headers,
+      body,
+      redirect: 'follow',
+    });
+
+    const respHeaders = new Headers(response.headers);
+    respHeaders.delete('access-control-allow-origin');
+    respHeaders.delete('access-control-allow-credentials');
+    respHeaders.delete('access-control-allow-methods');
+    respHeaders.delete('access-control-allow-headers');
     return new Response(response.body, {
       status: response.status,
       statusText: response.statusText,
-      headers,
+      headers: respHeaders,
     });
   } catch (err) {
+    console.error('[API PROXY ERROR]', pathname, err && (err.stack || err.message || err));
     return json({ ok: false, error: 'API unavailable' }, 502);
   }
 }

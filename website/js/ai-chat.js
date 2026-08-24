@@ -774,28 +774,30 @@
       body: JSON.stringify(body),
     })
       .then(function (r) {
-        if (!r.ok) throw new Error('Server error ' + r.status);
-        return r.json();
+        // Read the body even on failure so the server's real message surfaces
+        // instead of a bare "Server error 500".
+        return r.json().catch(function () { return null; }).then(function (data) {
+          if (!r.ok || !data || data.ok === false) {
+            throw new Error((data && data.error) || 'Server error ' + r.status);
+          }
+          return data;
+        });
       })
       .then(function (data) {
         hideTyping();
-        if (data.ok) {
-          var orderId = data.id || 'placed';
-          // Clear cart and update UI FIRST (hides cart bar, frees space)
-          cart = [];
-          saveCart();
-          updateCartUI();
-          // Now add confirmation messages into the freed-up space
-          addBotMessage('Order ' + orderId + ' placed! ' + String.fromCodePoint(0x1F389) + ' ' +
-            totalUnits + ' item' + (totalUnits > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
-            '. Your order is on its way — great choice!');
-          messages.push({ type: 'cart-summary', uids: orderUids, readonly: true, snapshot: receiptSnapshot, time: formatTime(new Date()) });
-          appendCartSummaryDOM(orderUids, true, true, null, receiptSnapshot);
-          // Scroll after layout reflows (cart bar is now hidden)
-          setTimeout(function () { scrollBottom(); }, 50);
-        } else {
-          showError(data.error || 'Could not place order. Please try again or order at the counter.');
-        }
+        var orderId = data.id || 'placed';
+        // Clear cart and update UI FIRST (hides cart bar, frees space)
+        cart = [];
+        saveCart();
+        updateCartUI();
+        // Now add confirmation messages into the freed-up space
+        addBotMessage('Order ' + orderId + ' placed! ' + String.fromCodePoint(0x1F389) + ' ' +
+          totalUnits + ' item' + (totalUnits > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
+          '. Your order is on its way — great choice!');
+        messages.push({ type: 'cart-summary', uids: orderUids, readonly: true, snapshot: receiptSnapshot, time: formatTime(new Date()) });
+        appendCartSummaryDOM(orderUids, true, true, null, receiptSnapshot);
+        // Scroll after layout reflows (cart bar is now hidden)
+        setTimeout(function () { scrollBottom(); }, 50);
       })
       .catch(function (err) {
         hideTyping();
