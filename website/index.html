@@ -917,6 +917,31 @@
                     });
                 }
 
+                // === LIVE STATS (real-time from orders) ===
+                fetch(base + '/api/stats', { cache: 'no-store' })
+                    .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+                    .then(function(s) {
+                        if (!s || !s.ok) return;
+                        var statEls = document.querySelectorAll('.stats .stat');
+                        var map = [
+                            { key: 'happyCustomers', labelKey: 'stat.happyCustomers' },
+                            { key: 'yearsServing', labelKey: 'stat.yearsServing' },
+                            { key: 'cupsServed', labelKey: 'stat.cupsServed' },
+                            { key: 'awards', labelKey: 'stat.awards' }
+                        ];
+                        map.forEach(function(m, i) {
+                            if (!statEls[i]) return;
+                            var valEl = statEls[i].querySelector('.stat-value');
+                            var lblEl = statEls[i].querySelector('.stat-label');
+                            var v = s[m.key];
+                            if (typeof v === 'number') {
+                                if (valEl) valEl.setAttribute('data-target', String(v));
+                                if (lblEl && m.labelKey) lblEl.setAttribute('data-i18n', m.labelKey);
+                            }
+                        });
+                    })
+                    .catch(function() { /* fallback to CMS */ });
+
                 // === CEREMONY ===
                 if (c.ceremony) {
                     if (c.ceremony.eyebrow) setI18n('ceremony.eyebrow', c.ceremony.eyebrow);
