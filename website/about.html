@@ -9,17 +9,21 @@
     <link rel="canonical" href="https://futfutcoffee.com/about.html">
     <meta name="theme-color" content="#0F7B78">
 
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
     <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
-    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png?v=2" sizes="16x16">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png?v=2" sizes="32x32">
+    <link rel="icon" type="image/png" href="/favicon-64x64.png?v=2" sizes="64x64">
+    <link rel="icon" type="image/png" href="/icon-192.png?v=2" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" sizes="180x180">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="About — Fu Fut Coffee">
     <meta property="og:description" content="Ethiopian coffee heritage meets modern café culture in the heart of Kazanchis, Addis Ababa.">
-    <meta property="og:image" content="assets/logo.webp">
+    <meta property="og:image" content="assets/logo-og.png">
     <meta property="og:url" content="https://futfutcoffee.com/about.html">
 
     <!-- Fonts -->
@@ -433,7 +437,7 @@
             transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
         .nav-logo { color: #fff !important; }
-        .nav-logo img { filter: brightness(0) invert(1); }
+        /* Full-color badge logo — no invert filter (it would white-out the badge) */
         .nav-links a { color: rgba(255,255,255,0.85) !important; }
         .nav-links a:hover { color: var(--gold-300) !important; }
         .nav-about-link { color: var(--gold-300) !important; font-weight: 700; }
@@ -541,14 +545,14 @@
     <!-- NAVBAR (identical structure to index.html) -->
     <nav class="nav" id="nav">
         <a href="index.html" class="nav-logo">
-            <img src="assets/logo.webp" alt="Fu Fut Coffee">
+            <img src="assets/logo.png" alt="Fu Fut Coffee">
             Fu Fut Coffee
         </a>
 
         <div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Navigation Menu">
             <div class="nav-drawer-header">
                 <a href="index.html" class="nav-drawer-logo">
-                    <img src="assets/logo.webp" alt="Fu Fut Coffee">
+                    <img src="assets/logo.png" alt="Fu Fut Coffee">
                     <span class="nav-drawer-logo-text">
                         <span class="nav-drawer-logo-brand">FU FUT</span>
                         <span class="nav-drawer-logo-sub">COFFEE</span>
@@ -723,7 +727,7 @@
         <div class="content">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <img src="assets/logo.webp" alt="Fu Fut Coffee Logo" class="footer-logo-img">
+                    <img src="assets/logo.png" alt="Fu Fut Coffee Logo" class="footer-logo-img">
                     <div class="footer-brand-name">Fu Fut Coffee</div>
                     <span class="footer-am">ፉ ፉት ኮፊ</span>
                     <p>Ethiopian coffee heritage meets modern café culture. Serving single-origin excellence and traditional flavors since 2016.</p>
