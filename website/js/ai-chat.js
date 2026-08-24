@@ -31,7 +31,7 @@
   var SUGGESTIONS = [
     '\u2615 What coffees do you have?',
     '\uD83C\uDF3F Coffee ceremony',
-    '\uD83C\uDF7D \uD83D\uDEB2 View menu & order',
+    '\uD83C\uDF7D View menu & order',
     '\uD83D\uDCCD Your location',
   ];
 
@@ -47,6 +47,7 @@
     var bubble = document.createElement('button');
     bubble.id = 'aiChatBubble';
     bubble.setAttribute('aria-label', 'Open AI assistant');
+    bubble.setAttribute('aria-expanded', 'false');
     bubble.innerHTML =
       '<svg class="ai-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>' +
       '<svg class="ai-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
@@ -205,7 +206,10 @@
     if (!isOpen) return;
     var panel = document.getElementById('aiChatPanel');
     if (!panel || e.key !== 'Tab') return;
-    var focusables = panel.querySelectorAll('button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    var focusables = Array.prototype.filter.call(
+      panel.querySelectorAll('button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+      function (el) { return el.offsetParent !== null; }
+    );
     if (!focusables.length) return;
     var first = focusables[0];
     var last = focusables[focusables.length - 1];
@@ -299,9 +303,9 @@
     container.innerHTML = '';
     messages.forEach(function (msg) {
       if (msg.type === 'cart-summary') {
-        appendCartSummaryDOM(msg.content, false);
+        appendCartSummaryDOM(msg.uids, msg.readonly, false, msg.time, msg.snapshot);
       } else {
-        appendMessageDOM(msg.role, msg.content, false);
+        appendMessageDOM(msg.role, msg.content, false, msg.time);
       }
     });
     if (messages.length) scrollBottom();
@@ -327,7 +331,7 @@
     });
   }
 
-  function appendMessageDOM(role, content, animate) {
+  function appendMessageDOM(role, content, animate, timeStr) {
     var container = document.getElementById('aiChatMessages');
     var div = document.createElement('div');
     div.className = 'ai-msg ai-msg--' + (role === 'user' ? 'user' : 'bot');
@@ -336,9 +340,9 @@
     var bubble = document.createElement('div');
     var time = document.createElement('div');
     time.className = 'ai-msg-time';
-    time.textContent = formatTime(new Date());
+    time.textContent = timeStr || formatTime(new Date());
 
-    if (role === 'bot') {
+    if (role !== 'user') {
       var copy = document.createElement('div');
       copy.className = 'ai-msg-copy';
       bubble.className = 'ai-msg-bubble';
@@ -357,7 +361,72 @@
     container.appendChild(div);
   }
 
-  function appendCartSummaryDOM(cartItems, animate) {
+  function renderCartSummaryInto(bubble, uids, readonly, snapshot) {
+    var rows = [];
+    var total = 0;
+    (uids || []).forEach(function (uid) {
+      var item = null;
+      if (snapshot) {
+        for (var s = 0; s < snapshot.length; s++) {
+          if (snapshot[s].uid === uid) { item = snapshot[s]; break; }
+        }
+      } else {
+        for (var i = 0; i < cart.length; i++) {
+          if (cart[i].uid === uid) { item = cart[i]; break; }
+        }
+      }
+      if (!item) return;
+      var subtotal = item.price * item.qty;
+      total += subtotal;
+      rows.push(
+        '<div class="ai-cart-summary-item">' +
+          '<div class="ai-cart-item-left">' +
+            '<span class="ai-cart-item-name">' + escapeHtml(item.name) + ' <small>x' + item.qty + '</small></span>' +
+            '<span class="ai-cart-item-price">ETB ' + subtotal + '</span>' +
+          '</div>' +
+          (readonly ? '' : '<button class="ai-cart-item-remove" data-uid="' + uid + '" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>') +
+        '</div>'
+      );
+    });
+
+    if (!rows.length) {
+      // Empty live-cart summary: drop the message entirely (receipts keep their snapshot)
+      var msgEl = bubble.closest('.ai-msg');
+      if (msgEl && !readonly) {
+        var idx = -1;
+        if (bubble._uids && bubble._uids.length) {
+          idx = messages.findIndex(function (m) { return m.type === 'cart-summary' && m.uids && m.uids[0] === bubble._uids[0]; });
+        }
+        if (idx > -1) messages.splice(idx, 1);
+        msgEl.remove();
+      }
+      return;
+    }
+
+    bubble._uids = uids;
+    bubble._readonly = readonly;
+    bubble._snapshot = snapshot || null;
+    bubble.innerHTML =
+      '<div class="ai-cart-summary-title">' + (readonly ? '\uD83E\uDDED Order Summary' : '\uD83D\uDCE6 Your Cart') + '</div>' +
+      rows.join('') +
+      '<div class="ai-cart-summary-total"><span>Total</span><span>ETB ' + total + '</span></div>';
+
+    if (!readonly) {
+      bubble.querySelectorAll('.ai-cart-item-remove').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          removeFromCart(this.getAttribute('data-uid'));
+        });
+      });
+    }
+  }
+
+  function refreshCartSummaries() {
+    document.querySelectorAll('.ai-cart-summary').forEach(function (bubble) {
+      renderCartSummaryInto(bubble, bubble._uids || [], bubble._readonly, bubble._snapshot);
+    });
+  }
+
+  function appendCartSummaryDOM(uids, readonly, animate, timeStr, snapshot) {
     var container = document.getElementById('aiChatMessages');
     var div = document.createElement('div');
     div.className = 'ai-msg ai-msg--bot';
@@ -365,25 +434,11 @@
 
     var bubble = document.createElement('div');
     bubble.className = 'ai-msg-bubble ai-cart-summary';
-    var total = 0;
-    var html = '<div class="ai-cart-summary-title">\uD83D\uDCE6 Your Cart</div>';
-    cartItems.forEach(function (item, idx) {
-      var subtotal = item.price * item.qty;
-      total += subtotal;
-      html += '<div class="ai-cart-summary-item">' +
-        '<div class="ai-cart-item-left">' +
-          '<span class="ai-cart-item-name">' + escapeHtml(item.name) + ' <small>x' + item.qty + '</small></span>' +
-          '<span class="ai-cart-item-price">ETB ' + subtotal + '</span>' +
-        '</div>' +
-        '<button class="ai-cart-item-remove" data-idx="' + idx + '" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>' +
-      '</div>';
-    });
-    html += '<div class="ai-cart-summary-total"><span>Total</span><span>ETB ' + total + '</span></div>';
-    bubble.innerHTML = html;
+    renderCartSummaryInto(bubble, uids, readonly, snapshot);
 
     var time = document.createElement('div');
     time.className = 'ai-msg-time';
-    time.textContent = formatTime(new Date());
+    time.textContent = timeStr || formatTime(new Date());
 
     var copy = document.createElement('div');
     copy.className = 'ai-msg-copy';
@@ -392,14 +447,6 @@
     div.innerHTML = botAvatarHTML();
     div.appendChild(copy);
     container.appendChild(div);
-
-    // Attach remove buttons
-    bubble.querySelectorAll('.ai-cart-item-remove').forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        var idx = parseInt(this.getAttribute('data-idx'), 10);
-        removeFromCart(idx);
-      });
-    });
   }
 
   function showTyping() {
@@ -453,13 +500,13 @@
   }
 
   function addUserMessage(text) {
-    messages.push({ role: 'user', content: text });
+    messages.push({ role: 'user', content: text, time: formatTime(new Date()) });
     appendMessageDOM('user', text, true);
     scrollBottom();
   }
 
   function addBotMessage(text) {
-    messages.push({ role: 'assistant', content: text });
+    messages.push({ role: 'assistant', content: text, time: formatTime(new Date()) });
     appendMessageDOM('assistant', text, true);
     if (!isOpen) {
       unreadCount++;
@@ -481,7 +528,8 @@
 
     // Show loading skeleton
     var scroll = document.getElementById('aiMenuScroll');
-    scroll.innerHTML = Array(4).join('<div class="ai-menu-card-skeleton"><div class="ai-menu-card-skeleton-img"></div><div class="ai-menu-card-skeleton-text"></div><div class="ai-menu-card-skeleton-text short"></div></div>');
+    var skeleton = '<div class="ai-menu-card-skeleton"><div class="ai-menu-card-skeleton-img"></div><div class="ai-menu-card-skeleton-text"></div><div class="ai-menu-card-skeleton-text short"></div></div>';
+    scroll.innerHTML = skeleton + skeleton + skeleton + skeleton;
 
     fetch(MENU_API)
       .then(function (r) { return r.json(); })
@@ -555,9 +603,10 @@
 
       var info = document.createElement('div');
       info.className = 'ai-menu-card-info';
+      var desc = item.description ? (item.description.length > 60 ? item.description.slice(0, 60) + '\u2026' : item.description) : '';
       info.innerHTML =
         '<div class="ai-menu-card-name">' + escapeHtml(item.name) + '</div>' +
-        (item.description ? '<div class="ai-menu-card-desc">' + escapeHtml(item.description).slice(0, 50) + '</div>' : '') +
+        (desc ? '<div class="ai-menu-card-desc">' + escapeHtml(desc) + '</div>' : '') +
         '<div class="ai-menu-card-bottom">' +
           '<span class="ai-menu-card-price">ETB ' + item.price + '</span>' +
           '<button class="ai-menu-card-add" aria-label="Add ' + escapeHtml(item.name) + ' to cart">+</button>' +
@@ -578,14 +627,16 @@
   }
 
   // ---------- Cart ----------
-  function removeFromCart(idx) {
-    if (idx >= 0 && idx < cart.length) {
-      var removed = cart.splice(idx, 1)[0];
+  function removeFromCart(uid) {
+    var idx = -1;
+    for (var i = 0; i < cart.length; i++) {
+      if (cart[i].uid === uid) { idx = i; break; }
+    }
+    if (idx > -1) {
+      cart.splice(idx, 1);
       saveCart();
       updateCartUI();
-      // Remove stale cart summary DOM and messages, then re-render
-      messages = messages.filter(function (m) { return m.type !== 'cart-summary'; });
-      renderMessages();
+      refreshCartSummaries();
       scrollBottom();
     }
   }
@@ -594,6 +645,7 @@
     cart = [];
     saveCart();
     updateCartUI();
+    refreshCartSummaries();
   }
 
   // Undo timer for last added item
@@ -608,6 +660,10 @@
     toast.className = 'ai-undo-toast';
     toast.innerHTML = '<span class="ai-undo-text">Added ' + escapeHtml(item.name) + '</span>' +
       '<button class="ai-undo-btn" id="aiUndoBtn">Undo</button>';
+    // Sit above the cart bar when it is visible so nothing gets covered
+    var bar = document.getElementById('aiCartBar');
+    var barH = bar && bar.style.display !== 'none' ? bar.offsetHeight : 0;
+    toast.style.bottom = (80 + barH) + 'px';
     document.getElementById('aiChatPanel').appendChild(toast);
     document.getElementById('aiUndoBtn').addEventListener('click', function () {
       undoLastAdd();
@@ -638,6 +694,7 @@
     }
     saveCart();
     updateCartUI();
+    refreshCartSummaries();
     hideUndoToast();
   }
 
@@ -646,10 +703,11 @@
     if (existing) {
       existing.qty++;
     } else {
-      cart.push({ id: item.id, name: item.name, price: item.price, image: item.image || '', qty: 1 });
+      cart.push({ uid: item.id + '-' + Date.now(), id: item.id, name: item.name, price: item.price, image: item.image || '', qty: 1 });
     }
     saveCart();
     updateCartUI();
+    refreshCartSummaries();
     showUndoToast(item);
 
     // Flash the add button
@@ -666,8 +724,9 @@
       showError('Your cart is empty. Browse the menu above to add items!');
       return;
     }
-    messages.push({ type: 'cart-summary', content: cart.slice() });
-    appendCartSummaryDOM(cart, true);
+    var uids = cart.map(function (c) { return c.uid; });
+    messages.push({ type: 'cart-summary', uids: uids, readonly: false, time: formatTime(new Date()) });
+    appendCartSummaryDOM(uids, false, true);
     scrollBottom();
   }
 
@@ -679,8 +738,11 @@
 
     // Calculate total before clearing
     var total = cart.reduce(function (s, c) { return s + c.price * c.qty; }, 0);
-    var itemCount = cart.length;
+    var totalUnits = cart.reduce(function (s, c) { return s + c.qty; }, 0);
     var itemNames = cart.map(function (c) { return c.name; }).join(', ');
+    var orderUids = cart.map(function (c) { return c.uid; });
+    // Snapshot for the immutable receipt (cart is cleared after ordering)
+    var receiptSnapshot = cart.map(function (c) { return { uid: c.uid, name: c.name, price: c.price, qty: c.qty }; });
 
     // Build items array with name and price — the backend needs these
     var orderItems = cart.map(function (c) {
@@ -720,18 +782,16 @@
         hideTyping();
         if (data.ok) {
           var orderId = data.id || 'placed';
-          // Save cart before clearing
-          var savedCart = cart.slice();
           // Clear cart and update UI FIRST (hides cart bar, frees space)
           cart = [];
           saveCart();
           updateCartUI();
           // Now add confirmation messages into the freed-up space
           addBotMessage('Order ' + orderId + ' placed! ' + String.fromCodePoint(0x1F389) + ' ' +
-            itemCount + ' item' + (itemCount > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
+            totalUnits + ' item' + (totalUnits > 1 ? 's' : '') + ' (' + itemNames + ') totaling ETB ' + total +
             '. Your order is on its way — great choice!');
-          messages.push({ type: 'cart-summary', content: savedCart });
-          appendCartSummaryDOM(savedCart, true);
+          messages.push({ type: 'cart-summary', uids: orderUids, readonly: true, snapshot: receiptSnapshot, time: formatTime(new Date()) });
+          appendCartSummaryDOM(orderUids, true, true, null, receiptSnapshot);
           // Scroll after layout reflows (cart bar is now hidden)
           setTimeout(function () { scrollBottom(); }, 50);
         } else {
@@ -745,7 +805,7 @@
       .finally(function () {
         isLoading = false;
         updateSendButton();
-        document.getElementById('aiChatInput').focus();
+        if (isOpen) document.getElementById('aiChatInput').focus();
       });
   }
 
@@ -779,18 +839,17 @@
       } else {
         itemsEl.style.display = '';
         var html = '';
-        cart.forEach(function (item, idx) {
+        cart.forEach(function (item) {
           html += '<div class="ai-cart-chip">' +
             '<span class="ai-cart-chip-name">' + escapeHtml(item.name) + (item.qty > 1 ? ' x' + item.qty : '') + '</span>' +
-            '<button class="ai-cart-chip-remove" data-idx="' + idx + '" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>' +
+            '<button class="ai-cart-chip-remove" data-uid="' + item.uid + '" aria-label="Remove ' + escapeHtml(item.name) + '">&times;</button>' +
           '</div>';
         });
         itemsEl.innerHTML = html;
         // Attach remove events
         itemsEl.querySelectorAll('.ai-cart-chip-remove').forEach(function (btn) {
           btn.addEventListener('click', function () {
-            var idx = parseInt(this.getAttribute('data-idx'), 10);
-            removeFromCart(idx);
+            removeFromCart(this.getAttribute('data-uid'));
           });
         });
       }
@@ -802,7 +861,8 @@
     isLoading = true;
     updateSendButton();
     showTyping();
-    var history = messages.filter(function (m) { return m.role; }).slice(-10);
+    // Exclude the current user message (backend appends it separately)
+    var history = messages.filter(function (m) { return m.role; }).slice(0, -1).slice(-10);
     fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -830,7 +890,7 @@
       .finally(function () {
         isLoading = false;
         updateSendButton();
-        document.getElementById('aiChatInput').focus();
+        if (isOpen) document.getElementById('aiChatInput').focus();
       });
   }
 
@@ -860,7 +920,15 @@
 
   // ---------- Cart persistence (survives refresh) ----------
   function loadCart() {
-    try { var r = localStorage.getItem(CART_KEY); return r ? JSON.parse(r) : []; }
+    try {
+      var r = localStorage.getItem(CART_KEY);
+      var c = r ? JSON.parse(r) : [];
+      // Migrate legacy items missing uid
+      c.forEach(function (item) {
+        if (!item.uid) item.uid = item.id + '-legacy-' + Math.random().toString(36).slice(2, 8);
+      });
+      return c;
+    }
     catch (e) { return []; }
   }
   function saveCart() {

@@ -537,9 +537,10 @@
 .ai-msg-time {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 10px;
-  color: #8C897F;
+  color: #6F6B61;
   padding: 0 6px;
-  opacity: 0.7;
+  opacity: 0.85;
+  white-space: nowrap;
 }
 .ai-msg--user .ai-msg-time { text-align: right; }
 
@@ -698,7 +699,7 @@
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   min-height: 0;
-  max-height: 140px;
+  max-height: 215px;
 }
 .ai-menu-scroll::-webkit-scrollbar { height: 5px; }
 .ai-menu-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -782,6 +783,7 @@
   color: #0F7B78;
 }
 .ai-menu-card-add {
+  position: relative;
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -796,6 +798,13 @@
   align-items: center;
   justify-content: center;
   transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), background 0.2s;
+}
+/* Expand tap area to >=44px without changing visual size */
+.ai-menu-card-add::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
 }
 .ai-menu-card-add:hover {
   transform: scale(1.15);
@@ -1004,6 +1013,7 @@
   flex-shrink: 0;
 }
 .ai-cart-item-remove {
+  position: relative;
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -1018,8 +1028,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  align-self: center;
   transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
+}
+.ai-cart-item-remove::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
 }
 .ai-cart-item-remove:hover {
   background: #D32F2F;
@@ -1150,6 +1167,7 @@
   text-overflow: ellipsis;
 }
 .ai-cart-chip-remove {
+  position: relative;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -1167,6 +1185,12 @@
   transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
+.ai-cart-chip-remove::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+}
 .ai-cart-chip-remove:hover {
   background: #D32F2F;
   color: #fff;
@@ -1177,6 +1201,7 @@
 
 /* ---------- Menu carousel close button ---------- */
 .ai-menu-carousel-close {
+  position: relative;
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -1192,6 +1217,12 @@
   flex-shrink: 0;
   transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
+}
+.ai-menu-carousel-close::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: 50%;
 }
 .ai-menu-carousel-close:hover {
   background: #D32F2F;
@@ -1272,10 +1303,10 @@
     transform-origin: bottom center;
   }
 
-  /* Show the close bar on mobile for easy thumb tap */
+  /* Show the close bar on mobile for easy thumb tap.
+     No safe-area padding here — the input row below owns the inset. */
   .ai-chat-bottom-bar {
     display: flex;
-    padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
   }
 
   /* Hide the FAB when panel is open on mobile — prevents overlap */
@@ -1315,9 +1346,16 @@
     max-width: calc(100vw - 60px);
   }
 
-  /* Input bar respects home-indicator inset */
+  /* Input bar respects home-indicator inset.
+     Font must be >=16px on mobile or iOS Safari zooms the viewport on focus. */
   .ai-chat-input {
     padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+  .ai-chat-input input {
+    font-size: 16px;
+  }
+  .ai-chat-input input::placeholder {
+    font-size: 15px;
   }
 
   /* Menu cards slightly smaller on mobile */
@@ -1331,10 +1369,7 @@
     max-height: none;
   }
 
-  /* Undo toast positioned higher on mobile (full screen) */
-  .ai-undo-toast {
-    bottom: 160px;
-  }
+  /* Undo toast bottom is set dynamically by JS (above the cart bar) */
   .ai-undo-btn {
     padding: 8px 18px;
     font-size: 13px;
@@ -1349,6 +1384,7 @@
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   #aiChatBubble, #aiChatBubble svg,
+  #aiChatBubble::after,
   #aiChatPanel, #aiChatBackdrop,
   .ai-msg, .ai-typing span,
   .ai-suggestion-btn, .ai-chat-send,
@@ -1357,5 +1393,9 @@
   .ai-send-spinner, .ai-chat-header-close {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+  }
+  #aiChatBubble::after {
+    animation: none !important;
+    opacity: 0 !important;
   }
 }

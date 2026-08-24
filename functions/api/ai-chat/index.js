@@ -194,8 +194,11 @@ export async function onRequestPost(context) {
     // Try AI binding first, fall back to REST API
     if (env.AI) {
       reply = await callViaBinding(env, messages);
-    } else {
+    } else if (env.CF_API_TOKEN) {
       reply = await callViaRestApi(env, messages);
+    } else {
+      // No AI binding and no REST credentials — tell the client explicitly
+      return json({ ok: false, error: 'AI_SERVICE_NOT_CONFIGURED' }, 503);
     }
 
     if (!reply) {
