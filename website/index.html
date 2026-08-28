@@ -533,7 +533,7 @@
                             <div class="form-group"><label for="time" data-i18n="res.time">Time</label><select id="time" required><option value="" data-i18n="res.selectTime">Select time</option><option>7:00 AM</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option><option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option><option>8:00 PM</option><option>9:00 PM</option></select></div>
                         </div>
                         <div class="form-row">
-                            <div class="form-group"><label for="guests" data-i18n="res.guests">Guests</label><select id="guests" required><option value="" data-i18n="res.numGuests">Number of guests</option><option>1 Person</option><option>2 People</option><option>3 People</option><option>4 People</option><option>5 People</option><option>6+ People</option></select></div>
+                            <div class="form-group"><label for="guests" data-i18n="res.guests">Guests</label><select id="guests" required><option value="" data-i18n="res.numGuests">Number of guests</option><option value="1">1 Person</option><option value="2">2 People</option><option value="3">3 People</option><option value="4">4 People</option><option value="5">5 People</option><option value="6">6+ People</option></select></div>
                             <div class="form-group"><label for="phone" data-i18n="res.phone">Phone</label><input type="tel" id="phone" autocomplete="tel" placeholder="+251 9xx xxx xxx"></div>
                         </div>
                         <div class="form-row">
@@ -1605,6 +1605,11 @@
     if (document.readyState === 'complete') { initGSAP(); } else { window.addEventListener('load', initGSAP); }
 
     // ===== RESERVATION FORM =====
+    // Guests used to submit the option's label text ("2 People"), which the
+    // API's Number() coerced into a silent 1 for every booking the site took.
+    // The options now carry values, and the date picker cannot offer yesterday.
+    var dateInput = document.getElementById('date');
+    if (dateInput && !dateInput.min) dateInput.min = new Date().toLocaleDateString('en-CA');
     document.getElementById('reservationForm').addEventListener('submit', function(e) {
         e.preventDefault();
         var btn = this.querySelector('.form-submit');
