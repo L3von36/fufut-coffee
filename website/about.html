@@ -104,10 +104,6 @@
             gap: 12px;
             margin-bottom: 24px;
         }
-        .about-hero-year-line {
-            width: 32px; height: 1px;
-            background: var(--gold-500); opacity: 0.7;
-        }
         .about-hero-year span {
             font-size: 11px; font-weight: 600; letter-spacing: 0.3em;
             text-transform: uppercase; color: var(--gold-300);
@@ -599,11 +595,9 @@
 
         <div class="about-hero-content">
             <div class="about-hero-year">
-                <div class="about-hero-year-line"></div>
                 <span>Est. 2016 · Kazanchis, Addis Ababa</span>
             </div>
             <div class="about-hero-year" style="margin-top:-16px; margin-bottom:28px;">
-                <div class="about-hero-year-line"></div>
                 <span>Founded by Henok Solomon Tefera</span>
             </div>
             <h1>The <span class="accent">Soul</span> of<br>Ethiopian Coffee</h1>
@@ -618,20 +612,20 @@
         <div class="about-inner" style="padding-left:0;padding-right:0;max-width:100%;">
             <div class="stats-grid">
                 <div class="stat-item reveal">
-                    <div class="stat-num">2016</div>
-                    <div class="stat-lbl">Year Founded</div>
+                    <div class="stat-num stat-value" data-stat="happyCustomers" data-target="30019">0</div>
+                    <div class="stat-lbl">Happy Customers Served</div>
                 </div>
                 <div class="stat-item reveal" style="transition-delay:.1s">
-                    <div class="stat-num">3</div>
+                    <div class="stat-num stat-value" data-stat="coffeeOrigins" data-target="3">0</div>
                     <div class="stat-lbl">Coffee Origins</div>
                 </div>
                 <div class="stat-item reveal" style="transition-delay:.2s">
-                    <div class="stat-num">100+</div>
-                    <div class="stat-lbl">Menu Items</div>
+                    <div class="stat-num stat-value" data-stat="cupsServed" data-target="325003">0</div>
+                    <div class="stat-lbl">Cups Served</div>
                 </div>
                 <div class="stat-item reveal" style="transition-delay:.3s">
-                    <div class="stat-num">7</div>
-                    <div class="stat-lbl">Days a Week</div>
+                    <div class="stat-num stat-value" data-stat="yearsServing" data-target="10">0</div>
+                    <div class="stat-lbl">Years Open</div>
                 </div>
             </div>
         </div>
@@ -853,6 +847,65 @@
         } else {
             reveals.forEach(function (el) { el.classList.add('in'); });
         }
+    })();
+    </script>
+    <script>
+    // ===== ABOUT STATS (same semantic pipeline as the landing page) =====
+    // Static data-target values are the offline fallback; live /api/stats
+    // wins when it lands. Counters animate on first reveal and re-run when
+    // fresher data arrives, counting from the current value.
+    (function () {
+        function fmt(el, v) {
+            var target = parseInt(el.dataset.target, 10) || 0;
+            var suffix = (el.dataset.suffix !== undefined) ? el.dataset.suffix : (target >= 1000 ? '+' : '');
+            return Math.round(v).toLocaleString() + suffix;
+        }
+        function animate() {
+            var els = document.querySelectorAll('.stats-grid .stat-value');
+            Array.prototype.forEach.call(els, function (el) {
+                var target = parseInt(el.dataset.target, 10);
+                if (Number.isNaN(target)) return;
+                var from = parseInt(String(el.textContent).replace(/[^\d]/g, ''), 10);
+                if (Number.isNaN(from)) from = 0;
+                if (from === target && el.dataset.counted === '1') return;
+                el.dataset.counted = '1';
+                if (el._statRaf) cancelAnimationFrame(el._statRaf);
+                var t0 = null, dur = 1400;
+                var step = function (ts) {
+                    if (t0 === null) t0 = ts;
+                    var p = Math.min((ts - t0) / dur, 1);
+                    el.textContent = fmt(el, from + (target - from) * (1 - Math.pow(1 - p, 4)));
+                    if (p < 1) el._statRaf = requestAnimationFrame(step);
+                };
+                el._statRaf = requestAnimationFrame(step);
+            });
+        }
+        var grid = document.querySelector('.stats-grid');
+        if (grid && 'IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
+                for (var i = 0; i < entries.length; i++) {
+                    if (entries[i].isIntersecting) { animate(); io.disconnect(); break; }
+                }
+            }, { threshold: 0.3 });
+            io.observe(grid);
+        } else {
+            window.addEventListener('load', animate);
+        }
+        /* Live values win when they arrive (same endpoint as the landing page). */
+        fetch('/api/stats', { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+            .then(function (s) {
+                if (!s || !s.ok) return;
+                Object.keys(s).forEach(function (k) {
+                    if (k === 'ok') return;
+                    var v = s[k];
+                    if (typeof v !== 'number' || !isFinite(v)) return;
+                    var slot = document.querySelector('.stats-grid .stat-value[data-stat="' + k + '"]');
+                    if (slot) slot.setAttribute('data-target', String(Math.max(0, Math.round(v))));
+                });
+                animate();
+            })
+            .catch(function () { /* static fallbacks keep the section honest */ });
     })();
     </script>
 </body>
