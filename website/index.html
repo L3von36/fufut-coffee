@@ -490,10 +490,11 @@
     <section class="stats">
         <div class="content">
             <div class="stats-grid">
-                <div class="stat"><div class="stat-value" data-target="48000">0</div><div class="stat-label" data-i18n="stat.happyCustomers">Happy Customers</div></div>
-                <div class="stat"><div class="stat-value" data-target="9">0</div><div class="stat-label" data-i18n="stat.yearsServing">Years Serving</div></div>
-                <div class="stat"><div class="stat-value" data-target="620000">0</div><div class="stat-label" data-i18n="stat.cupsServed">Cups Served</div></div>
-                <div class="stat"><div class="stat-value" data-target="14">0</div><div class="stat-label" data-i18n="stat.awards">Awards</div></div>
+                <div class="stat" data-stat="happyCustomers"><div class="stat-value" data-target="48000">0</div><div class="stat-label" data-i18n="stat.happyCustomers">Happy Customers Served</div></div>
+                <div class="stat" data-stat="coffeeOrigins"><div class="stat-value" data-target="3">0</div><div class="stat-label" data-i18n="stat.coffeeOrigins">Coffee Origins</div></div>
+                <div class="stat" data-stat="cupsServed"><div class="stat-value" data-target="620000">0</div><div class="stat-label" data-i18n="stat.cupsServed">Cups Served</div></div>
+                <div class="stat" data-stat="yearsServing"><div class="stat-value" data-target="10">0</div><div class="stat-label" data-i18n="stat.yearsServing">Years Open</div></div>
+                <div class="stat" data-stat="happyPercent"><div class="stat-value" data-target="99" data-suffix="%">0</div><div class="stat-label" data-i18n="stat.happyPercent">Happy Percent</div></div>
             </div>
         </div>
     </section>
@@ -673,6 +674,54 @@
             if (window.FuFutChat) { window.FuFutChat.open(); }
         });
     });
+    </script>
+    <script>
+    // ===== STATS COUNTERS (global, semantic, dependency-free) =====
+    // Every stat slot carries a data-stat key and every value source (static
+    // HTML fallback, CMS content, /api/stats) writes into the slot whose key
+    // matches — never by position, so a new metric can never land under the
+    // wrong label again. The animator used to live inside initGSAP(), where
+    // the data path couldn't see it: counters sat at 0 forever. It is now a
+    // global that runs on first reveal (IntersectionObserver) and again when
+    // fresher data arrives, counting from the current value — GSAP optional.
+    (function () {
+        function fmt(el, v) {
+            var target = parseInt(el.dataset.target, 10) || 0;
+            var suffix = (el.dataset.suffix !== undefined) ? el.dataset.suffix : (target >= 1000 ? '+' : '');
+            return Math.round(v).toLocaleString() + suffix;
+        }
+        window.animateStatCounters = function () {
+            var els = document.querySelectorAll('.stat-value');
+            Array.prototype.forEach.call(els, function (el) {
+                var target = parseInt(el.dataset.target, 10);
+                if (Number.isNaN(target)) return;
+                var from = parseInt(String(el.textContent).replace(/[^\d]/g, ''), 10);
+                if (Number.isNaN(from)) from = 0;
+                if (from === target && el.dataset.counted === '1') return;
+                el.dataset.counted = '1';
+                if (el._statRaf) cancelAnimationFrame(el._statRaf);
+                var t0 = null, dur = 1400;
+                var step = function (ts) {
+                    if (t0 === null) t0 = ts;
+                    var p = Math.min((ts - t0) / dur, 1);
+                    el.textContent = fmt(el, from + (target - from) * (1 - Math.pow(1 - p, 4)));
+                    if (p < 1) el._statRaf = requestAnimationFrame(step);
+                };
+                el._statRaf = requestAnimationFrame(step);
+            });
+        };
+        var statsSection = document.querySelector('.stats');
+        if (statsSection && 'IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
+                for (var i = 0; i < entries.length; i++) {
+                    if (entries[i].isIntersecting) { window.animateStatCounters(); io.disconnect(); break; }
+                }
+            }, { threshold: 0.3 });
+            io.observe(statsSection);
+        } else {
+            window.addEventListener('load', function () { window.animateStatCounters(); });
+        }
+    })();
     </script>
     <script>
     // ===== CMS CONTENT LOADER =====
@@ -905,43 +954,47 @@
                     if (c.menu.title) setI18n('menu.title', c.menu.title);
                 }
 
-                // === STATS ===
+                // === STATS (fallback layer; live /api/stats wins) ===
+                // CMS entries carry either a key or one of the venue's
+                // long-standing labels; each value lands in the slot whose
+                // data-stat matches, never by position. Labels stay canonical
+                // in the HTML/i18n so the CMS cannot rename a metric the API
+                // counts. A zero or absent value never blanks a slot.
                 if (Array.isArray(c.stats)) {
-                    var statEls = document.querySelectorAll('.stats .stat');
-                    c.stats.forEach(function(stat, i) {
-                        if (!statEls[i]) return;
-                        var valEl = statEls[i].querySelector('.stat-value');
-                        var lblEl = statEls[i].querySelector('.stat-label');
-                        if (valEl) valEl.setAttribute('data-target', String(stat.value || 0));
-                        if (lblEl) lblEl.textContent = stat.label || '';
+                    var LABEL_KEYS = {
+                        'happy customers': 'happyCustomers', 'happy customers served': 'happyCustomers',
+                        'coffee origins': 'coffeeOrigins', 'cups served': 'cupsServed',
+                        'years open': 'yearsServing', 'years serving': 'yearsServing',
+                        'happy percent': 'happyPercent', 'awards': 'awards'
+                    };
+                    var allSlots = document.querySelectorAll('.stats .stat');
+                    c.stats.forEach(function (stat, i) {
+                        var key = stat.key || LABEL_KEYS[String(stat.label || '').trim().toLowerCase()];
+                        var slot = key ? document.querySelector('.stats .stat[data-stat="' + key + '"]') : allSlots[i];
+                        if (!slot) return;
+                        var valEl = slot.querySelector('.stat-value');
+                        if (valEl && typeof stat.value === 'number' && stat.value > 0) {
+                            valEl.setAttribute('data-target', String(stat.value));
+                        }
                     });
                 }
 
-                // === LIVE STATS (real-time from orders) ===
+                // === LIVE STATS (real-time from orders, matched by key) ===
                 fetch(base + '/api/stats', { cache: 'no-store' })
                     .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
                     .then(function(s) {
                         if (!s || !s.ok) return;
-                        var statEls = document.querySelectorAll('.stats .stat');
-                        var map = [
-                            { key: 'happyCustomers', labelKey: 'stat.happyCustomers' },
-                            { key: 'yearsServing', labelKey: 'stat.yearsServing' },
-                            { key: 'cupsServed', labelKey: 'stat.cupsServed' },
-                            { key: 'awards', labelKey: 'stat.awards' }
-                        ];
-                        map.forEach(function(m, i) {
-                            if (!statEls[i]) return;
-                            var valEl = statEls[i].querySelector('.stat-value');
-                            var lblEl = statEls[i].querySelector('.stat-label');
-                            var v = s[m.key];
-                            if (typeof v === 'number') {
-                                if (valEl) valEl.setAttribute('data-target', String(v));
-                                if (lblEl && m.labelKey) lblEl.setAttribute('data-i18n', m.labelKey);
-                            }
+                        Object.keys(s).forEach(function(k) {
+                            if (k === 'ok') return;
+                            var v = s[k];
+                            if (typeof v !== 'number' || !isFinite(v)) return;
+                            var slot = document.querySelector('.stat[data-stat="' + k + '"]');
+                            var valEl = slot && slot.querySelector('.stat-value');
+                            if (valEl) valEl.setAttribute('data-target', String(Math.max(0, Math.round(v))));
                         });
                         if (typeof animateStatCounters === 'function') animateStatCounters();
                     })
-                    .catch(function() { /* fallback to CMS */ });
+                    .catch(function() { /* fallbacks keep the section honest */ });
 
                 // === CEREMONY ===
                 if (c.ceremony) {
@@ -1479,17 +1532,11 @@
                     start: 'top 85%', once: true
                 });
 
-                // Stats counter animation
-                function animateStatCounters() {
-                    gsap.utils.toArray('.stat-value').forEach(function(el) {
-                        var target = parseInt(el.dataset.target, 10);
-                        if (!el || Number.isNaN(target)) return;
-                        gsap.from({ val: 0 }, {
-                            val: target, duration: 1.5, ease: 'expo.out',
-                            onUpdate: function() { el.textContent = Math.round(this.targets()[0].val).toLocaleString() + (target > 100 ? '+' : ''); }
-                        });
-                    });
-                }
+                // Stats counter animation lives in the global
+                // window.animateStatCounters (script block above the CMS
+                // loader): triggered on first reveal of the section and on
+                // live-data arrival. This block only did parallax/reveal
+                // choreography and could never be reached from the data path.
 
                 // Testimonial infinite scroll
                 var track = document.getElementById('testTrack');
@@ -2561,14 +2608,18 @@
             if (sFeat[2] && c.feat3) sFeat[2].textContent = c.feat3;
             if (sFeat[3] && c.feat4) sFeat[3].textContent = c.feat4;
 
-            // Stats — nested array [ {value, label}, ... ] or legacy flat stat1Val / stat1Label
-            var statEls  = document.querySelectorAll('.stat-value');
-            var statLbls = document.querySelectorAll('.stat-label');
-            for (var i = 0; i < 4; i++) {
-                var sv = (st[i] !== undefined) ? st[i].value : c['stat' + (i+1) + 'Val'];
-                var sl = (st[i] !== undefined) ? st[i].label : c['stat' + (i+1) + 'Label'];
-                if (statEls[i]  && sv !== undefined && sv !== '') statEls[i].dataset.target = sv;
-                if (statLbls[i] && sl)                            statLbls[i].textContent   = sl;
+            // Stats — fallback values only (labels are canonical in the
+            // HTML/i18n). Nested entries [ {key?, value, label}, ... ] match
+            // their slot by data-stat when a key is present, else positionally;
+            // legacy flat stat1Val..stat4Val stay positional. A zero/absent
+            // value never blanks a slot, and live /api/stats wins when it lands.
+            var statEls = document.querySelectorAll('.stat-value');
+            for (var i = 0; i < statEls.length; i++) {
+                var entry = (st && st[i] !== undefined) ? st[i] : null;
+                var sv = entry ? entry.value : c['stat' + (i+1) + 'Val'];
+                if (typeof sv !== 'number' || !(sv > 0)) continue;
+                var keyed = (entry && entry.key) ? document.querySelector('.stat[data-stat="' + entry.key + '"] .stat-value') : null;
+                (keyed || statEls[i]).dataset.target = String(sv);
             }
 
             // Ceremony

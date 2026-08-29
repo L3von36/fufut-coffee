@@ -93,9 +93,11 @@
       'testimonials.title': 'Loved by Regulars',
 
       // Stats
-      'stat.happyCustomers': 'Happy Customers',
-      'stat.yearsServing': 'Years Serving',
+      'stat.happyCustomers': 'Happy Customers Served',
+      'stat.coffeeOrigins': 'Coffee Origins',
+      'stat.yearsServing': 'Years Open',
       'stat.cupsServed': 'Cups Served',
+      'stat.happyPercent': 'Happy Percent',
       'stat.awards': 'Awards',
 
       // Reservation
@@ -262,9 +264,11 @@
       'testimonials.title': 'በተደጋጋሚዎች የተወደዱ',
 
       // Stats
-      'stat.happyCustomers': 'ደስ ያለ ደንበኞች',
-      'stat.yearsServing': 'ዓመት አገልግልቷል',
+      'stat.happyCustomers': 'የተገለገሉ ደስ ያሉ ደንበኞች',
+      'stat.coffeeOrigins': 'የቡና መነሻዎች',
+      'stat.yearsServing': 'የቆየ ዓመታት',
       'stat.cupsServed': 'የተሰጠ ቡና',
+      'stat.happyPercent': 'የተስማማ መቶኛ',
       'stat.awards': 'ሽልማቶች',
 
       // Reservation
